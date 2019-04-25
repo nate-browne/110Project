@@ -1,5 +1,6 @@
-# Insert Project Name Here
-## By Team Avatar
+# Roommate Engagement and Needs Tool
+## By Aabjeet Grewal, Akshay Kamal, Bonnie Dai, Jacalyn Li, James Cor, Jenny Zhang Maria Paula Parga Nina, Nate Browne, Shivani Doshi, and Tammy Mok
 
 ### Description
-This will have useful stuff later, but for now it's not useful
+
+*We'll fill this in with a sales pitch type thing later probably.*
