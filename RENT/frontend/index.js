@@ -1,5 +1,5 @@
 /**
- * Main entry point into the program.
+ * @format
  */
 
 import {AppRegistry} from 'react-native';
