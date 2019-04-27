@@ -47,10 +47,7 @@ keep it or yeet it).
    you can create your local copy of the database with the following steps:
    ```
    $ mysql.server start
-   $ mysql -u root
-   MariaDB [(none)]> create database rent;
-   MariaDB [(none)]> exit;
-   $ mysql rent < <filename>.sql
+   $ mysql -u root < rent_init.sql
    $ mysql.server stop
    ```
 
