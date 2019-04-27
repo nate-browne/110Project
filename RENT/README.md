@@ -47,7 +47,7 @@ keep it or yeet it).
    you can create your local copy of the database with the following steps:
    ```bash
    $ mysql.server start
-   $ mysql Rent_mysql_create.sql
+   $ mysql -u root < Rent_mysql_create.sql
    $ mysql.server stop
    ```
 
