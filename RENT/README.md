@@ -46,8 +46,9 @@ keep it or yeet it).
 6. mariaDB. On macOS, you can get this with `brew install mariadb`. Ask Aabjeet about installation on Linux. Once you've done this,
    you can create your local copy of the database with the following steps:
    ```bash
+   $ cd backend
    $ mysql.server start
-   $ mysql -u root < rent_init.sql
+   $ mysql -u root < db/rent_init.sql
    $ mysql.server stop
    ```
 
