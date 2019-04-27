@@ -34,7 +34,7 @@ CREATE TABLE `Rental` (
 	`roommates` bigint(20) NOT NULL,
 	`contactInfo` bigint(20) NOT NULL,
 	`expenses` bigint(20) NOT NULL,
-	`shoppingList` bigint(20) NOT NULL,
+	`shoppingList` bigint(20) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -56,14 +56,14 @@ CREATE TABLE `GroceryListItem` (
 
 CREATE TABLE `GroceryList` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`listItem1` bigint(20) NOT NULL,
-	`listItem2` bigint(20) NOT NULL,
-	`listItem3` bigint(20) NOT NULL,
-	`listItem4` bigint(20) NOT NULL,
-	`listItem5` bigint(20) NOT NULL,
-	`listItem6` bigint(20) NOT NULL,
-	`listItem7` bigint(20) NOT NULL,
-	`listItem8` bigint(20) NOT NULL,
+	`listItem1` bigint(20) DEFAULT NULL,
+	`listItem2` bigint(20) DEFAULT NULL,
+	`listItem3` bigint(20) DEFAULT NULL,
+	`listItem4` bigint(20) DEFAULT NULL,
+	`listItem5` bigint(20) DEFAULT NULL,
+	`listItem6` bigint(20) DEFAULT NULL,
+	`listItem7` bigint(20) DEFAULT NULL,
+	`listItem8` bigint(20) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
