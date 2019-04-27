@@ -1,31 +1,24 @@
 {
-  "name": "RENT",
-  "version": "0.0.1",
-  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "concurrently -r 'tsc -w' 'node node_modules/react-native/local-cli/cli.js start'",
-    "test": "jest"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject"
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "react": "16.8.3",
-    "react-native": "0.59.5",
-    "react-native-elements": "^1.1.0",
-    "react-native-vector-icons": "^6.4.2"
+    "expo": "^32.0.0",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-elements": "^1.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/runtime": "^7.4.3",
+    "@types/expo": "^32.0.11",
     "@types/react": "^16.8.14",
     "@types/react-native": "^0.57.50",
-    "babel-jest": "^24.7.1",
-    "concurrently": "^4.1.0",
-    "jest": "^24.7.1",
-    "metro-react-native-babel-preset": "^0.53.1",
-    "react-test-renderer": "16.8.3",
+    "babel-preset-expo": "^5.0.0",
     "typescript": "^3.4.5"
   },
-  "jest": {
-    "preset": "react-native"
-  }
+  "private": true
 }

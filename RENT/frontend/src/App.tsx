@@ -1,50 +1,28 @@
-/**
- * Main page for the application. This is where the magic happens.
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Button, Header} from 'react-native-elements';
+import styles from './style/Stylesheet'; // This is how you can import stuff from other folders
+import { Text, View, Alert, Vibration } from 'react-native';
+import {Button, Icon} from 'react-native-elements';
 
 type Props = {};
 export default class App extends Component<Props> {
+
+  buttonPressed() {
+    Alert.alert("Ahhh!", "Sup lol you found me dude");
+    Vibration.vibrate(300);
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          leftComponent={{icon: 'menu', color: '#fff'}}
-          centerComponent={{text: "RENT", style: {color: '#fff'}}}
-          rightComponent={{icon: 'home', color: '#fff'}}
+        <Text style={styles.text}>Hello group, this is much better than the simulator</Text>
+        <Button
+          icon={<Icon name='g-translate' size={15} color="white"/>}
+          raised={true}
+          title="Press Me, I do nothing!"
+          onPress={this.buttonPressed}
         />
-        <Text style={styles.welcome}>This is the app for Team RENT's app, RENT</Text>
-        <Text style={styles.instructions}>To get started, edit src/App.tsx</Text>
-        <Text style={styles.instructions}>
-          This app is using Typescript and Flask
-        </Text>
-        <Button title="Outline button" type="outline" raised={true} />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
