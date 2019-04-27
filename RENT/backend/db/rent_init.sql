@@ -8,6 +8,7 @@ CREATE TABLE `Users` (
 	`firstName` varchar(255) NOT NULL,
 	`lastName` varchar(255) NOT NULL,
 	`password` varchar(255) NOT NULL,
+	`rental` bigint(20) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -51,6 +52,7 @@ CREATE TABLE `GroceryListItem` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`name` varchar(25) NOT NULL,
 	`count` int(4) NOT NULL DEFAULT 0,
+	`price` DECIMAL(10, 2) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
@@ -84,6 +86,8 @@ CREATE TABLE `ExpenseListItem` (
 	`paid` BOOL NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
+
+ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`rental`) REFERENCES `Rental`(`id`);
 
 ALTER TABLE `Roommates` ADD CONSTRAINT `Roommates_fk0` FOREIGN KEY (`roommate1`) REFERENCES `Users`(`id`);
 
