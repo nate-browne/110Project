@@ -19,6 +19,9 @@ style files, etc. React is pretty nice in that it looks very object-oriented, an
 errors and stuff. For styling components, instead of designing our own, Akshay and I added in [this lovely library](https://github.com/react-native-training/react-native-elements) which has great icons and better documentation. Feel free to let us know if there are
 any others we should add.
 
+Regarding Typescript, [refer to this link](https://www.typescriptlang.org/docs/home.html) to get more information on how to use it.
+Basically, it makes JavaScript feel a lot more like a true OO language like Java, which is ![very nice](https://media1.tenor.com/images/5198aac8f04c105379617199e0b9665b/tenor.gif)
+
 The `backend` folder is a Flask Python project. [Flask](http://flask.pocoo.org) will provide a [RESTful api](https://restfulapi.net/)
 for the front end to use, hooking into the database module (Shivani, James, Bonnie, and Tammy please look this over and either
 keep it or yeet it).
