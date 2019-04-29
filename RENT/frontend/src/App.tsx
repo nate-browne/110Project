@@ -14,7 +14,7 @@ const server = axios.create({
 type Props = {};
 export default class App extends Component<Props> {
 
-  buttonPressed() {
+  buttonPressed(): void {
     Alert.alert("Ahhh!", "Sup lol you found me dude");
     Vibration.vibrate(300);
   }
