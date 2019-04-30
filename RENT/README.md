@@ -21,6 +21,7 @@ any others we should add.
 
 Regarding Typescript, [refer to this link](https://www.typescriptlang.org/docs/home.html) to get more information on how to use it.
 Basically, it makes JavaScript feel a lot more like a true OO language like Java, which is 
+
 ![very nice](https://media1.tenor.com/images/5198aac8f04c105379617199e0b9665b/tenor.gif)
 
 The `backend` folder is a Flask Python project. [Flask](http://flask.pocoo.org) will provide a [RESTful api](https://restfulapi.net/)
