@@ -20,7 +20,8 @@ errors and stuff. For styling components, instead of designing our own, Akshay a
 any others we should add.
 
 Regarding Typescript, [refer to this link](https://www.typescriptlang.org/docs/home.html) to get more information on how to use it.
-Basically, it makes JavaScript feel a lot more like a true OO language like Java, which is ![very nice](https://media1.tenor.com/images/5198aac8f04c105379617199e0b9665b/tenor.gif)
+Basically, it makes JavaScript feel a lot more like a true OO language like Java, which is 
+![very nice](https://media1.tenor.com/images/5198aac8f04c105379617199e0b9665b/tenor.gif)
 
 The `backend` folder is a Flask Python project. [Flask](http://flask.pocoo.org) will provide a [RESTful api](https://restfulapi.net/)
 for the front end to use, hooking into the database module (Shivani, James, Bonnie, and Tammy please look this over and either
@@ -32,7 +33,7 @@ keep it or yeet it).
 
 1. `node`, `yarn`, and `expo`. You should have both from the lab, but you can double check this by typing
    `node -v` and `yarn --version` into a terminal. If you get output, you're good. If you don't have either
-   and you use a Mac, type `brew install node` followed by `brew install yarn` followed by `yarn global install expo`.
+   and you use a Mac, type `brew install node` followed by `brew install yarn` followed by `yarn global add expo`.
    Windows/Linux users, you're on your own; I know Linux distros have similar package managers to `brew` that you can use.
    Once done, `cd` into the frontend directory and type `yarn install` to get the rest of the missing dependencies.
 
