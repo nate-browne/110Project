@@ -45,6 +45,7 @@ CREATE TABLE `ContactInfo` (
 	`lastName` varchar(255) NOT NULL,
 	`phoneNumber` varchar(10) NOT NULL,
 	`email` varchar(255) NOT NULL UNIQUE,
+	`associatedUser` bigint(20) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -108,6 +109,8 @@ ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk2` FOREIGN KEY (`contactInfo`) REF
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk3` FOREIGN KEY (`expenses`) REFERENCES `Expenses`(`id`);
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk4` FOREIGN KEY (`shoppingList`) REFERENCES `GroceryList`(`id`);
+
+ALTER TABLE `ContactInfo` ADD CONSTRAINT `ContactInfo_fk0` FOREIGN KEY (`associatedUser`) REFERENCES `Users`(`id`);
 
 ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk0` FOREIGN KEY (`listItem1`) REFERENCES `GroceryListItem`(`id`);
 
