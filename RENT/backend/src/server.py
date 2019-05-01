@@ -1,4 +1,4 @@
-import db
+from db_modules import db
 from passlib.hash import sha256_crypt
 from flask import Flask, request, abort, jsonify, url_for, make_response
 

@@ -44,7 +44,7 @@ CREATE TABLE `ContactInfo` (
 	`firstName` varchar(255) NOT NULL,
 	`lastName` varchar(255) NOT NULL,
 	`phoneNumber` varchar(10) NOT NULL,
-	`email` varchar(255) NOT NULL UNIQUE,
+	`email` varchar(255),
 	`associatedUser` bigint(20) NOT NULL,
 	PRIMARY KEY (`id`)
 );

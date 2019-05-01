@@ -1,6 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+from db_objects.users import Users
+from db_objects.rental import Rental
+from db_objects.roommates import Roommates
+from db_objects.contact_info import ContactInfo
+from db_objects.expenses import ExpenseListItem, Expenses
+from db_objects.property_document import PropertyDocument
+from db_objects.grocery_list import GroceryList, GroceryListItem
+
 # Local database URL for everyone
 DB_URL = 'mysql://root@localhost/rent'
 
