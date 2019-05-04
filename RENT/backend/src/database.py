@@ -21,16 +21,16 @@ class Users(db.Model):
 
 class Roommate(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    roomate1 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                         default=None)
-    roomate2 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                         default=None)
-    roomate3 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                         default=None)
-    roomate4 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                         default=None)
-    roomate5 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                         default=None)
+    roommate1 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
+                          default=None)
+    roommate2 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
+                          default=None)
+    roommate3 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
+                          default=None)
+    roommate4 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
+                          default=None)
+    roommate5 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
+                          default=None)
 
     def __repr__(self) -> str:
         to_print = []
@@ -42,6 +42,53 @@ class Roommate(db.Model):
         val.append("<RoommateList>\n")
         val.extend(to_print)
         return ''.join(val)
+
+
+class Rental(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    document = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
+                         nullable=False)
+    roommates = db.Column(db.Integer, db.ForeignKey('Roommates.id'),
+                          nullable=False)
+    contact_info = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                             nullable=False)
+    expenses = db.Column(db.Integer, db.ForeignKey('Expenses.id'),
+                         nullable=False)
+    shopping_list = db.Column(db.Integer, db.ForeignKey('GroceryList.id'),
+                              nullable=True, default=None)
+
+    def __repr__(self) -> str:
+        print_str = "<Rental>\nrentalID: {}\ndocumentID: {}\nroommatesListID:\
+            {}\ncontactInfoListID: {}\nexpensesID: {}\nshoppingListID: {}"
+        return print_str.format(self.id, self.roommates, self.contact_info,
+                                self.expenses, self.shopping_list)
+
+
+class ExpensesListItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    expense = db.Column(db.String(255), nullable=False)
+    cost = db.Column(db.Decimal(precision=13, scale=2), nullable=False,
+                     default=0)
+    paid = db.Column(db.Boolean, nullable=False, default=False)
+
+    def __repr__(self) -> str:
+        print_str = "<ExpenseListItem>\nid: {}\nexpense name: {}\ncost:\
+            {}\npaid: {}"
+        return print_str.format(self.id, self.expense, self.cost, self.paid)
+
+
+class Expenses(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    rent = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
+                     nullable=False)
+    heat_gas = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
+                         default=None)
+    internet = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
+                         default=None)
+    electricity = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
+                            default=None)
+    insurance = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
+                          default=None)
 
 
 def getUserByObject(user: Users) -> Optional[Users]:

@@ -53,7 +53,7 @@ CREATE TABLE `GroceryListItem` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`name` varchar(25) NOT NULL,
 	`count` int(4) NOT NULL DEFAULT 0,
-	`price` DECIMAL(10, 2) NOT NULL DEFAULT 0,
+	`price` DECIMAL(13, 2) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
