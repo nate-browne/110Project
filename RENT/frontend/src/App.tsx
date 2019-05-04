@@ -15,7 +15,7 @@ type Props = {};
 export default class App extends Component<Props> {
 
   buttonPressed(): void {
-    Alert.alert("Ahhh!", "Sup lol you found me dude");
+    Alert.alert("hey!");
     Vibration.vibrate(300);
   }
 
@@ -26,7 +26,7 @@ export default class App extends Component<Props> {
         <Button
           icon={<Icon name='g-translate' size={15} color="white"/>}
           raised={true}
-          title="Press Me, I do nothing!"
+          title="Press Me, I do something!"
           onPress={this.buttonPressed}
         />
       </View>
