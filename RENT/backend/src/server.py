@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-from database import Users, getUserByObject
+
+import database as db
 
 # Local database URL for everyone
 DB_URL = 'mysql://root@localhost/rent'
@@ -15,11 +16,11 @@ def login():
     email = request.json['email']
     password = request.json['password']
 
-    user = Users(email, password)
-    user = getUserByObject(user)
+    user = db.getUserByLogin([email, password])
 
     if user is not None:
-        return jsonify(user), 200
+        rental = db.getRentalByRentalID(user.rental)
+        return jsonify(rental), 200
     else:
         return {}, 204
 
