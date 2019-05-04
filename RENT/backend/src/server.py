@@ -1,4 +1,3 @@
-import db
 from flask import Flask, request, abort, jsonify, url_for, make_response
 
 from db_modules import db

@@ -896,6 +896,11 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/sjcl@^1.0.28":
+  version "1.0.28"
+  resolved "https://registry.yarnpkg.com/@types/sjcl/-/sjcl-1.0.28.tgz#4693eb6943e385e844a70fb25b4699db286c7214"
+  integrity sha1-RpPraUPjhehEpw+yW0aZ2yhschQ=
+
 "@types/uuid-js@^0.7.1":
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/@types/uuid-js/-/uuid-js-0.7.2.tgz#5b5552fcbaaf4acf026fb6dc66f7e5bd6b4be92f"
