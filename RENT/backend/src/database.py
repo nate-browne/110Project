@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from flask_sqlalchemy import SQLAlchemy
 
 from server import app
@@ -158,5 +158,12 @@ class Expenses(db.Model):
                           default=None)
 
 
-def getUserByObject(user: Users) -> Optional[Users]:
-    pass
+def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
+    '''Returns a rental from the db by finding the matching rentalID'''
+    return Rental.query.filter_by(id=rentalID).first()
+
+
+def getUserByLogin(user: List[str, str]) -> Optional[Users]:
+    '''Returns the matching user from the DB given the email and password, or
+    "None" if they do not exist'''
+    return Users.query.filter_by(email=user[0], password=user[1]).first()
