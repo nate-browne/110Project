@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import { UrlTile } from 'expo';
 
 const styles = StyleSheet.create({
   container: {
@@ -8,11 +9,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontSize: 50,
+    fontSize: 36,
     color: 'teal',
-    fontStyle: "italic",
-    padding: 70
-  }
+    alignItems: 'stretch',
+    textAlign: 'center',
+    padding: 20,
+  },
 });
 
 export default styles;

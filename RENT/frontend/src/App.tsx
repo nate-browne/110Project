@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import styles from './style/Stylesheet'; // This is how you can import stuff from other folders
-import { Text, View, Alert, Vibration } from 'react-native';
+import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
+import { Text, View, Alert, Vibration, Image, ImageBackground, ImageBackgroundBase } from 'react-native';
 import {Button, Icon} from 'react-native-elements';
+import {Login} from './Login';
+
 import sha256 from 'sjcl';
 import axios from 'axios';
 
@@ -11,25 +13,45 @@ const server = axios.create({
 });
 
 type Props = {};
-export default class App extends Component<Props> {
+export default class App1 extends Component<Props> {
 
   buttonPressed(): void {
-    Alert.alert("Ahhh!", "Sup lol you found me dude");
+    Alert.alert("Test2");
     Vibration.vibrate(300);
+    <Login />
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Hello group, this is much better than the simulator</Text>
-        <Button
-          icon={<Icon name='g-translate' size={15} color="white"/>}
-          raised={true}
-          title="Press Me, I do nothing!"
-          onPress={this.buttonPressed}
+
+        <Image 
+          style={styles.image}
+          source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png'}} 
         />
+
+        <Text style={styles.text}>
+          Welcome to RENT! 
+        </Text>
+
+        <View style={styles.button}>
+          <Button
+            raised={true}
+            title="Login"
+            onPress={this.buttonPressed}
+          />
+        </View>
+
+        <View style={styles.button}>
+          <Button
+            style={styles.button}
+            raised={true}
+            title="Sign up"
+            onPress={this.buttonPressed}
+          />
+        </View>
+
       </View>
     );
   }
 }
-
