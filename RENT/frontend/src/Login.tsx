@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styles from './style/Login-Stylesheet'; // This is how you can import stuff from other folders
-import { Text, View, Alert, Vibration } from 'react-native';
+import {Modal, Text, View, TouchableWithoutFeedback } from 'react-native';
 import {Button, Icon} from 'react-native-elements';
 
 
@@ -11,14 +11,24 @@ const server = axios.create({
   baseURL: serverURL
 });
 
+export class Login extends Component {
+  state = {
+    modalVisible: false
+  };
 
-type Props = {};
-export default class Login extends Component<Props> {
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
+  constructor(props: Props) {
+    super(props);
+    this.buttonPressed = this.buttonPressed.bind(this);
+  }
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>This is login</Text>
+      <View>
+        
       </View>
     );
   }
