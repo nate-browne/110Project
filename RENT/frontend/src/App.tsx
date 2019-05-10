@@ -137,15 +137,10 @@ export default class App extends Component<Props> {
       <View style={styles.button}>
         <Button
           raised={true}
-<<<<<<< HEAD
           title="Login"
           onPress={() => {
             this.setLoginVisible(true);
           }}
-=======
-          title="Press Me, I do something!"
-          onPress={this.buttonPressed}
->>>>>>> be41bcf3f246bf3fa83b134c1603295ab03a8e35
         />
       </View>
 
