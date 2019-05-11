@@ -117,7 +117,8 @@ export default class App extends Component<Props> {
                 raised={true}
                 title="Done"
                 onPress={() => {
-                  this.setSignupVisible(false);
+                  server.post('/createuser', {
+                  });
                 }}
               />
             </View>
