@@ -1,4 +1,4 @@
-/*
+  /*
   Name: Login.tsx
   Description: This file renders the login page and handles sign up and logging in
   of user.
@@ -163,7 +163,7 @@ export default class Login extends Component<Props> {
         <Button
           raised={true}
           title="Test Page"
-          onPress={() => this.props.navigation.push('Example')}
+          onPress={() => this.props.navigation.push('RentalMain')}
         />
       </View>
 
