@@ -88,7 +88,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="First Name"
-                onChangeText={(text: string) => this.setState({firstName: text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -96,7 +96,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Last Name"
-                onChangeText={(text: string) => this.setState({lastName: text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -104,7 +104,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="something@something.something"
-                onChangeText={(text: string) => this.setState({email: text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -112,7 +112,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Password"
-                onChangeText={(text: string) => this.setState({password: /*sjcl.hash.sha256.hash(*/text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -122,17 +122,7 @@ export default class Login extends Component<Props> {
                 title="Done"
                 onPress={() => {
                   server.post('/createuser', {
-                    email: this.state.email,
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    password: this.state.password
-                  }).then(resp => {
-                    // redirect user to different page
-
-                  }).catch(err => {
-                    // catch errors such as user logged in, account already exists, etc
                   });
-                  this.setSignupVisible(false);
                 }}
               />
             </View>
@@ -142,7 +132,7 @@ export default class Login extends Component<Props> {
 
       <Image
           style={styles.image}
-          source={require('../assets/logo.jpg')}
+          source={require('../assets/logo.png')}
         />
 
       <Text style={styles.text}>
@@ -169,21 +159,14 @@ export default class Login extends Component<Props> {
         />
       </View>
 
-      /*
-      * Example Page Navigation
-      */
       <View style={styles.button}>
         <Button
-            raised={true}
-            title="Go to Details"
-            /*
-            * This is the important part basically,
-            * and you dont always need a button,
-            * navigation can occur with frontend logic too
-            */
-            onPress={() => this.props.navigation.navigate('Example')}
-          />
+          raised={true}
+          title="Test Page"
+          onPress={() => this.props.navigation.push('Example')}
+        />
       </View>
+
     </ImageBackground>
     );
   }
