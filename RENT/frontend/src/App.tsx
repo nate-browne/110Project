@@ -35,7 +35,7 @@ export default class App extends Component<Props> {
   }
 
   render() {
-    return ( 
+    return (
     <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
       <Modal
         animationType="fade"
@@ -133,9 +133,9 @@ export default class App extends Component<Props> {
         </Modal>
 
 
-      <Image 
+      <Image
           style={styles.image}
-          source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png'}} 
+          source={require('../assets/logo.png')} 
         />
 
       <Text style={styles.text}>
