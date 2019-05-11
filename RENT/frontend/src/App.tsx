@@ -11,6 +11,7 @@ import ExamplePage from "./ExamplePage";
 import RentalMain from "./RentalMain";
 
 
+
 const RootStack = createStackNavigator(
   {
     Login: Login,
