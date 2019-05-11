@@ -6,7 +6,7 @@
 
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { TextInput, Modal, Text, View, Alert, Image, ImageBackground } from 'react-native';
+import { TextInput, Text, View, Alert, Image, ImageBackground } from 'react-native';
 import {Button, Overlay } from 'react-native-elements';
 //import sjcl from 'sjcl';
 import axios from 'axios';
