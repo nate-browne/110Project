@@ -34,11 +34,11 @@ CREATE TABLE `Lease` (
 	`landlordFirstName` varchar(255) NOT NULL,
 	`landlordLastName` varchar(255) NOT NULL,
 	`landlordPhoneNumber` varchar(10),
-	`landlordEmail` varchar(255)
+	`landlordEmail` varchar(255),
 	`rentCost` DECIMAL(13, 2) NOT NULL DEFAULT 0,
 	`startDate` DATE NOT NULL,
 	`endDate` DATE NOT NULL,
-	`rentDueDate` varchar(50), NOT NULL,
+	`rentDueDate` varchar(50) NOT NULL,
 	`document` bigint(20) NOT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -54,7 +54,7 @@ CREATE TABLE `Rental` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `RentalContactInfo` (
+CREATE TABLE `ContactInfoList` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`contact1` bigint(20) DEFAULT NULL,
 	`contact2` bigint(20) DEFAULT NULL,
@@ -93,7 +93,7 @@ ALTER TABLE `Roommates` ADD CONSTRAINT `Roommates_fk4` FOREIGN KEY (`roommate5`)
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk0` FOREIGN KEY (`roommates`) REFERENCES `Roommates`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk1` FOREIGN KEY (`contactInfo`) REFERENCES `RentalContactInfo`(`id`);
+ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk1` FOREIGN KEY (`contactInfo`) REFERENCES `ContactInfoList`(`id`);
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk2` FOREIGN KEY (`lease`) REFERENCES `Lease`(`id`);
 
@@ -101,22 +101,22 @@ ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk3` FOREIGN KEY (`insurance`) REFER
 
 ALTER TABLE `Lease` ADD CONSTRAINT `Lease_fk0` FOREIGN KEY (`document`) REFERENCES `PropertyDocument`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk0` FOREIGN KEY (`contact1`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk0` FOREIGN KEY (`contact1`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk1` FOREIGN KEY (`contact2`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk1` FOREIGN KEY (`contact2`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk2` FOREIGN KEY (`contact3`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk2` FOREIGN KEY (`contact3`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk3` FOREIGN KEY (`contact4`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk3` FOREIGN KEY (`contact4`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk4` FOREIGN KEY (`contact5`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk4` FOREIGN KEY (`contact5`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk5` FOREIGN KEY (`contact6`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk5` FOREIGN KEY (`contact6`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk6` FOREIGN KEY (`contact7`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk6` FOREIGN KEY (`contact7`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk7` FOREIGN KEY (`contact8`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk7` FOREIGN KEY (`contact8`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk8` FOREIGN KEY (`contact9`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk8` FOREIGN KEY (`contact9`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk9` FOREIGN KEY (`contact10`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk9` FOREIGN KEY (`contact10`) REFERENCES `ContactInfo`(`id`);

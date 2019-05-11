@@ -8,7 +8,7 @@ from passlib.hash import pbkdf2_sha256
 
 @app.route('/', methods=["GET"])
 def hello():
-    return "Hello Akshay"
+    return "Hello Shivani"
 
 
 @app.route('/createuser', methods=['POST'])
@@ -17,7 +17,7 @@ def createuser():
     firstName = request.json['firstName']
     lastName = request.json['lastName']
     password = pbkdf2_sha256.hash(request.json['password'])
-    user = db.Users(email=email, first_name=firstName, last_name=lastName,
+    user = db.Users(email=email, firstName=firstName, lastName=lastName,
                     password=password)
 
     # check if user exists
@@ -30,9 +30,13 @@ def createuser():
 
 @app.route('/testcreateuser')
 def testcreateuser():
-    user = db.Users(email="fake@fake.net", first_name="Johnny",
-                    last_name="Test", password='lmaowhatevenissecurity')
-    db.addUser(user)
+    user = db.Users(email="fake@fake.net", firstName="Johnny",
+                    lastName="Test", password='lmaowhatevenissecurity')
+    if db.isUser(user):
+        return "no dice bud"
+    else:
+        db.addUser(user)
+        return "yeet"
 
 
 @app.route('/login', methods=["POST"])
