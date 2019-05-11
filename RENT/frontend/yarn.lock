@@ -9862,6 +9862,14 @@ react-native-branch@2.2.5:
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.2.5.tgz#4074dd63b4973e6397d9ce50e97b57c77a518e9d"
   integrity sha1-QHTdY7SXPmOX2c5Q6XtXx3pRjp0=
 
+react-native-dashboard@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-dashboard/-/react-native-dashboard-0.0.4.tgz#f4c28582075f374dd5e2a97e1b9812b7988d0255"
+  integrity sha512-V6apz3ooreInNChP1Z8tEvCM1Xc9grA/jIm1QV+eq+QCir9NPnt5CFCMKS9mBWbPWivfDhZiu7ddcd5k5yt1RA==
+  dependencies:
+    react-native-super-grid "2.4.3"
+    react-native-vector-icons "6.3.0"
+
 react-native-elements@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.1.0.tgz#f99bcda4459a886f3ab4591c684c099d37aedf2b"
@@ -9889,7 +9897,7 @@ react-native-maps@*:
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.24.2.tgz#19974f967cb0c2e24dab74ca879118e0932571b2"
   integrity sha512-1iNIDikp2dkCG+8DguaEviYZiMSYyvwqYT7pO2YTZvuFRDSc/P9jXMhTUnSh4wNDlEeQ47OJ09l0pwWVBZ7wxg==
 
-"react-native-maps@github:expo/react-native-maps#v0.22.1-exp.0":
+react-native-maps@expo/react-native-maps#v0.22.1-exp.0:
   version "0.22.1"
   resolved "https://codeload.github.com/expo/react-native-maps/tar.gz/e6f98ff7272e5d0a7fe974a41f28593af2d77bb2"
 
@@ -9930,6 +9938,14 @@ react-native-status-bar-height@^2.2.0:
   resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.3.1.tgz#b92ce9112c2367290847ac11284d9d84a6330169"
   integrity sha512-m9nGKYfFn6ljF1abafzF5cFaD9JCzXwj7kNE9CuF+g0TgtItH70eY2uHaCV9moENTftqd5XIS3Cx0mf4WfistA==
 
+react-native-super-grid@2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-2.4.3.tgz#ceeaa4515de7bdb2e3cc3f810009e1adbbadd40b"
+  integrity sha512-SRYHWSc6EPFlMp4m9ZQ2P6Fqc9GEH+RuO4sc6fhisUcH20TRxFO2OcDeHobIKv7KOarGa7jXdZZ85R+LZisKqA==
+  dependencies:
+    lodash "^4.17.10"
+    prop-types "^15.6.0"
+
 react-native-svg@*:
   version "9.4.0"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-9.4.0.tgz#e428e0eae55aebd2355f1ff4f22675dad4611960"
@@ -9955,6 +9971,15 @@ react-native-vector-icons@6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.0.0.tgz#3a7076dbe244ea94c6d5e92802a870e64a4283c5"
   integrity sha512-uF3oWb3TV42uXi2apVOZHw9oy9Nr5SXDVwOo1umQWo/yYCrDzXyVfq14DzezgEbJ9jfc/yghBelj0agkXmOKlg==
+  dependencies:
+    lodash "^4.0.0"
+    prop-types "^15.6.2"
+    yargs "^8.0.2"
+
+react-native-vector-icons@6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.3.0.tgz#47a0c9e04e045c0ea0b9ca450e2af84e45c07b3f"
+  integrity sha512-3Rf77BC1BhCpHkCitq4hDAEyaAR7Won5qrHU3fBoZzkEsI5oFTCfvnMDYzCx7XDW5Xn0u/Yg7JD9USynAOYVYA==
   dependencies:
     lodash "^4.0.0"
     prop-types "^15.6.2"
