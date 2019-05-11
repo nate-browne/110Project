@@ -27,6 +27,7 @@ export default class Login extends Component<Props> {
     password: "",
   };
 
+
   setLoginVisible(visible: boolean) {
     this.setState({loginVisible: visible});
   }
