@@ -18,6 +18,7 @@ const server = axios.create({
 
 type Props = {};
 export default class Login extends Component<Props> {
+
   state = {
     loginVisible: false,
     signupVisible: false,
@@ -45,6 +46,9 @@ export default class Login extends Component<Props> {
       <Modal
         animationType="fade"
         visible={this.state.loginVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}
         >
         <View style={styles.container}>
             <Text style={{fontSize: 48}}>Login Here</Text>
@@ -80,6 +84,9 @@ export default class Login extends Component<Props> {
       <Modal
         animationType="fade"
         visible={this.state.signupVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}
         >
         <View style={styles.container}>
             <Text style={{fontSize: 48}}>Signup Here</Text>
@@ -162,7 +169,7 @@ export default class Login extends Component<Props> {
       <View style={styles.button}>
         <Button
           raised={true}
-          title="Test Page"
+          title="Rental Main"
           onPress={() => this.props.navigation.push('RentalMain')}
         />
       </View>
