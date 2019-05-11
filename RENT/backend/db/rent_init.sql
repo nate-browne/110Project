@@ -8,7 +8,8 @@ CREATE TABLE `Users` (
 	`firstName` varchar(255) NOT NULL,
 	`lastName` varchar(255) NOT NULL,
 	`password` varchar(255) NOT NULL,
-	`rental` bigint(20) DEFAULT NULL,
+	`rental1` bigint(20) DEFAULT NULL,
+	`rental2` bigint(20) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -46,11 +47,26 @@ CREATE TABLE `Lease` (
 CREATE TABLE `Rental` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`roommates` bigint(20) NOT NULL,
-	`contactInfo` bigint(20) NOT NULL,
+	`contactInfoList` bigint(20) NOT NULL,
 	`lease` bigint(20) NOT NULL,
 	`insurance` bigint(20) NOT NULL,
+	`board` bigint(20) NOT NULL,
 	`address` varchar(255) NOT NULL,
 	`photo` varchar(255),
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `Board` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `Note` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`date` DATE NOT NULL,
+	`value` varchar(500) NOT NULL,
+	`board` bigint(20) NOT NULL,
+	`isDeleted` BOOL NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
@@ -79,7 +95,9 @@ CREATE TABLE `ContactInfo` (
 	PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`rental`) REFERENCES `Rental`(`id`);
+ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`rental1`) REFERENCES `Rental`(`id`);
+
+ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`rental2`) REFERENCES `Rental`(`id`);
 
 ALTER TABLE `Roommates` ADD CONSTRAINT `Roommates_fk0` FOREIGN KEY (`roommate1`) REFERENCES `Users`(`id`);
 
@@ -93,11 +111,13 @@ ALTER TABLE `Roommates` ADD CONSTRAINT `Roommates_fk4` FOREIGN KEY (`roommate5`)
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk0` FOREIGN KEY (`roommates`) REFERENCES `Roommates`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk1` FOREIGN KEY (`contactInfo`) REFERENCES `ContactInfoList`(`id`);
+ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk1` FOREIGN KEY (`contactInfoList`) REFERENCES `ContactInfoList`(`id`);
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk2` FOREIGN KEY (`lease`) REFERENCES `Lease`(`id`);
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk3` FOREIGN KEY (`insurance`) REFERENCES `PropertyDocument`(`id`);
+
+ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk4` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);
 
 ALTER TABLE `Lease` ADD CONSTRAINT `Lease_fk0` FOREIGN KEY (`document`) REFERENCES `PropertyDocument`(`id`);
 
@@ -120,3 +140,5 @@ ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk7` FOREIGN KEY (
 ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk8` FOREIGN KEY (`contact9`) REFERENCES `ContactInfo`(`id`);
 
 ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk9` FOREIGN KEY (`contact10`) REFERENCES `ContactInfo`(`id`);
+
+ALTER TABLE `Note` ADD CONSTRAINT `Note_fk0` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);

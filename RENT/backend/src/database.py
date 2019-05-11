@@ -76,12 +76,14 @@ class Rental(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommates = db.Column(db.Integer, db.ForeignKey('Roommates.id'),
                           nullable=False)
-    contactInfo = db.Column(db.Integer, db.ForeignKey('ContactInfoList.id'),
-                            nullable=False)
+    contactInfoList = db.Column(db.Integer,
+                                db.ForeignKey('ContactInfoList.id'),
+                                nullable=False)
     lease = db.Column(db.Integer, db.ForeignKey('Lease.id'),
                       nullable=False)
     insurance = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
                           nullable=False)
+    board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     photo = db.Column(db.String(255), nullable=True)
 
@@ -90,6 +92,20 @@ class Rental(db.Model):
             {}\ncontactInfoListID: {}\nexpensesID: {}\nshoppingListID: {}"
         return print_str.format(self.id, self.roommates, self.contact_info,
                                 self.expenses, self.shopping_list)
+
+
+class Board(db.Model):
+    __tablename__ = 'Board'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+
+
+class Note(db.Model):
+    __tablename__ = 'Note'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    value = db.Column(db.String(500), nullable=False)
+    board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=False)
+    isDeleted = db.Column(db.Boolean, nullable=False, default=False)
 
 
 class ContactInfo(db.Model):
@@ -145,6 +161,10 @@ def getUserByLogin(user: List[str]) -> Optional[Users]:
     return Users.query.filter_by(email=user[0], password=user[1]).first()
 
 
+def getUserByEmail(email: str) -> Optional[Users]:
+    return Users.query.filter_by(email=email).first()
+
+
 def isUser(user) -> bool:
     '''Checks if a user has created an account already'''
     u = Users.query.filter_by(email=user.email).first()
@@ -153,4 +173,9 @@ def isUser(user) -> bool:
 
 def addUser(user: Users) -> None:
     db.session.add(user)
+    db.session.commit()
+
+
+def updatePassword(user: Users, password: str) -> None:
+    user.password = password
     db.session.commit()

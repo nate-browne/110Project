@@ -1,14 +1,9 @@
 from flask import request, jsonify
+from passlib.hash import pbkdf2_sha256
 
 from config import app
 import database as db
-
-from passlib.hash import pbkdf2_sha256
-
-
-@app.route('/', methods=["GET"])
-def hello():
-    return "Hello Shivani"
+import mailer
 
 
 @app.route('/createuser', methods=['POST'])
@@ -22,21 +17,34 @@ def createuser():
 
     # check if user exists
     if db.isUser(user):
-        return {}, 404
+        return {}, 300
     else:
         # create user
         return {}, 201
 
 
-@app.route('/testcreateuser')
-def testcreateuser():
-    user = db.Users(email="fake@fake.net", firstName="Johnny",
-                    lastName="Test", password='lmaowhatevenissecurity')
-    if db.isUser(user):
-        return "no dice bud"
+@app.route('/forgotpassword', methods=['POST'])
+def forgot_password():
+    user = db.getUserByEmail(request.json['email'])
+    if user is not None:
+        temp = mailer.send_mail(user.email)
+        change_password(user, temp)
     else:
-        db.addUser(user)
-        return "yeet"
+        return {}, 300
+
+
+def change_password(user: db.Users, password: str):
+    db.updatePassword(user, pbkdf2_sha256.hash(password))
+
+
+@app.route('/resetpassword', methods=['POST'])
+def reset_password(email: str, password: str):
+    pass
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    pass
 
 
 @app.route('/login', methods=["POST"])
@@ -50,7 +58,7 @@ def login():
         rental = db.getRentalByRentalID(user.rental)
         return jsonify(rental), 200
     else:
-        return {}, 204
+        return {}, 300
 
 
 if __name__ == "__main__":
