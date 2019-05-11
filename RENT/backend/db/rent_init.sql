@@ -29,13 +29,43 @@ CREATE TABLE `PropertyDocument` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `Lease` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`landlordFirstName` varchar(255) NOT NULL,
+	`landlordLastName` varchar(255) NOT NULL,
+	`landlordPhoneNumber` varchar(10),
+	`landlordEmail` varchar(255)
+	`rentCost` DECIMAL(13, 2) NOT NULL DEFAULT 0,
+	`startDate` DATE NOT NULL,
+	`endDate` DATE NOT NULL,
+	`rentDueDate` varchar(50), NOT NULL,
+	`document` bigint(20) NOT NULL,
+	PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `Rental` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`document` bigint(20) NOT NULL,
 	`roommates` bigint(20) NOT NULL,
 	`contactInfo` bigint(20) NOT NULL,
-	`expenses` bigint(20) NOT NULL,
-	`shoppingList` bigint(20) DEFAULT NULL,
+	`lease` bigint(20) NOT NULL,
+	`insurance` bigint(20) NOT NULL,
+	`address` varchar(255) NOT NULL,
+	`photo` varchar(255),
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `RentalContactInfo` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`contact1` bigint(20) DEFAULT NULL,
+	`contact2` bigint(20) DEFAULT NULL,
+	`contact3` bigint(20) DEFAULT NULL,
+	`contact4` bigint(20) DEFAULT NULL,
+	`contact5` bigint(20) DEFAULT NULL,
+	`contact6` bigint(20) DEFAULT NULL,
+	`contact7` bigint(20) DEFAULT NULL,
+	`contact8` bigint(20) DEFAULT NULL,
+	`contact9` bigint(20) DEFAULT NULL,
+	`contact10` bigint(20) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -46,45 +76,6 @@ CREATE TABLE `ContactInfo` (
 	`phoneNumber` varchar(10) NOT NULL,
 	`email` varchar(255),
 	`associatedUser` bigint(20) NOT NULL,
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `GroceryListItem` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`name` varchar(25) NOT NULL,
-	`count` int(4) NOT NULL DEFAULT 0,
-	`price` DECIMAL(13, 2) NOT NULL DEFAULT 0,
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `GroceryList` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`listItem1` bigint(20) DEFAULT NULL,
-	`listItem2` bigint(20) DEFAULT NULL,
-	`listItem3` bigint(20) DEFAULT NULL,
-	`listItem4` bigint(20) DEFAULT NULL,
-	`listItem5` bigint(20) DEFAULT NULL,
-	`listItem6` bigint(20) DEFAULT NULL,
-	`listItem7` bigint(20) DEFAULT NULL,
-	`listItem8` bigint(20) DEFAULT NULL,
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `Expenses` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`rent` bigint(20) NOT NULL,
-	`heat_gas` bigint(20) DEFAULT NULL,
-	`internet` bigint(20) DEFAULT NULL,
-	`electricity` bigint(20) DEFAULT NULL,
-	`insurance` bigint(20) DEFAULT NULL,
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `ExpenseListItem` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`expense` varchar(255) NOT NULL,
-	`cost` DECIMAL(13,2) NOT NULL DEFAULT 0,
-	`paid` BOOL NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
@@ -100,41 +91,32 @@ ALTER TABLE `Roommates` ADD CONSTRAINT `Roommates_fk3` FOREIGN KEY (`roommate4`)
 
 ALTER TABLE `Roommates` ADD CONSTRAINT `Roommates_fk4` FOREIGN KEY (`roommate5`) REFERENCES `Users`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk0` FOREIGN KEY (`document`) REFERENCES `PropertyDocument`(`id`);
+ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk0` FOREIGN KEY (`roommates`) REFERENCES `Roommates`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk1` FOREIGN KEY (`roommates`) REFERENCES `Roommates`(`id`);
+ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk1` FOREIGN KEY (`contactInfo`) REFERENCES `RentalContactInfo`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk2` FOREIGN KEY (`contactInfo`) REFERENCES `ContactInfo`(`id`);
+ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk2` FOREIGN KEY (`lease`) REFERENCES `Lease`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk3` FOREIGN KEY (`expenses`) REFERENCES `Expenses`(`id`);
+ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk3` FOREIGN KEY (`insurance`) REFERENCES `PropertyDocument`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk4` FOREIGN KEY (`shoppingList`) REFERENCES `GroceryList`(`id`);
+ALTER TABLE `Lease` ADD CONSTRAINT `Lease_fk0` FOREIGN KEY (`document`) REFERENCES `PropertyDocument`(`id`);
 
-ALTER TABLE `ContactInfo` ADD CONSTRAINT `ContactInfo_fk0` FOREIGN KEY (`associatedUser`) REFERENCES `Users`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk0` FOREIGN KEY (`contact1`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk0` FOREIGN KEY (`listItem1`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk1` FOREIGN KEY (`contact2`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk1` FOREIGN KEY (`listItem2`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk2` FOREIGN KEY (`contact3`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk2` FOREIGN KEY (`listItem3`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk3` FOREIGN KEY (`contact4`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk3` FOREIGN KEY (`listItem4`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk4` FOREIGN KEY (`contact5`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk4` FOREIGN KEY (`listItem5`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk5` FOREIGN KEY (`contact6`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk5` FOREIGN KEY (`listItem6`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk6` FOREIGN KEY (`contact7`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk6` FOREIGN KEY (`listItem7`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk7` FOREIGN KEY (`contact8`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `GroceryList` ADD CONSTRAINT `GroceryList_fk7` FOREIGN KEY (`listItem8`) REFERENCES `GroceryListItem`(`id`);
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk8` FOREIGN KEY (`contact9`) REFERENCES `ContactInfo`(`id`);
 
-ALTER TABLE `Expenses` ADD CONSTRAINT `Expenses_fk0` FOREIGN KEY (`rent`) REFERENCES `ExpenseListItem`(`id`);
-
-ALTER TABLE `Expenses` ADD CONSTRAINT `Expenses_fk1` FOREIGN KEY (`heat_gas`) REFERENCES `ExpenseListItem`(`id`);
-
-ALTER TABLE `Expenses` ADD CONSTRAINT `Expenses_fk2` FOREIGN KEY (`internet`) REFERENCES `ExpenseListItem`(`id`);
-
-ALTER TABLE `Expenses` ADD CONSTRAINT `Expenses_fk3` FOREIGN KEY (`electricity`) REFERENCES `ExpenseListItem`(`id`);
-
-ALTER TABLE `Expenses` ADD CONSTRAINT `Expenses_fk4` FOREIGN KEY (`insurance`) REFERENCES `ExpenseListItem`(`id`);
-
+ALTER TABLE `RentalContactInfo` ADD CONSTRAINT `RentalContactInfo_fk9` FOREIGN KEY (`contact10`) REFERENCES `ContactInfo`(`id`);
