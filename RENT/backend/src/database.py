@@ -167,3 +167,7 @@ def getUserByLogin(user: List[str, str]) -> Optional[Users]:
     '''Returns the matching user from the DB given the email and password, or
     "None" if they do not exist'''
     return Users.query.filter_by(email=user[0], password=user[1]).first()
+
+
+def isUser(user) -> bool:
+    pass

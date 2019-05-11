@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { AppRegistry, TextInput, Modal, Text, View, Alert, Vibration, Image, ImageBackground } from 'react-native';
-import {Button, Icon} from 'react-native-elements';
-import {Login} from './Login';
+import { TextInput, Modal, Text, View, Alert, Image, ImageBackground } from 'react-native';
+import {Button } from 'react-native-elements';
 
-import sha256 from 'sjcl';
+import sjcl from 'sjcl';
 import axios from 'axios';
 
 const serverURL = 'http://localhost:5000' // I think this is the default flask one
@@ -84,7 +83,7 @@ export default class App extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="First Name"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text: string) => this.setState({firstName: text})}
               />
             </View>
 
@@ -92,7 +91,7 @@ export default class App extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Last Name"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text: string) => this.setState({lastName: text})}
               />
             </View>
 
@@ -100,7 +99,7 @@ export default class App extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="something@something.something"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text: string) => this.setState({email: text})}
               />
             </View>
 
@@ -108,7 +107,7 @@ export default class App extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Password"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text: string) => this.setState({password: sjcl.hash.sha256.hash(text)})}
               />
             </View>
 
@@ -118,6 +117,14 @@ export default class App extends Component<Props> {
                 title="Done"
                 onPress={() => {
                   server.post('/createuser', {
+                    email: this.state.email,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    password: this.state.password
+                  }).then(resp => {
+                    // redirect user to different page
+                  }).catch(err => {
+                    // catch errors such as user logged in, account already exists, etc
                   });
                 }}
               />

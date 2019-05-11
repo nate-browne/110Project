@@ -12,6 +12,7 @@ npm-debug.*
 .idea
 *.swp
 .vscode
+.vscode/*
 .atom
 .babel.7.4.4.development.json
 packager-info.json

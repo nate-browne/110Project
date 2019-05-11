@@ -11,6 +11,23 @@ app.secret_key = 'aabjeetGx2LaCC1a4opBUsc95a6KmbKX20hHIq8ie5r8FJx5S9fSTk2hYsz8\
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 
 
+@app.route('/createuser', methods=['POST'])
+def createuser():
+    email = request.json['email']
+    firstName = request.json['firstName']
+    lastName = request.json['lastName']
+    password = request.json['password']
+    user = db.Users(email=email, first_name=firstName, last_name=lastName,
+                    password=password)
+
+    # check if user exists
+    if db.isUser(user):
+        return {}, 404
+    else:
+        # create user
+        return {}, 201
+
+
 @app.route('/login', methods=["POST"])
 def login():
     email = request.json['email']
