@@ -5,7 +5,6 @@
 */
 
 import React, {Component} from 'react';
-import Dashboard from "react-native-dashboard";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import Login from "./Login";
 import ExamplePage from "./ExamplePage"
