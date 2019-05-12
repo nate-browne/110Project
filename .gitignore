@@ -17,3 +17,4 @@ npm-debug.*
 .atom
 .babel.7.4.4.development.json
 packager-info.json
+config.py
