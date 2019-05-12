@@ -10,8 +10,10 @@ import { TextInput, Text, View, Alert, Image, ImageBackground } from 'react-nati
 import {Button, Overlay } from 'react-native-elements';
 import axios from 'axios';
 
+
 // change the ip address below to be the one for your computer
 const serverURL = 'http://100.81.38.211:5000' // I think this is the default flask one
+
 const server = axios.create({
   baseURL: serverURL
 });
@@ -31,7 +33,7 @@ export default class Login extends Component<IAppProps, IAppState> {
       fontWeight: 'bold',
     },
   };
-  
+
   state = {
     loginVisible: false,
     signupVisible: false,
@@ -84,8 +86,28 @@ export default class Login extends Component<IAppProps, IAppState> {
             <View style={styles.button}>
               <Button
                 raised={true}
-                title="Done"
+                title="Login"
                 onPress={() => {
+                  server.post('/login', {
+                    email: this.state.email,
+                    password: this.state.password
+                  })
+                  .then (resp => {
+                    //login successful
+                    if(resp.status === 200) {
+                      {this.props.navigation.navigate('Example')}
+                      console.log("Login Successful");
+                    }
+                    //login failed
+                    else if (resp.status === 404) {
+                      Alert.alert("Login Failed","Username or Password incorrect");
+                      console.log("Login Failed");
+                    }
+                  })
+                  .catch (err => {
+
+                  })
+
                   this.setLoginVisible(false);
                 }}
               />
@@ -136,13 +158,14 @@ export default class Login extends Component<IAppProps, IAppState> {
             <View style={styles.button}>
               <Button
                 raised={true}
-                title="Done"
+                title="Sign Up"
                 onPress={() => {
                   server.post('/createuser', {
                     email: this.state.email,
                     firstName: this.state.firstName,
                     lastName: this.state.lastName,
                     password: this.state.password
+
                   }).then(resp => {
                     if(resp.status === 201) {
                       {this.props.navigation.navigate('Example')}
@@ -156,7 +179,6 @@ export default class Login extends Component<IAppProps, IAppState> {
                   });
                   this.setSignupVisible(false);
                 }}
-                //add navigate to home page if success
               />
             </View>
         </View>
@@ -189,14 +211,6 @@ export default class Login extends Component<IAppProps, IAppState> {
           onPress={() =>{
             this.setSignupVisible(true);
           }}
-        />
-      </View>
-
-      <View style={styles.button}>
-        <Button
-          raised={true}
-          title="Test Page"
-          onPress={() => this.props.navigation.push('Example')}
         />
       </View>
 
