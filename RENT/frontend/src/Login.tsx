@@ -6,9 +6,8 @@
 
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { TextInput, Modal, Text, View, Alert, Image, ImageBackground } from 'react-native';
-import {Button } from 'react-native-elements';
-//import sjcl from 'sjcl';
+import { TextInput, Text, View, Alert, Image, ImageBackground } from 'react-native';
+import {Button, Overlay } from 'react-native-elements';
 import axios from 'axios';
 
 const serverURL = 'http://localhost:5000' // I think this is the default flask one
@@ -16,8 +15,22 @@ const server = axios.create({
   baseURL: serverURL
 });
 
-type Props = {};
-export default class Login extends Component<Props> {
+
+interface IAppProps {
+  navigation?: any;
+}
+
+interface IAppState {
+}
+
+export default class Login extends Component<IAppProps, IAppState> {
+  static navigationOptions = {
+    headerTransparent: true,
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  };
+  
   state = {
     loginVisible: false,
     signupVisible: false,
@@ -26,6 +39,7 @@ export default class Login extends Component<Props> {
     email: "",
     password: "",
   };
+
 
   setLoginVisible(visible: boolean) {
     this.setState({loginVisible: visible});
@@ -42,9 +56,10 @@ export default class Login extends Component<Props> {
   render() {
     return (
     <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
-      <Modal
-        animationType="fade"
-        visible={this.state.loginVisible}
+      <Overlay
+        windowBackgroundColor="rgba(255, 255, 255, .5)"
+        isVisible={this.state.loginVisible}
+        onBackdropPress={() => this.setState({ isVisible: false })}
         >
         <View style={styles.container}>
             <Text style={{fontSize: 48}}>Login Here</Text>
@@ -75,11 +90,12 @@ export default class Login extends Component<Props> {
               />
             </View>
         </View>
-      </Modal>
+      </Overlay>
 
-      <Modal
-        animationType="fade"
-        visible={this.state.signupVisible}
+      <Overlay
+        windowBackgroundColor="rgba(255, 255, 255, .5)"
+        isVisible={this.state.signupVisible}
+        onBackdropPress={() => this.setState({ isVisible: false })}
         >
         <View style={styles.container}>
             <Text style={{fontSize: 48}}>Signup Here</Text>
@@ -88,7 +104,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="First Name"
-                onChangeText={(text: string) => this.setState({firstName: text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -96,7 +112,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Last Name"
-                onChangeText={(text: string) => this.setState({lastName: text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -104,7 +120,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="something@something.something"
-                onChangeText={(text: string) => this.setState({email: text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -112,7 +128,7 @@ export default class Login extends Component<Props> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Password"
-                onChangeText={(text: string) => this.setState({password: /*sjcl.hash.sha256.hash(*/text})}
+                onChangeText={(text) => this.setState({text})}
               />
             </View>
 
@@ -122,27 +138,18 @@ export default class Login extends Component<Props> {
                 title="Done"
                 onPress={() => {
                   server.post('/createuser', {
-                    email: this.state.email,
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    password: this.state.password
-                  }).then(resp => {
-                    // redirect user to different page
-
-                  }).catch(err => {
-                    // catch errors such as user logged in, account already exists, etc
                   });
-                  this.setSignupVisible(false);
                 }}
+                //add navigate to home page if success
               />
             </View>
         </View>
-        </Modal>
+        </Overlay>
 
 
       <Image
           style={styles.image}
-          source={require('../assets/logo.jpg')}
+          source={require('../assets/logo.png')}
         />
 
       <Text style={styles.text}>
@@ -169,21 +176,14 @@ export default class Login extends Component<Props> {
         />
       </View>
 
-      /*
-      * Example Page Navigation
-      */
       <View style={styles.button}>
         <Button
-            raised={true}
-            title="Go to Details"
-            /*
-            * This is the important part basically,
-            * and you dont always need a button,
-            * navigation can occur with frontend logic too
-            */
-            onPress={() => this.props.navigation.navigate('Example')}
-          />
+          raised={true}
+          title="Test Page"
+          onPress={() => this.props.navigation.push('Example')}
+        />
       </View>
+
     </ImageBackground>
     );
   }
