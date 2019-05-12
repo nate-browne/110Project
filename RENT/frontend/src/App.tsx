@@ -11,6 +11,7 @@ import ExamplePage from "./ExamplePage";
 import RentalMain from "./RentalMain";
 import Grocery from "./Grocery";
 import Expenses from "./Expenses";
+import Bulletin from "./Bulletin";
 
 
 
@@ -21,10 +22,11 @@ const RootStack = createStackNavigator(
     RentalMain: RentalMain,
     Grocery: Grocery,
     Expenses: Expenses,
+    Bulletin: Bulletin,
 
   },
   {
-    initialRouteName: "Expenses",
+    initialRouteName: "RentalMain",
   }
 );
 const AppContainer = createAppContainer(RootStack);

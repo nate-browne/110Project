@@ -22,9 +22,6 @@ export default class RenatlMain extends Component<Props> {
         itemDimension={130}
         items={items}
         style={styles.gridView}
-        // staticDimension={300}
-        // fixed
-        // spacing={20}
         renderItem={({ item, index }) => (
           //<View style={[styles.itemContainer, { backgroundColor: item.code }]}>
             <TouchableHighlight onPress={()=> {
@@ -48,7 +45,7 @@ export default class RenatlMain extends Component<Props> {
                   Alert.alert("You pressed calendar!");
                   break;
                 case 'Expenses':
-                  Alert.alert("You pressed expenses!");
+                  this.props.navigation.push('Expenses');
                   break;
                 default:
                   Alert.alert("This should not happen");

@@ -5,13 +5,6 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       marginTop: 20
     },
-    button: {
-        width: '30%',
-        paddingLeft: 30,
-        position: 'absolute',
-        bottom: 20,
-        right: 0
-    },
     text: {
         fontSize: 20,
         textAlign: 'center',

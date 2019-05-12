@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, View, Alert } from 'react-native';
-import { Button, ListItem } from 'react-native-elements'
+import { Text, ScrollView, View } from 'react-native';
+import { ListItem } from 'react-native-elements'
 import styles from './style/Expenses-Stylesheet';
 
 export default class Grocery extends Component {
@@ -77,7 +77,7 @@ export default class Grocery extends Component {
           },
           
       ],
-      listNicole: [
+      listJenny: [
         {
           amount: '$20.00',
           reason: 'WIFI May',
@@ -161,17 +161,17 @@ export default class Grocery extends Component {
             </View>
 
             <View style={{height:'100%', flexDirection: 'column', padding: 5}}>
-                <Text style={styles.text_name}> Nicole </Text>
+                <Text style={styles.text_name}> Jenny </Text>
                 <ScrollView style={styles.itemContainer}>
               {
-                this.state.listNicole.map((l, i) => (
+                this.state.listJenny.map((l, i) => (
                   <ListItem
                     containerStyle={l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}}
                     key={i}
                     onPress={() => { 
-                      let listNicole = [ ...this.state.listNicole];
-                      listNicole[i].paid = !listNicole[i].paid;
-                      this.setState( { listNicole } );
+                      let listJenny = [ ...this.state.listJenny];
+                      listJenny[i].paid = !listJenny[i].paid;
+                      this.setState( { listJenny } );
                     }}
                     title={
                       <Text style={styles.text}>
