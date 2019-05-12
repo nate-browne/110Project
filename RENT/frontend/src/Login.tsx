@@ -15,6 +15,7 @@ const server = axios.create({
   baseURL: serverURL
 });
 
+
 interface IAppProps {
   navigation?: any;
 }
@@ -23,6 +24,13 @@ interface IAppState {
 }
 
 export default class Login extends Component<IAppProps, IAppState> {
+  static navigationOptions = {
+    headerTransparent: true,
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  };
+  
   state = {
     loginVisible: false,
     signupVisible: false,
