@@ -18,6 +18,13 @@ const server = axios.create({
 
 type Props = {};
 export default class Login extends Component<Props> {
+  static navigationOptions = {
+    headerTransparent: true,
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  };
+
   state = {
     loginVisible: false,
     signupVisible: false,
