@@ -176,6 +176,10 @@ def addUser(user: Users) -> None:
     db.session.commit()
 
 
+def isValid(user: Users) -> Optional[Users]:
+    return Users.query.filter_by(email=user.email, password=user.password).first()
+
+
 def updatePassword(user: Users, password: str) -> None:
     user.password = password
     db.session.commit()
