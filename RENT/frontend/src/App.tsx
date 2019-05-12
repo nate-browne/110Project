@@ -9,8 +9,6 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import Login from "./Login";
 import ExamplePage from "./ExamplePage"
 
-
-
 const RootStack = createStackNavigator(
   {
     Login: Login,
@@ -20,9 +18,10 @@ const RootStack = createStackNavigator(
     initialRouteName: "Login"
   }
 );
+
 const AppContainer = createAppContainer(RootStack);
 
-export default class App extends React.Component {
+export default class App extends Component {
   render() {
       return <AppContainer />;
     }

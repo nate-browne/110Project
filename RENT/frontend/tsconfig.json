@@ -2,10 +2,6 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": { "*": ["types/*"] },
-    "baseUrl": ".",
-    "paths": { "*": ["types/*"] },
-    "baseUrl": ".",
-    "paths": { "*": ["types/*"] },
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
