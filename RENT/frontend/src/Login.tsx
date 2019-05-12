@@ -10,7 +10,7 @@ import { TextInput, Text, View, Alert, Image, ImageBackground } from 'react-nati
 import {Button, Overlay } from 'react-native-elements';
 import axios from 'axios';
 
-const serverURL = 'http:5000' // I think this is the default flask one
+const serverURL = 'http://100.81.37.46:5000' // I think this is the default flask one
 const server = axios.create({
   baseURL: serverURL
 });
