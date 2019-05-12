@@ -8,7 +8,6 @@ import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
 import { TextInput, Text, View, Alert, Image, ImageBackground } from 'react-native';
 import {Button, Overlay } from 'react-native-elements';
-//import sjcl from 'sjcl';
 import axios from 'axios';
 
 const serverURL = 'http://localhost:5000' // I think this is the default flask one
@@ -16,15 +15,22 @@ const server = axios.create({
   baseURL: serverURL
 });
 
-type Props = {};
-export default class Login extends Component<Props> {
+
+interface IAppProps {
+  navigation?: any;
+}
+
+interface IAppState {
+}
+
+export default class Login extends Component<IAppProps, IAppState> {
   static navigationOptions = {
     headerTransparent: true,
     headerTitleStyle: {
       fontWeight: 'bold',
     },
   };
-
+  
   state = {
     loginVisible: false,
     signupVisible: false,

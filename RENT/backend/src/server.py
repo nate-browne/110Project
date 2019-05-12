@@ -1,14 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import request, jsonify
+from passlib.hash import pbkdf2_sha256
 
+from config import app
 import database as db
-
-# Local database URL for everyone
-DB_URL = 'mysql://root@localhost/rent'
-
-app = Flask(__name__)
-app.secret_key = 'aabjeetGx2LaCC1a4opBUsc95a6KmbKX20hHIq8ie5r8FJx5S9fSTk2hYsz8\
-5BLfNxk9vjw'
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
+import mailer
 
 
 @app.route('/createuser', methods=['POST'])
@@ -16,16 +11,40 @@ def createuser():
     email = request.json['email']
     firstName = request.json['firstName']
     lastName = request.json['lastName']
-    password = request.json['password']
-    user = db.Users(email=email, first_name=firstName, last_name=lastName,
+    password = pbkdf2_sha256.hash(request.json['password'])
+    user = db.Users(email=email, firstName=firstName, lastName=lastName,
                     password=password)
 
     # check if user exists
     if db.isUser(user):
-        return {}, 404
+        return {}, 300
     else:
         # create user
         return {}, 201
+
+
+@app.route('/forgotpassword', methods=['POST'])
+def forgot_password():
+    user = db.getUserByEmail(request.json['email'])
+    if user is not None:
+        temp = mailer.send_mail(user.email)
+        change_password(user, temp)
+    else:
+        return {}, 300
+
+
+def change_password(user: db.Users, password: str):
+    db.updatePassword(user, pbkdf2_sha256.hash(password))
+
+
+@app.route('/resetpassword', methods=['POST'])
+def reset_password(email: str, password: str):
+    pass
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    pass
 
 
 @app.route('/login', methods=["POST"])
@@ -39,7 +58,7 @@ def login():
         rental = db.getRentalByRentalID(user.rental)
         return jsonify(rental), 200
     else:
-        return {}, 204
+        return {}, 300
 
 
 if __name__ == "__main__":

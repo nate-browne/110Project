@@ -42,7 +42,7 @@ keep it or yeet it).
 
 3. Flask, and SQLAlchemy. You can get these with `pip3 install flask` and `pip3 install flask_sqlalchemy`, respectively.
 
-4. Passlib. You can install this with `pip3 install passlib`.
+4. MySQLClient. You can get this with `pip3 install mysqlclient`
 
 5. An editor that supports Typescript. I recommend either [IntelliJ IDEA](https://www.jetbrains.com/idea/?fromMenu),
    [Visual Studio Code](https://code.visualstudio.com/), or [Atom](https://atom.io/). Make sure that for VSCode you install the relevant Typescript plugins, like "ESLint", "TSLint", and "vscode-icons". If you're using VSCode, it may also help to have

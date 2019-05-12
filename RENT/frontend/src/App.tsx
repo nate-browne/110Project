@@ -18,9 +18,10 @@ const RootStack = createStackNavigator(
     initialRouteName: "Login"
   }
 );
+
 const AppContainer = createAppContainer(RootStack);
 
-export default class App extends React.Component {
+export default class App extends Component {
   render() {
       return <AppContainer />;
     }
