@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import { UrlTile } from 'expo';
 
 const styles = StyleSheet.create({
   container: {

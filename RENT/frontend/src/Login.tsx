@@ -1,4 +1,4 @@
-/*
+  /*
   Name: Login.tsx
   Description: This file renders the login page and handles sign up and logging in
   of user.
@@ -208,6 +208,14 @@ export default class Login extends Component<IAppProps, IAppState> {
           onPress={() =>{
             this.setSignupVisible(true);
           }}
+        />
+      </View>
+
+      <View style={styles.button}>
+        <Button
+          raised={true}
+          title="Rental Main"
+          onPress={() => this.props.navigation.push('RentalMain')}
         />
       </View>
 
