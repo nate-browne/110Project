@@ -9,9 +9,11 @@
   "dependencies": {
     "@types/sjcl": "^1.0.28",
     "axios": "^0.18.0",
-    "expo": "^32.0.0",
+    "expo": "^32.0.6",
+    "expo-cli": "^2.17.1",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-dashboard": "^0.0.4",
     "react-native-elements": "^1.1.0",
     "react-navigation": "^3.9.1",
     "sjcl": "^1.0.8"
