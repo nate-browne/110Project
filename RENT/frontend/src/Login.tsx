@@ -10,7 +10,8 @@ import { TextInput, Text, View, Alert, Image, ImageBackground } from 'react-nati
 import {Button, Overlay } from 'react-native-elements';
 import axios from 'axios';
 
-const serverURL = 'http://localhost:5000' // I think this is the default flask one
+// change the ip address below to be the one for your computer
+const serverURL = 'http://100.81.38.211:5000' // I think this is the default flask one
 const server = axios.create({
   baseURL: serverURL
 });
@@ -68,7 +69,7 @@ export default class Login extends Component<IAppProps, IAppState> {
               <TextInput
                 style={styles.textinput}
                 placeholder="something@something.something"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text: string) => this.setState({email: text})}
               />
             </View>
 
@@ -76,7 +77,7 @@ export default class Login extends Component<IAppProps, IAppState> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Password"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text: string) => this.setState({password: text})}
               />
             </View>
 
@@ -104,7 +105,7 @@ export default class Login extends Component<IAppProps, IAppState> {
               <TextInput
                 style={styles.textinput}
                 placeholder="First Name"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text) => this.setState({firstName: text})}
               />
             </View>
 
@@ -112,7 +113,7 @@ export default class Login extends Component<IAppProps, IAppState> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Last Name"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text) => this.setState({lastName: text})}
               />
             </View>
 
@@ -120,7 +121,7 @@ export default class Login extends Component<IAppProps, IAppState> {
               <TextInput
                 style={styles.textinput}
                 placeholder="something@something.something"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text) => this.setState({email: text})}
               />
             </View>
 
@@ -128,7 +129,7 @@ export default class Login extends Component<IAppProps, IAppState> {
               <TextInput
                 style={styles.textinput}
                 placeholder="Password"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text) => this.setState({password: text})}
               />
             </View>
 
@@ -138,7 +139,22 @@ export default class Login extends Component<IAppProps, IAppState> {
                 title="Done"
                 onPress={() => {
                   server.post('/createuser', {
+                    email: this.state.email,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    password: this.state.password
+                  }).then(resp => {
+                    if(resp.status === 201) {
+                      {this.props.navigation.navigate('Example')}
+                      console.log("Account created");
+                    } else {
+                      Alert.alert('Account Exists', "We found an account with that email. Please sign in");
+                      console.log("Exists");
+                    }
+                  }).catch(err => {
+                    {this.props.navigation.navigate('Login')}
                   });
+                  this.setSignupVisible(false);
                 }}
                 //add navigate to home page if success
               />

@@ -14,7 +14,8 @@ class Users(db.Model):
     firstName = db.Column(db.String(255), nullable=False)
     lastName = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
+    rental1 = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
+    rental2 = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
 
     def __repr__(self) -> str:
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
