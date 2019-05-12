@@ -3,8 +3,11 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
     itemContainer: {
       borderRadius: 5,
-      marginTop: 20
     },
+    legendContainer: {
+        marginTop: 20,
+        borderRadius: 5,
+      },
     text: {
         fontSize: 20,
         textAlign: 'center',
@@ -17,7 +20,13 @@ const styles = StyleSheet.create({
     text_name: {
         fontSize: 30,
         textAlign: 'center',
-        paddingTop: 15
+    },
+    text_legend: {
+        fontSize: 20,
+        textAlign: 'left',
+    },
+    button: {
+        marginTop: 15
     },
   });
 

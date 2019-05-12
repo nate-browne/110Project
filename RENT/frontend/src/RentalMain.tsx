@@ -27,7 +27,7 @@ export default class RenatlMain extends Component<Props> {
             <TouchableHighlight onPress={()=> {
               switch(item.name){
                 case 'Contact Info':
-                  Alert.alert("You pressed personal info!");
+                  this.props.navigation.push('ContactInfo');
                   break;
                 case 'Leasing Info':
                   Alert.alert("You pressed leasing info!");
@@ -45,7 +45,7 @@ export default class RenatlMain extends Component<Props> {
                   Alert.alert("You pressed calendar!");
                   break;
                 case 'Expenses':
-                  this.props.navigation.push('Expenses');
+                  this.props.navigation.push('ExpensesHome');
                   break;
                 default:
                   Alert.alert("This should not happen");

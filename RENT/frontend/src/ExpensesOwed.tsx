@@ -1,112 +1,132 @@
 import React, { Component } from 'react';
 import { Text, ScrollView, View } from 'react-native';
-import { ListItem } from 'react-native-elements'
+import { Button, ListItem } from 'react-native-elements'
 import styles from './style/Expenses-Stylesheet';
 
-export default class Grocery extends Component {
+export default class ExpensesOwed extends Component {
   state = {
+    list: [
+      {
+        name: 'Unpaid',
+        subtitle: 'Only 1 roll left!!!',
+        color: '#ff4444',
+        done: false
+      },
+      {
+        name: 'Payment Sent',
+        subtitle: 'Need 7 for pie recipe',
+        color: 'green',
+        done: false
+      },
+      {
+        name: 'Payment Received',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Need 7 for pie recipe',
+        color: '#55ff55',
+        done: false
+      },
+    ],
     // TODO: this list is actually stored in backend - it's only here for viewing purposes (limit reason to some number of characters)
-    listMaria: [
-        {
-          amount: '$20.00',
-          reason: 'WIFI May',
+listMaria: [
+    {
+      amount: '$20.00',
+      reason: 'WIFI May',
+      date: '05/11/19',
+      paid: false
+    },
+    {
+        amount: '$50.00',
+        reason: 'Water May',
+        date: '05/11/19',
+        paid: false
+      },
+  ],
+  listJames: [
+    {
+      amount: '$90.00',
+      reason: 'Electricity May',
+      date: '05/11/19',
+      paid: false
+    },
+    {
+        amount: '$5.00',
+        reason: 'Paper Towels',
+        date: '05/11/19',
+        paid: false
+    },
+    {
+        amount: '$75.00',
+        reason: 'SDGE May',
+        date: '05/11/19',
+        paid: false
+    },
+    {
+        amount: '$90.00',
+        reason: 'Electricity May',
+        date: '05/11/19',
+        paid: false
+      },
+      {
+          amount: '$5.00',
+          reason: 'Paper Towels',
           date: '05/11/19',
           paid: false
-        },
-        {
-            amount: '$50.00',
-            reason: 'Water May',
-            date: '05/11/19',
-            paid: false
-          },
-      ],
-      listJames: [
-        {
-          amount: '$90.00',
-          reason: 'Electricity May',
+      },
+      {
+          amount: '$75.00',
+          reason: 'SDGE May',
           date: '05/11/19',
           paid: false
-        },
-        {
-            amount: '$5.00',
-            reason: 'Paper Towels',
-            date: '05/11/19',
-            paid: false
-        },
-        {
-            amount: '$75.00',
-            reason: 'SDGE May',
-            date: '05/11/19',
-            paid: false
-        },
-        {
-            amount: '$90.00',
-            reason: 'Electricity May',
-            date: '05/11/19',
-            paid: false
-          },
-          {
-              amount: '$5.00',
-              reason: 'Paper Towels',
-              date: '05/11/19',
-              paid: false
-          },
-          {
-              amount: '$75.00',
-              reason: 'SDGE May',
-              date: '05/11/19',
-              paid: false
-          },
-          {
-            amount: '$90.00',
-            reason: 'Electricity May',
-            date: '05/11/19',
-            paid: false
-          },
-          {
-              amount: '$5.00',
-              reason: 'Paper Towels',
-              date: '05/11/19',
-              paid: false
-          },
-          {
-              amount: '$75.00',
-              reason: 'SDGE May',
-              date: '05/11/19',
-              paid: false
-          },
-          
-      ],
-      listJenny: [
-        {
-          amount: '$20.00',
-          reason: 'WIFI May',
+      },
+      {
+        amount: '$90.00',
+        reason: 'Electricity May',
+        date: '05/11/19',
+        paid: false
+      },
+      {
+          amount: '$5.00',
+          reason: 'Paper Towels',
           date: '05/11/19',
           paid: false
-        },
-        {
-            amount: '$50.00',
-            reason: 'Water May',
-            date: '05/11/19',
-            paid: false
-        },
-        {
-            amount: '$50.00',
-            reason: 'Water May',
-            date: '05/11/19',
-            paid: false
-        },
-      ],
-      listBonnie: [
-        {
-          amount: '$20.00',
-          reason: 'WIFI May',
+      },
+      {
+          amount: '$75.00',
+          reason: 'SDGE May',
           date: '05/11/19',
           paid: false
-        },
-      ],
-  };
-
+      },
+      
+  ],
+  listJenny: [
+    {
+      amount: '$20.00',
+      reason: 'WIFI May',
+      date: '05/11/19',
+      paid: false
+    },
+    {
+        amount: '$50.00',
+        reason: 'Water May',
+        date: '05/11/19',
+        paid: false
+    },
+    {
+        amount: '$50.00',
+        reason: 'Water May',
+        date: '05/11/19',
+        paid: false
+    },
+  ],
+  listBonnie: [
+    {
+      amount: '$20.00',
+      reason: 'WIFI May',
+      date: '05/11/19',
+      paid: false
+    },
+  ],
+};
     render() {
           return (
             <ScrollView horizontal={true} style= {{width: '100%', height:'100%', flexDirection: 'row'}}>
@@ -209,6 +229,25 @@ export default class Grocery extends Component {
                 </ScrollView>
                 <Text style= {styles.text_total}> Total: $20 </Text>
               </View>
+
+              <ScrollView style={styles.legendContainer}>
+                    <Text style= {styles.text_name}> Legend </Text>
+                    <View> 
+                    {
+                    this.state.list.map((l, i) => (
+                    <ListItem
+                        badge={{ badgeStyle: {backgroundColor: l.color, width: 30, height: 30} }}
+                        key={i}
+                        title={
+                        <Text style={styles.text_legend}>
+                            {l.name}
+                        </Text>
+                        }
+                    />
+                    ))
+                    }
+                    </View>
+                </ScrollView>
             
         </ScrollView>
           )
