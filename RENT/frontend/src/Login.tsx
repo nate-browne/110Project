@@ -44,19 +44,10 @@ export default class Login extends Component<Props> {
   render() {
     return (
     <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
-<<<<<<< HEAD
-      <Modal
-        animationType="fade"
-        visible={this.state.loginVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}
-=======
       <Overlay
         windowBackgroundColor="rgba(255, 255, 255, .5)"
         isVisible={this.state.loginVisible}
         onBackdropPress={() => this.setState({ isVisible: false })}
->>>>>>> 1a38aa53c76253fdfeedd4e00a0b7b78456fc93b
         >
         <View style={styles.container}>
             <Text style={{fontSize: 48}}>Login Here</Text>
@@ -89,19 +80,10 @@ export default class Login extends Component<Props> {
         </View>
       </Overlay>
 
-<<<<<<< HEAD
-      <Modal
-        animationType="fade"
-        visible={this.state.signupVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}
-=======
       <Overlay
         windowBackgroundColor="rgba(255, 255, 255, .5)"
         isVisible={this.state.signupVisible}
         onBackdropPress={() => this.setState({ isVisible: false })}
->>>>>>> 1a38aa53c76253fdfeedd4e00a0b7b78456fc93b
         >
         <View style={styles.container}>
             <Text style={{fontSize: 48}}>Signup Here</Text>
