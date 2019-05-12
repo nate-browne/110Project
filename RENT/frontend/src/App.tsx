@@ -9,6 +9,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import Login from "./Login";
 import ExamplePage from "./ExamplePage";
 import RentalMain from "./RentalMain";
+import Grocery from "./Grocery";
 
 
 
@@ -17,10 +18,11 @@ const RootStack = createStackNavigator(
     Login: Login,
     Example: ExamplePage,
     RentalMain: RentalMain,
+    Grocery: Grocery,
 
   },
   {
-    initialRouteName: "Login",
+    initialRouteName: "RentalMain",
   }
 );
 const AppContainer = createAppContainer(RootStack);

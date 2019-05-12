@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Vibration, Alert, View, Text, TouchableHighlight } from 'react-native';
+import { Alert, View, Text, TouchableHighlight } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 import { Icon } from 'react-native-elements';
 import styles from './style/RentalMain-Stylesheet';
 
-export default class Example extends Component {
+type Props = {};
+export default class RenatlMain extends Component<Props> {
   render() {
     const items = [
       { name: 'Contact Info', code: '#1abc9c', icon:'face' }, 
@@ -27,31 +28,30 @@ export default class Example extends Component {
         renderItem={({ item, index }) => (
           //<View style={[styles.itemContainer, { backgroundColor: item.code }]}>
             <TouchableHighlight onPress={()=> {
-              Vibration.vibrate(30)
               switch(item.name){
                 case 'Contact Info':
-                  Alert.alert("You pressed personal info!")
+                  Alert.alert("You pressed personal info!");
                   break;
                 case 'Leasing Info':
-                  Alert.alert("You pressed leasing info!")
+                  Alert.alert("You pressed leasing info!");
                   break;
                 case 'Grocery List':
-                  Alert.alert("You pressed grocery list!")
+                  this.props.navigation.push('Grocery');
                   break;
                 case 'Roommates':
-                  Alert.alert("You pressed roommates!")
+                  Alert.alert("You pressed roommates!");
                   break;
                 case 'Bulletin Board':
-                  Alert.alert("You pressed bulletin board!")
+                  Alert.alert("You pressed bulletin board!");
                   break;
                 case 'Calendar':
-                  Alert.alert("You pressed calendar!")
+                  Alert.alert("You pressed calendar!");
                   break;
                 case 'Expenses':
-                  Alert.alert("You pressed expenses!")
+                  Alert.alert("You pressed expenses!");
                   break;
                 default:
-                  Alert.alert("This should not happen")
+                  Alert.alert("This should not happen");
               }
             }} 
             activeOpacity= {0.5} style={[styles.itemContainer, { backgroundColor: item.code }]}>
