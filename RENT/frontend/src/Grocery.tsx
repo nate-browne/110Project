@@ -4,9 +4,7 @@ import { Button, ListItem } from 'react-native-elements'
 import styles from './style/Grocery-Stylesheet';
 
 export default class Grocery extends Component {
-
   state = {
-    hello: false,
     // this list is actually stored in backend - it's only here for viewing purposes
     list: [
       {
@@ -41,12 +39,32 @@ export default class Grocery extends Component {
       },
       {
         name: 'Soy milk',
-        subtitle: 'I think Ralphs is having a promotion',
+        subtitle: 'I think Ralph\'s is having a promotion',
         done: false
       },
       {
         name: 'Whipped cream',
         subtitle: 'This is happiness',
+        done: false
+      },
+      {
+        name: 'Ice cream',
+        subtitle: 'Topping for apple pie',
+        done: true
+      },
+      {
+        name: 'Balloons',
+        subtitle: 'For Surprise Party',
+        done: true
+      },
+      {
+        name: 'Cups',
+        subtitle: 'Also for party',
+        done: false
+      },
+      {
+        name: 'Eggs',
+        subtitle: '2 dozen please',
         done: false
       },
     ]
