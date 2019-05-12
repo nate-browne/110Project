@@ -11,6 +11,18 @@ interface IAppProps {
 interface IAppState {
 }
 export default class RentalMain extends Component<IAppProps, IAppState> {
+  static navigationOptions = ({ navigation }) => {
+      return {
+        title: "Welcome back " + navigation.getParam('userName', '') + "!",
+        headerStyle: {
+          backgroundColor: '#89cff0',
+        },
+        headerBackTitle: "Home Page",
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      };
+    };
   render() {
     const items = [
       { name: 'Contact Info', code: '#1abc9c', icon:'face' },
