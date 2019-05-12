@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { Alert, View, Text, TouchableHighlight } from 'react-native';
-import { FlatGrid } from 'react-native-super-grid';
+import  FlatGrid from 'react-native-super-grid';
 import { Icon } from 'react-native-elements';
 import styles from './style/RentalMain-Stylesheet';
 
-type Props = {};
-export default class RenatlMain extends Component<Props> {
+interface IAppProps {
+  navigation?: any;
+}
+
+interface IAppState {
+}
+export default class RentalMain extends Component<IAppProps, IAppState> {
   render() {
     const items = [
-      { name: 'Contact Info', code: '#1abc9c', icon:'face' }, 
+      { name: 'Contact Info', code: '#1abc9c', icon:'face' },
       { name: 'Leasing Info', code: '#2ecc71', icon:'info' },
-      { name: 'Grocery List', code: '#3498db', icon:'assignment' }, 
+      { name: 'Grocery List', code: '#3498db', icon:'assignment' },
       { name: 'Roommates', code: '#9b59b6', icon:'group' },
-      { name: 'Bulletin Board', code: '#34495e', icon:'mode-edit' }, 
+      { name: 'Bulletin Board', code: '#34495e', icon:'mode-edit' },
       { name: 'Calendar', code: '#16a085', icon:'insert-invitation' },
       { name: 'Expenses', code: '#16a085', icon:'attach-money' },
     ];
@@ -50,12 +55,12 @@ export default class RenatlMain extends Component<Props> {
                 default:
                   Alert.alert("This should not happen");
               }
-            }} 
+            }}
             activeOpacity= {0.5} style={[styles.itemContainer, { backgroundColor: item.code }]}>
               <View>
                 <Icon name={item.icon} color='white' size={49}/>
-                <Text style={styles.itemName}>{item.name}</Text> 
-              </View> 
+                <Text style={styles.itemName}>{item.name}</Text>
+              </View>
             </TouchableHighlight>
           //</View>
         )}

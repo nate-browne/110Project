@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-elements'
+interface IAppProps {
+  navigation?: any;
+}
 
-export default class ExpensesOwed extends Component {
+interface IAppState {
+}
+export default class ExpensesOwed extends Component<IAppProps, IAppState> {
     render() {
           return (
                 <View>
