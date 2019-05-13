@@ -92,27 +92,22 @@ export default class Login extends Component<IAppProps, IAppState> {
           onBackdropPress={() => this.setState({ isVisible: false })}
           >
           <View style={styles.container}>
-              <Text style={{fontSize: 48}}>Login Here</Text>
+              <Text style={{fontSize: 48}}>Login</Text>
 
-              <View style={styles.textbox}>
-                <Input
+              <Input
                   inputContainerStyle={styles.textinput}
-                  placeholder="something@something.something"
+                  placeholder="Email"
                   leftIcon={{type: 'font-awesome', name: 'envelope'}}
                   onChangeText={(text: string) => this.setState({email: text})}
                 />
-              </View>
 
-              <View style={styles.textbox}>
-                <Input
+              <Input
                   inputContainerStyle={styles.textinput}
                   secureTextEntry={true}
                   placeholder="Password"
                   leftIcon={{type: 'font-awesome', name: 'lock'}}
                   onChangeText={(text: string) => this.setState({password: text})}
-                />
-              </View>
-
+              />
               <View style={styles.button}>
                 <Button
                   raised={true}
@@ -153,44 +148,39 @@ export default class Login extends Component<IAppProps, IAppState> {
           onBackdropPress={() => this.setState({ isVisible: false })}
           >
           <View style={styles.container}>
-              <Text style={{fontSize: 48}}>Signup Here</Text>
+              <Text style={{fontSize: 48}}>Signup</Text>
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="First Name"
-                  leftIcon={{type: 'font-awesome', name: 'user'}}
-                  onChangeText={(text) => this.setState({firstName: text})}
-                />
-              </View>
+              <Input
+                inputContainerStyle={styles.textinput}
+                placeholder="First Name"
+                leftIcon={{type: 'font-awesome', name: 'user'}}
+                onChangeText={(text) => this.setState({firstName: text})}
+              />
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="Last Name"
-                  leftIcon={{type: 'font-awesome', name: 'user'}}
-                  onChangeText={(text) => this.setState({lastName: text})}
-                />
-              </View>
+              <Input
+                inputContainerStyle={styles.textinput}
+                placeholder="Last Name"
+                leftIcon={{type: 'font-awesome', name: 'user'}}
+                onChangeText={(text) => this.setState({lastName: text})}
+              />
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="something@something.something"
-                  leftIcon={{type: 'font-awesome', name: 'envelope'}}
-                  onChangeText={(text) => this.setState({email: text})}
-                />
-              </View>
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="Password"
-                  secureTextEntry={true}
-                  leftIcon={{type: 'font-awesome', name: 'lock'}}
-                  onChangeText={(text) => this.setState({password: text})}
-                />
-              </View>
+              <Input
+                inputContainerStyle={styles.textinput}
+                placeholder="Email"
+                leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                onChangeText={(text) => this.setState({email: text})}
+              />
+
+
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                placeholder="Password"
+                secureTextEntry={true}
+                leftIcon={{type: 'font-awesome', name: 'lock'}}
+                onChangeText={(text) => this.setState({password: text})}
+              />
 
               <View style={styles.button}>
                 <Button
