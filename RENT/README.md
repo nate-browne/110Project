@@ -40,9 +40,10 @@ keep it or yeet it).
 
 2. `python3`. This will also install `pip3` for you. Installation is available through `brew` I think.
 
-3. Flask, and SQLAlchemy. You can get these with `pip3 install flask` and `pip3 install flask_sqlalchemy`, respectively.
+3. Flask, SQLAlchemy, and MYSQLClient. You can get these with `pip3 install flask`, `pip3 install flask_sqlalchemy`, and
+   `pip3 install mysqlclient`, respectively.
 
-4. MySQLClient. You can get this with `pip3 install mysqlclient`
+4. MySQLClient and passlib (for now). You can get this with `pip3 install mysqlclient` and `pip3 install passlib`
 
 5. An editor that supports Typescript. I recommend either [IntelliJ IDEA](https://www.jetbrains.com/idea/?fromMenu),
    [Visual Studio Code](https://code.visualstudio.com/), or [Atom](https://atom.io/). Make sure that for VSCode you install the relevant Typescript plugins, like "ESLint", "TSLint", and "vscode-icons". If you're using VSCode, it may also help to have
@@ -57,16 +58,42 @@ keep it or yeet it).
    $ mysql.server stop
    ```
 
+Next, you'll need to `cd RENT/backend/src` and create a file called `config.py`. Make sure that it has the following:
+
+
+```python
+from flask import Flask
+
+# Local database URL for everyone
+DB_URL = 'mysql://root@localhost/rent'
+
+app = Flask(__name__)
+app.secret_key = 'aabjeetGx2LaCC1a4opBUsc95a6KmbKX20hHIq8ie5r8FJx5S9fSTk2hYsz8\
+5BLfNxk9vjw'
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
+app.config['SQLALCHEMY_TRACK_MODIFACTIONS'] = False
+```
+
+
+Change the  `DB_URL` to match the one for your particular database. Chances are, it's the same as mine, but if you have a password
+then you'll have to change it. In `frontend`, be sure to create a file called `url.js` and put the following in it:
+
+
+```javascript
+/** @type {Object.<string, string>} */
+var configInfo = {
+  'serverURL': "<your PRIVATE IP address>:5000"
+};
+
+module.exports = configInfo
+```
+
 ### Steps to Install and Run
 
-*Note: These steps will be updated when we add in info about the backend.*
+1. Start up the database by typing `mysql.server start`. This will run a `mariadb` instance.
 
-1. `cd` into the `frontend` directory.
+2. Almost done! Now, start up the python process. `cd` into the backend directory, then type `python3 server.py`. Leave this running.
 
-2. Next up, start up the database by typing `mysql.server start`. This will run a `mariadb` instance.
+3. `cd` into the `frontend` directory.
 
-3. Almost done! Now, start up the python process. `cd` into the backend directory, then type `python3 server.py`. Leave this running.
-
-4. `cd` back into frontend, then run `expo start`. Download the "Expo" app onto your phone, then scan the QR code. Das it. No more emulators!
-
-
+4. Run `expo start`. Download the "Expo" app onto your phone, then scan the QR code. Das it. No more emulators!
