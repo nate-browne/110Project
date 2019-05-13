@@ -6,11 +6,13 @@
 
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { TextInput, Text, View, Alert, Image, ImageBackground } from 'react-native';
-import {Button, Overlay } from 'react-native-elements';
+import { Text, View, Alert, Image, ImageBackground } from 'react-native';
+import {Button, Overlay, Input} from 'react-native-elements';
 import axios from 'axios';
+// @ts-ignore
+import configInfo from './url';
 
-const serverURL = 'http://192.168.1.102:5000'
+const serverURL = configInfo['serverURL'];
 const server = axios.create({
   baseURL: serverURL
 });
@@ -93,18 +95,20 @@ export default class Login extends Component<IAppProps, IAppState> {
               <Text style={{fontSize: 48}}>Login Here</Text>
 
               <View style={styles.textbox}>
-                <TextInput
-                  style={styles.textinput}
+                <Input
+                  inputContainerStyle={styles.textinput}
                   placeholder="something@something.something"
+                  leftIcon={{type: 'font-awesome', name: 'envelope'}}
                   onChangeText={(text: string) => this.setState({email: text})}
                 />
               </View>
 
               <View style={styles.textbox}>
-                <TextInput
-                  style={styles.textinput}
+                <Input
+                  inputContainerStyle={styles.textinput}
                   secureTextEntry={true}
                   placeholder="Password"
+                  leftIcon={{type: 'font-awesome', name: 'lock'}}
                   onChangeText={(text: string) => this.setState({password: text})}
                 />
               </View>
@@ -118,11 +122,12 @@ export default class Login extends Component<IAppProps, IAppState> {
                       email: this.state.email,
                       password: this.state.password
                     })
-                    .then (resp => {
+                    .then(resp => {
                       //login successful
                       if(resp.status === 200) {
                         this.props.navigation.navigate('RentalMain',{
-                          userName: this.state.firstName
+                          userName: this.state.firstName,
+                          loggedIn: resp.data.loggedIn
                         })
                         console.log("Login Successful");
                         this.setLoginVisible(false);
@@ -133,8 +138,8 @@ export default class Login extends Component<IAppProps, IAppState> {
                         console.log("Login Failed");
                       }
                     })
-                    .catch (err => {
-
+                    .catch(err => {
+                      console.log('Error occurred',err);
                     })
                   }}
                 />
@@ -151,34 +156,38 @@ export default class Login extends Component<IAppProps, IAppState> {
               <Text style={{fontSize: 48}}>Signup Here</Text>
 
               <View style={styles.textbox}>
-                <TextInput
-                  style={styles.textinput}
+                <Input
+                  inputContainerStyle={styles.textinput}
                   placeholder="First Name"
+                  leftIcon={{type: 'font-awesome', name: 'user'}}
                   onChangeText={(text) => this.setState({firstName: text})}
                 />
               </View>
 
               <View style={styles.textbox}>
-                <TextInput
-                  style={styles.textinput}
+                <Input
+                  inputContainerStyle={styles.textinput}
                   placeholder="Last Name"
+                  leftIcon={{type: 'font-awesome', name: 'user'}}
                   onChangeText={(text) => this.setState({lastName: text})}
                 />
               </View>
 
               <View style={styles.textbox}>
-                <TextInput
-                  style={styles.textinput}
+                <Input
+                  inputContainerStyle={styles.textinput}
                   placeholder="something@something.something"
+                  leftIcon={{type: 'font-awesome', name: 'envelope'}}
                   onChangeText={(text) => this.setState({email: text})}
                 />
               </View>
 
               <View style={styles.textbox}>
-                <TextInput
-                  style={styles.textinput}
+                <Input
+                  inputContainerStyle={styles.textinput}
                   placeholder="Password"
                   secureTextEntry={true}
+                  leftIcon={{type: 'font-awesome', name: 'lock'}}
                   onChangeText={(text) => this.setState({password: text})}
                 />
               </View>
@@ -193,20 +202,21 @@ export default class Login extends Component<IAppProps, IAppState> {
                       firstName: this.state.firstName,
                       lastName: this.state.lastName,
                       password: this.state.password
-
                     }).then(resp => {
                       if(resp.status === 201) {
                         this.props.navigation.navigate('RentalMain',{
-                          userName: this.state.firstName
+                          userName: this.state.firstName,
+                          loggedIn: true
                         })
                         console.log("Account created");
                         this.setSignupVisible(false);
                       } else {
                         Alert.alert('Account Exists', "We found an account with that email. Please sign in");
+                        this.props.navigation.navigate('Login')
                         console.log("Exists");
                       }
                     }).catch(err => {
-                      this.props.navigation.navigate('Login')
+                      console.log('Error occurred',err);
                     });
                   }}
                 />

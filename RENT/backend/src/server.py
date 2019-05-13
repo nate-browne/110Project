@@ -15,11 +15,11 @@ def createuser():
     user = db.Users(email=email, firstName=firstName, lastName=lastName,
                     password=password)
 
-    # check if user exists
+    # check if user exists and redirect them if they do
     if db.isUser(user):
         return jsonify({}), 300
     else:
-        # create user
+        # create user in the DB and return success
         db.addUser(user)
         return jsonify({}), 201
 
@@ -27,7 +27,7 @@ def createuser():
 @app.route('/forgotpassword', methods=['POST'])
 def forgot_password():
     user = db.getUserByEmail(request.json['email'])
-    if db.isUser(user):
+    if user is not None:
         temp = mailer.send_mail(user.email)
         change_password(user, temp)
     else:
@@ -55,12 +55,10 @@ def login():
 
     user = db.getUserByLogin([email, password])
 
-    if db.isUser(user):
-        rental = db.getRentalByRentalID(user.rental)
-        return jsonify(rental), 200
+    if user is not None:
+        return jsonify({'loggedIn': True}), 200
     else:
-        return jsonify({}), 300
-
+        return jsonify({}), 404
 
 
 if __name__ == "__main__":
