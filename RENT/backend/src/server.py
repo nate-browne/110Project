@@ -53,10 +53,10 @@ def login():
     email = request.json['email']
     password = request.json['password']
 
-    user = db.getUserByLogin([email, password])
+    user = db.getUserByEmail(email)
 
-    if user is not None:
-        return jsonify({'loggedIn': True}), 200
+    if user is not None and pbkdf2_sha256.verify(password, user.password):
+        return jsonify({'loggedIn': True, 'firstName': user.firstName}), 200
     else:
         return jsonify({}), 404
 

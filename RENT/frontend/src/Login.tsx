@@ -7,7 +7,7 @@
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
 import { Text, View, Alert, Image, ImageBackground } from 'react-native';
-import {Button, Overlay, Input} from 'react-native-elements';
+import {Button, Overlay, Input, Icon} from 'react-native-elements';
 import axios from 'axios';
 // @ts-ignore
 import configInfo from './url';
@@ -89,30 +89,38 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Overlay
           windowBackgroundColor="rgba(255, 255, 255, .5)"
           isVisible={this.state.loginVisible}
-          onBackdropPress={() => this.setState({ isVisible: false })}
+          onBackdropPress={() => this.setState({ loginVisible: false })}
           >
           <View style={styles.container}>
-              <Text style={{fontSize: 48}}>Login Here</Text>
+              <Text style={{fontSize: 48}}>Login</Text>
 
-              <View style={styles.textbox}>
-                <Input
+              <Input
                   inputContainerStyle={styles.textinput}
-                  placeholder="something@something.something"
-                  leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                  placeholder="Email"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  leftIcon={
+                    <Icon name="email-outline" type="material-community" color="black" size={25} />
+                  }
                   onChangeText={(text: string) => this.setState({email: text})}
                 />
-              </View>
 
-              <View style={styles.textbox}>
-                <Input
+              <Input
                   inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   secureTextEntry={true}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  returnKeyType="done"
                   placeholder="Password"
-                  leftIcon={{type: 'font-awesome', name: 'lock'}}
+                  leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
                   onChangeText={(text: string) => this.setState({password: text})}
-                />
-              </View>
-
+              />
               <View style={styles.button}>
                 <Button
                   raised={true}
@@ -121,12 +129,11 @@ export default class Login extends Component<IAppProps, IAppState> {
                     server.post('/login', {
                       email: this.state.email,
                       password: this.state.password
-                    })
-                    .then(resp => {
+                    }).then(resp => {
                       //login successful
                       if(resp.status === 200) {
                         this.props.navigation.navigate('RentalMain',{
-                          userName: this.state.firstName,
+                          userName: resp.data.firstName,
                           loggedIn: resp.data.loggedIn
                         })
                         console.log("Login Successful");
@@ -150,47 +157,79 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Overlay
           windowBackgroundColor="rgba(255, 255, 255, .5)"
           isVisible={this.state.signupVisible}
-          onBackdropPress={() => this.setState({ isVisible: false })}
+          onBackdropPress={() => this.setState({ signupVisible: false })}
           >
           <View style={styles.container}>
-              <Text style={{fontSize: 48}}>Signup Here</Text>
+              <Text style={{fontSize: 48}}>Signup</Text>
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="First Name"
-                  leftIcon={{type: 'font-awesome', name: 'user'}}
-                  onChangeText={(text) => this.setState({firstName: text})}
-                />
-              </View>
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="First Name"
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
+                onChangeText={(text) => this.setState({firstName: text})}
+              />
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="Last Name"
-                  leftIcon={{type: 'font-awesome', name: 'user'}}
-                  onChangeText={(text) => this.setState({lastName: text})}
-                />
-              </View>
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Last Name"
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
+                onChangeText={(text) => this.setState({lastName: text})}
+              />
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="something@something.something"
-                  leftIcon={{type: 'font-awesome', name: 'envelope'}}
-                  onChangeText={(text) => this.setState({email: text})}
-                />
-              </View>
 
-              <View style={styles.textbox}>
-                <Input
-                  inputContainerStyle={styles.textinput}
-                  placeholder="Password"
-                  secureTextEntry={true}
-                  leftIcon={{type: 'font-awesome', name: 'lock'}}
-                  onChangeText={(text) => this.setState({password: text})}
-                />
-              </View>
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Email"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                keyboardType="email-address"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon name="email-outline" type="material-community" color="black" size={25} />
+                }
+                onChangeText={(text) => this.setState({email: text})}
+              />
+
+
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="done"
+                secureTextEntry={true}
+                leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                onChangeText={(text) => this.setState({password: text})}
+              />
 
               <View style={styles.button}>
                 <Button

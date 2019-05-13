@@ -156,12 +156,6 @@ def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
     return Rental.query.filter_by(id=rentalID).first()
 
 
-def getUserByLogin(user: List[str]) -> Optional[Users]:
-    '''Returns the matching user from the DB given the email and password, or
-    "None" if they do not exist'''
-    return Users.query.filter_by(email=user[0], password=user[1]).first()
-
-
 def getUserByEmail(email: str) -> Optional[Users]:
     return Users.query.filter_by(email=email).first()
 
