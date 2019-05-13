@@ -7,7 +7,7 @@
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
 import { Text, View, Alert, Image, ImageBackground } from 'react-native';
-import {Button, Overlay, Input} from 'react-native-elements';
+import {Button, Overlay, Input, Icon} from 'react-native-elements';
 import axios from 'axios';
 // @ts-ignore
 import configInfo from './url';
@@ -89,23 +89,36 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Overlay
           windowBackgroundColor="rgba(255, 255, 255, .5)"
           isVisible={this.state.loginVisible}
-          onBackdropPress={() => this.setState({ isVisible: false })}
+          onBackdropPress={() => this.setState({ loginVisible: false })}
           >
           <View style={styles.container}>
               <Text style={{fontSize: 48}}>Login</Text>
 
               <Input
                   inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   placeholder="Email"
-                  leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  leftIcon={
+                    <Icon name="email-outline" type="material-community" color="black" size={25} />
+                  }
                   onChangeText={(text: string) => this.setState({email: text})}
                 />
 
               <Input
                   inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   secureTextEntry={true}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  returnKeyType="done"
                   placeholder="Password"
-                  leftIcon={{type: 'font-awesome', name: 'lock'}}
+                  leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
                   onChangeText={(text: string) => this.setState({password: text})}
               />
               <View style={styles.button}>
@@ -116,12 +129,11 @@ export default class Login extends Component<IAppProps, IAppState> {
                     server.post('/login', {
                       email: this.state.email,
                       password: this.state.password
-                    })
-                    .then(resp => {
+                    }).then(resp => {
                       //login successful
                       if(resp.status === 200) {
                         this.props.navigation.navigate('RentalMain',{
-                          userName: this.state.firstName,
+                          userName: resp.data.firstName,
                           loggedIn: resp.data.loggedIn
                         })
                         console.log("Login Successful");
@@ -145,30 +157,62 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Overlay
           windowBackgroundColor="rgba(255, 255, 255, .5)"
           isVisible={this.state.signupVisible}
-          onBackdropPress={() => this.setState({ isVisible: false })}
+          onBackdropPress={() => this.setState({ signupVisible: false })}
           >
           <View style={styles.container}>
               <Text style={{fontSize: 48}}>Signup</Text>
 
               <Input
                 inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                 placeholder="First Name"
-                leftIcon={{type: 'font-awesome', name: 'user'}}
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
                 onChangeText={(text) => this.setState({firstName: text})}
               />
 
               <Input
                 inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                 placeholder="Last Name"
-                leftIcon={{type: 'font-awesome', name: 'user'}}
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
                 onChangeText={(text) => this.setState({lastName: text})}
               />
 
 
               <Input
                 inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                 placeholder="Email"
-                leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                keyboardType="email-address"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon name="email-outline" type="material-community" color="black" size={25} />
+                }
                 onChangeText={(text) => this.setState({email: text})}
               />
 
@@ -176,9 +220,14 @@ export default class Login extends Component<IAppProps, IAppState> {
 
               <Input
                 inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                 placeholder="Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="done"
                 secureTextEntry={true}
-                leftIcon={{type: 'font-awesome', name: 'lock'}}
+                leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
                 onChangeText={(text) => this.setState({password: text})}
               />
 
