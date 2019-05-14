@@ -250,7 +250,7 @@ export default class Login extends Component<IAppProps, IAppState> {
                         console.log("Account created");
                         this.setSignupVisible(false);
                       } else {
-                        Alert.alert('Account Exists', "We found an account with that email. Please sign in");
+                        Alert.alert('Account Exists', "We found an account with that email. Please sign in.");
                         this.props.navigation.navigate('Login')
                         console.log("Exists");
                       }

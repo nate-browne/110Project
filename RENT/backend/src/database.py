@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
 
 from config import app
