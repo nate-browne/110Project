@@ -160,6 +160,10 @@ def getUserByEmail(email: str) -> Optional[Users]:
     return Users.query.filter_by(email=email).first()
 
 
+def getUserById(user_id: db.Integer) -> Optional[Users]:
+    return Users.query.filter_by(id=user_id).first()
+
+
 def isUser(user) -> bool:
     '''Checks if a user has created an account already'''
     u = Users.query.filter_by(email=user.email).first()
