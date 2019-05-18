@@ -1,6 +1,9 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+    container:{
+      borderRadius: 5
+    },
     header:{
       backgroundColor: "#00BFFF",
       height:200,
@@ -15,11 +18,6 @@ const styles = StyleSheet.create({
       alignSelf:'center',
       position: 'absolute',
       marginTop:130
-    },
-    name:{
-      fontSize:22,
-      color:"#FFFFFF",
-      fontWeight:'600',
     },
     body:{
       marginTop:40,
