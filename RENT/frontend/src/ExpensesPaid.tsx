@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Alert, Text, ScrollView, View } from 'react-native';
-import { Button, ListItem } from 'react-native-elements'
+import { Alert, ScrollView, View } from 'react-native';
+import { Button, ListItem, Text } from 'react-native-elements'
 import styles from './style/Expenses-Stylesheet';
 
 export default class ExpensesPaid extends Component {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, View, Text, TouchableHighlight } from 'react-native';
+import { Alert, View, TouchableHighlight } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
+import { Text } from 'react-native-elements';
 import styles from './style/Bulletin-Stylesheet';
 
 type Props = {};

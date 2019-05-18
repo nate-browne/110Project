@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, View, Text, TouchableHighlight } from 'react-native';
+import { Alert, TouchableHighlight, View } from 'react-native';
 import  FlatGrid from 'react-native-super-grid';
-import { Icon } from 'react-native-elements';
+import { Icon, Text } from 'react-native-elements';
 import styles from './style/RentalMain-Stylesheet';
 
 interface IAppProps {

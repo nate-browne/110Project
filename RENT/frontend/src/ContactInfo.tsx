@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import { Image, Text } from 'react-native-elements';
+
 import styles from './style/Contact-Stylesheet';
 
 export default class ContactInfo extends Component {
