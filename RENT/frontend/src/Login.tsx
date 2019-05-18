@@ -8,6 +8,7 @@ import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
 import { Alert, ImageBackground, View } from 'react-native';
 import {Button, Icon, Image, Input, Overlay, Text} from 'react-native-elements';
+
 import * as EmailValidator from 'email-validator';
 import axios from 'axios';
 // @ts-ignore
@@ -17,7 +18,6 @@ const serverURL = configInfo['serverURL'];
 const server = axios.create({
   baseURL: serverURL
 });
-
 
 interface IAppProps {
   navigation?: any;
@@ -46,7 +46,6 @@ export default class Login extends Component<IAppProps, IAppState> {
     passwordError: false
   };
 
-
   setLoginVisible(visible: boolean) {
     this.setState({loginVisible: visible});
   }
@@ -74,7 +73,7 @@ export default class Login extends Component<IAppProps, IAppState> {
       password: this.state.password
     }).then(resp => {
       if(resp.status === 201) {
-        this.props.navigation.navigate('RentalMain',{
+        this.props.navigation.navigate('Home',{
           userName: this.state.firstName,
           loggedIn: true
         })
@@ -166,7 +165,7 @@ export default class Login extends Component<IAppProps, IAppState> {
                     }).then(resp => {
                       //login successful
                       if(resp.status === 200) {
-                        this.props.navigation.navigate('RentalMain',{
+                        this.props.navigation.navigate('Home',{
                           userName: resp.data.firstName,
                           loggedIn: resp.data.loggedIn
                         })
