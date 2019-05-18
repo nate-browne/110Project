@@ -6,8 +6,8 @@
 
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { Text, View, Alert, Image, ImageBackground } from 'react-native';
-import {Button, Overlay, Input, Icon} from 'react-native-elements';
+import { Alert, ImageBackground, View } from 'react-native';
+import {Button, Icon, Image, Input, Overlay, Text} from 'react-native-elements';
 import axios from 'axios';
 // @ts-ignore
 import configInfo from './url';

@@ -4,7 +4,8 @@
   react-navigation library
 */
 import React, { Component } from 'react';
-import { Button, View, Text } from 'react-native';
+import { View } from 'react-native';
+import { Button, Text } from 'react-native-elements';
 
 interface IAppProps {
   navigation?: any;

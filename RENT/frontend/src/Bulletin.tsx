@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, View, Text, TouchableHighlight } from 'react-native';
+import { Alert, View, TouchableHighlight } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
+import { Text } from 'react-native-elements';
 import styles from './style/Bulletin-Stylesheet';
 
 type Props = {};
@@ -8,8 +9,8 @@ export default class RenatlMain extends Component<Props> {
     state = {
         // TODO this list is stored in the backend
         items: [
-            { num: '1', title: 'Chores', note: '-Take out the trash \n -Wash the dishes \n a \n b \n c \n d \n e \n f \n g' }, 
-            { num: '2', title: 'Happy thoughts', note: 'The sun' }, 
+            { num: '1', title: 'Chores', note: '-Take out the trash \n -Wash the dishes \n a \n b \n c \n d \n e \n f \n g' },
+            { num: '2', title: 'Happy thoughts', note: 'The sun' },
             { num: '3', title: 'Preferred name', note: 'Call James Jamie' },
           ]
     };
@@ -35,11 +36,11 @@ export default class RenatlMain extends Component<Props> {
                     default:
                     Alert.alert("This should not happen");
                 }
-                }} 
+                }}
                 activeOpacity= {0.5} style={[styles.itemContainer, { backgroundColor: "purple" }]}>
                 <View>
                     <Text style={styles.textTitle}>{item.title}</Text>
-                </View> 
+                </View>
                 </TouchableHighlight>
             //</View>
             )}
