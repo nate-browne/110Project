@@ -8,8 +8,8 @@ CREATE TABLE `Users` (
 	`firstName` varchar(255) NOT NULL,
 	`lastName` varchar(255) NOT NULL,
 	`password` varchar(255) NOT NULL,
-	`rental1` bigint(20) DEFAULT NULL,
-	`rental2` bigint(20) DEFAULT NULL,
+	`currentRental` bigint(20) DEFAULT NULL,
+	`pastRental` bigint(20) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -95,9 +95,9 @@ CREATE TABLE `ContactInfo` (
 	PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`rental1`) REFERENCES `Rental`(`id`);
+ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`currentRental`) REFERENCES `Rental`(`id`);
 
-ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`rental2`) REFERENCES `Rental`(`id`);
+ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`pastRental`) REFERENCES `Rental`(`id`);
 
 ALTER TABLE `Roommates` ADD CONSTRAINT `Roommates_fk0` FOREIGN KEY (`roommate1`) REFERENCES `Users`(`id`);
 
