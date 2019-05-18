@@ -5,6 +5,7 @@ USE rent;
 CREATE TABLE `Users` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`email` varchar(255) NOT NULL UNIQUE,
+	`phoneNumber` varchar(10),
 	`firstName` varchar(255) NOT NULL,
 	`lastName` varchar(255) NOT NULL,
 	`password` varchar(255) NOT NULL,
@@ -92,6 +93,7 @@ CREATE TABLE `ContactInfo` (
 	`phoneNumber` varchar(10) NOT NULL,
 	`email` varchar(255),
 	`associatedUser` bigint(20) NOT NULL,
+	`relationship` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
