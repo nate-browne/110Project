@@ -17,6 +17,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
         headerStyle: {
           backgroundColor: '#89cff0',
         },
+        headerLeft: null,
         headerBackTitle: "Home Page",
         headerTitleStyle: {
           fontWeight: 'bold',
