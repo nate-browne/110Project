@@ -57,42 +57,65 @@ export default class Login extends Component<IAppProps, IAppState> {
 
   render() {
     return (
-      <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
+      <View style={styles.flexContainer}>
+
+        <View style={{width : 375, height : 812 * 1/9}}>
+        </View>
+
+        <View>
+          <Image source={require('../assets/logo.png')} style={styles.imageIcon}></Image>
+
+          <View>
+            <Input
+                  inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                  placeholder="Email"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  leftIcon={
+                    <Icon name="email-outline" type="material-community" color="black" size={25} />
+                  }
+                  style={styles.textinput}
+                  onChangeText={(text: string) => this.setState({email: text})}
+                />
+
+              <Input
+                  inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  returnKeyType="done"
+                  placeholder="Password"
+                  leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                  containerStyle={styles.textinput}
+                  onChangeText={(text: string) => this.setState({password: text})}
+              />
+          </View>
+        </View>
+
+        <View style={styles.centerText}>
+          <Text>Forgot your password?</Text>
+        </View>
+      </View>
+    );
+  }
+}
+
+/*render() {
+    return (
+      <View style={styles.container}>
+
         <Image
             style={styles.image}
             source={require('../assets/logo.png')}
           />
 
-        <Text style={styles.text}>
-          Welcome to RENT!
-        </Text>
-
-        <View style={styles.button}>
-          <Button
-            raised={true}
-            title="Login"
-            onPress={() => {
-              this.setLoginVisible(true);
-            }}
-          />
-        </View>
-
-        <View style={styles.button}>
-          <Button
-            raised={true}
-            title="Sign up"
-            onPress={() =>{
-              this.setSignupVisible(true);
-            }}
-          />
-        </View>
-        <Overlay
-          windowBackgroundColor="rgba(255, 255, 255, .5)"
-          isVisible={this.state.loginVisible}
-          onBackdropPress={() => this.setState({ loginVisible: false })}
-          >
-          <View style={styles.container}>
-              <Text style={{fontSize: 48}}>Login</Text>
+        <View style={styles.container}>
 
               <Input
                   inputContainerStyle={styles.textinput}
@@ -152,7 +175,15 @@ export default class Login extends Component<IAppProps, IAppState> {
                 />
               </View>
           </View>
-        </Overlay>
+          <View style={styles.button}>
+          <Button
+            raised={true}
+            title="Sign up"
+            onPress={() =>{
+              this.setSignupVisible(true);
+            }}
+          />
+        </View>
 
         <Overlay
           windowBackgroundColor="rgba(255, 255, 255, .5)"
@@ -262,7 +293,5 @@ export default class Login extends Component<IAppProps, IAppState> {
               </View>
           </View>
         </Overlay>
-      </ImageBackground>
-    );
-  }
-}
+      </View>
+    );*/
