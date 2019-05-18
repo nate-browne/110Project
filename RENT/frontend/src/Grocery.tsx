@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, View, Alert } from 'react-native';
-import { Button, ListItem } from 'react-native-elements'
+import { Alert, ScrollView, View } from 'react-native';
+import { Button, ListItem, Text } from 'react-native-elements'
 import styles from './style/Grocery-Stylesheet';
 
 export default class Grocery extends Component {
@@ -82,7 +82,7 @@ export default class Grocery extends Component {
                       //edit item
                       Alert.alert("TODO: edit item")
                     }}
-                    onPress={() => { 
+                    onPress={() => {
                       let list = [ ...this.state.list];
                       list[i].done = !list[i].done;
                       this.setState( { list } );
