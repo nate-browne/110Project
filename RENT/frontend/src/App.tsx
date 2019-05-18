@@ -32,7 +32,7 @@ const RootStack = createStackNavigator(
 
   },
   {
-    initialRouteName: "Login",
+    initialRouteName: "RentalMain",
   }
 );
 

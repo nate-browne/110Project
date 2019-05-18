@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     header:{
       backgroundColor: "#00BFFF",
       height:200,
+      alignItems: 'flex-end',
     },
     avatar: {
       width: 130,
@@ -26,6 +27,9 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       padding:30,
+    },
+    button: {
+      padding: 10,
     },
     name:{
       fontSize:28,
@@ -53,6 +57,10 @@ const styles = StyleSheet.create({
       width:250,
       borderRadius:30,
       backgroundColor: "#00BFFF",
+    },
+    textinput: {
+      //fontSize: 18,
+      height: 36
     },
   });
 
