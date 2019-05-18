@@ -10,6 +10,8 @@ import { Alert, ImageBackground, View } from 'react-native';
 import {Button, Icon, Image, Input, Overlay, Text} from 'react-native-elements';
 import * as EmailValidator from 'email-validator';
 import axios from 'axios';
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+
 // @ts-ignore
 import configInfo from './url';
 
@@ -91,10 +93,197 @@ export default class Login extends Component<IAppProps, IAppState> {
   }
   render() {
     return (
-      <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
+      <View style={styles.loginContainer}>
+
+        <Image source={require('../assets/rent-final.png')} style={styles.imageIcon}></Image>
+
+        <View>
+          <Input
+                  inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                  placeholder="Email"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  leftIcon={
+                    <Icon name="email-outline" type="material-community" color="black" size={25} />
+                  }
+                  onChangeText={(text: string) => this.setState({email: text})}
+            />
+
+            <Input
+                  inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  returnKeyType="done"
+                  placeholder="Password"
+                  leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                  onChangeText={(text: string) => this.setState({password: text})}
+            />
+        </View>
+
+        <View style={styles.button}>
+                <Button
+                  raised={true}
+                  title="Login"
+                  onPress={() => {
+                    server.post('/login', {
+                      email: this.state.email,
+                      password: this.state.password
+                    }).then(resp => {
+                      //login successful
+                      if(resp.status === 200) {
+                        this.props.navigation.navigate('RentalMain',{
+                          userName: resp.data.firstName,
+                          loggedIn: resp.data.loggedIn
+                        })
+                        console.log("Login Successful");
+                        this.setLoginVisible(false);
+                      }
+                      //login failed
+                      else if (resp.status === 404) {
+                        Alert.alert("Login Failed","Username or Password incorrect");
+                        console.log("Login Failed");
+                      }
+                    })
+                    .catch(err => {
+                      console.log('Error occurred',err);
+                    })
+                  }}
+                />
+          </View>
+
+          <View style={styles.loginLinks}>
+            <Text style={styles.textLink}>Forgot password?</Text>
+            <Text style={styles.textLink}>Register</Text>
+          </View>
+
+          <Overlay
+          windowBackgroundColor="rgba(255, 255, 255, .5)"
+          isVisible={this.state.signupVisible}
+          onBackdropPress={() => this.setState({ signupVisible: false, passwordError: false, emailError: false })}
+          >
+          <View style={styles.container}>
+              <Text style={{fontSize: 48}}>Signup</Text>
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="First Name"
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
+                onChangeText={(text) => this.setState({firstName: text})}
+              />
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Last Name"
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
+                onChangeText={(text) => this.setState({lastName: text})}
+              />
+
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Email"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                keyboardType="email-address"
+                returnKeyType="next"
+                errorStyle={{ color: 'red' }}
+                errorMessage={this.displayEmailError()}
+                leftIcon={
+                  <Icon name="email-outline" type="material-community" color="black" size={25} />
+                }
+                onChangeText={(text) => this.setState({email: text, emailError: false})}
+              />
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="done"
+                secureTextEntry={true}
+                leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                onChangeText={(text) => this.setState({password: text})}
+              />
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Confirm Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="done"
+                errorStyle={{ color: 'red' }}
+                errorMessage={this.displayPasswordError()}
+                secureTextEntry={true}
+                leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                onChangeText={(text) => this.setState({confirmPassword: text, passwordError: false})}
+              />
+
+              <View style={styles.button}>
+                <Button
+                  raised={true}
+                  title="Sign Up"
+                  onPress={() => {
+                    if(EmailValidator.validate(this.state.email) &&
+                      this.state.password === this.state.confirmPassword) {
+                      this.createUser();
+                    }
+                    if( !EmailValidator.validate(this.state.email) ) {
+                      this.setState({emailError: true})
+                    }
+                    if( this.state.password !== this.state.confirmPassword) {
+                      this.setState({passwordError:true})
+                    }
+                  }}
+                />
+              </View>
+          </View>
+        </Overlay>        
+      </View>
+      
+    );
+  }
+}
+
+/*<ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
         <Image
             style={styles.imageIcon}
-            source={require('../assets/logo.png')}
+            source={require('../assets/rent_final.png')}
           />
 
         <Text style={styles.text}>
@@ -298,7 +487,4 @@ export default class Login extends Component<IAppProps, IAppState> {
               </View>
           </View>
         </Overlay>
-      </ImageBackground>
-    );
-  }
-}
+      </ImageBackground>*/

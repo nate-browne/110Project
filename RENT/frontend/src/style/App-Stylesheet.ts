@@ -1,7 +1,26 @@
 import {StyleSheet} from 'react-native';
 import { ClientRequest } from 'http';
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 const styles = StyleSheet.create({
+
+  loginContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  loginLinks: {
+    flexDirection: "row",
+    justifyContent: "space-evenly"
+  },
+
+  textLink: {
+    margin: vh(100),
+  },
+
+
+
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -35,6 +54,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     alignItems: 'stretch',
+    marginTop: 150
   },
   button: {
     width: '30%',
