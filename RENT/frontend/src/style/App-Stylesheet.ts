@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import { UrlTile } from 'expo';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
     borderColor: '#000'
   },
   textinput: {
-    fontSize: 18,
+    //fontSize: 18,
     height: 36
   },
   background: {

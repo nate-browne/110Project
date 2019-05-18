@@ -1,25 +1,29 @@
 from typing import Optional, List
 from flask_sqlalchemy import SQLAlchemy
 
-from server import app
+from config import app
 
 db = SQLAlchemy(app)
+db.init_app(app)
 
 
 class Users(db.Model):
+    __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    first_name = db.Column(db.String(255), nullable=False)
-    last_name = db.Column(db.String(255), nullable=False)
+    firstName = db.Column(db.String(255), nullable=False)
+    lastName = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
+    rental1 = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
+    rental2 = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
 
     def __repr__(self) -> str:
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
-            self.first_name, self.last_name, self.email, self.rental)
+            self.firstName, self.last_name, self.email, self.rental)
 
 
 class Roommate(db.Model):
+    __tablename__ = 'Roommate'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommate1 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
                           default=None)
@@ -45,6 +49,7 @@ class Roommate(db.Model):
 
 
 class PropertyDocument(db.Model):
+    __tablename__ = 'PropertyDocument'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     document = db.Column(db.LargeBinary(16777215), nullable=False)
     docName = db.Column(db.String(255), nullable=False)
@@ -53,76 +58,35 @@ class PropertyDocument(db.Model):
         return '<Property Document>\nID: {}'.format(self.id)
 
 
-class ContactInfo(db.Model):
+class Lease(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    first_name = db.Column(db.String(255), nullable=False)
-    last_name = db.Column(db.String(255), nullable=False)
-    phone_number = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=True)
-    associated_user = db.Column(db.Integer, db.ForeignKey('Users.id'),
-                                nullable=False)
-
-    def __repr__(self) -> str:
-        return '<Contact Info>\nName: {} {}\nPhone Number: {}\
-            \nAssociated User ID: {}'.format(
-                self.first_name, self.last_name, self.phone_number,
-                self.associated_user)
-
-
-class GroceryListItem(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(255), nullable=False)
-    count = db.Column(db.Integer, nullable=False, default=0)
-    price = db.Column(db.Decimal(precision=13, scale=2))
-
-    def __repr__(self) -> str:
-        return '<Grocery List Item>\nName: {}\nCount: {}\nPrice: {}'.format(
-            self.name, self.count, self.price)
-
-
-class GroceryList(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    list_item1 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-    list_item2 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-    list_item3 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-    list_item4 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-    list_item5 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-    list_item6 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-    list_item7 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-    list_item8 = db.Column(db.Integer, db.ForeignKey('GroceryListItem.id'),
-                           default=None)
-
-    def __repr__(self) -> str:
-        to_print = []
-        for attr in dir(self):
-            if attr != id and attr is not None:
-                to_print.append(attr)
-                to_print.append("\n")
-        val = []
-        val.append("<Grocery List>\n")
-        val.extend(to_print)
-        return ''.join(val)
+    landlordFirstName = db.Column(db.String(255), nullable=False)
+    landlordLastName = db.Column(db.String(255), nullable=False)
+    landlordPhoneNumber = db.Column(db.String(10), nullable=False)
+    landlordEmail = db.Column(db.String(255), nullable=False)
+    rentCost = db.Column(db.DECIMAL(13, 2), nullable=False, default=0)
+    startDate = db.Column(db.Date, nullable=False)
+    endDate = db.Column(db.Date, nullable=False)
+    rentDueDate = db.Column(db.String(50), nullable=False)
+    document = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
+                         nullable=False)
 
 
 class Rental(db.Model):
+    __tablename__ = 'Rental'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    document = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
-                         nullable=False)
     roommates = db.Column(db.Integer, db.ForeignKey('Roommates.id'),
                           nullable=False)
-    contact_info = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                             nullable=False)
-    expenses = db.Column(db.Integer, db.ForeignKey('Expenses.id'),
-                         nullable=False)
-    shopping_list = db.Column(db.Integer, db.ForeignKey('GroceryList.id'),
-                              nullable=True, default=None)
+    contactInfoList = db.Column(db.Integer,
+                                db.ForeignKey('ContactInfoList.id'),
+                                nullable=False)
+    lease = db.Column(db.Integer, db.ForeignKey('Lease.id'),
+                      nullable=False)
+    insurance = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
+                          nullable=False)
+    board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    photo = db.Column(db.String(255), nullable=True)
 
     def __repr__(self) -> str:
         print_str = "<Rental>\nrentalID: {}\ndocumentID: {}\nroommatesListID:\
@@ -131,31 +95,60 @@ class Rental(db.Model):
                                 self.expenses, self.shopping_list)
 
 
-class ExpensesListItem(db.Model):
+class Board(db.Model):
+    __tablename__ = 'Board'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    expense = db.Column(db.String(255), nullable=False)
-    cost = db.Column(db.Decimal(precision=13, scale=2), nullable=False,
-                     default=0)
-    paid = db.Column(db.Boolean, nullable=False, default=False)
+
+
+class Note(db.Model):
+    __tablename__ = 'Note'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    value = db.Column(db.String(500), nullable=False)
+    board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=False)
+    isDeleted = db.Column(db.Boolean, nullable=False, default=False)
+
+
+class ContactInfo(db.Model):
+    __tablename__ = 'ContactInfo'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    firstName = db.Column(db.String(255), nullable=False)
+    lastName = db.Column(db.String(255), nullable=False)
+    phoneNumber = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=True)
+    associatedUser = db.Column(db.Integer, db.ForeignKey('Users.id'),
+                               nullable=False)
 
     def __repr__(self) -> str:
-        print_str = "<ExpenseListItem>\nid: {}\nexpense name: {}\ncost:\
-            {}\npaid: {}"
-        return print_str.format(self.id, self.expense, self.cost, self.paid)
+        return '<Contact Info>\nName: {} {}\nPhone Number: {}\
+            \nAssociated User ID: {}'.format(
+                self.firstName, self.last_name, self.phone_number,
+                self.associated_user)
 
 
-class Expenses(db.Model):
+class ContactInfoList(db.Model):
+    __tablename__ = 'ContactInfoList'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    rent = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
-                     nullable=False)
-    heat_gas = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
-                         default=None)
-    internet = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
-                         default=None)
-    electricity = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
-                            default=None)
-    insurance = db.Column(db.Integer, db.ForeignKey('ExpenseListItem.id'),
-                          default=None)
+    contact1 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact2 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact3 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact4 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact5 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact6 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact7 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact8 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact9 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                         nullable=True)
+    contact10 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
+                          nullable=True)
 
 
 def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
@@ -163,11 +156,21 @@ def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
     return Rental.query.filter_by(id=rentalID).first()
 
 
-def getUserByLogin(user: List[str, str]) -> Optional[Users]:
-    '''Returns the matching user from the DB given the email and password, or
-    "None" if they do not exist'''
-    return Users.query.filter_by(email=user[0], password=user[1]).first()
+def getUserByEmail(email: str) -> Optional[Users]:
+    return Users.query.filter_by(email=email).first()
 
 
 def isUser(user) -> bool:
-    pass
+    '''Checks if a user has created an account already'''
+    u = Users.query.filter_by(email=user.email).first()
+    return u is not None
+
+
+def addUser(user: Users) -> None:
+    db.session.add(user)
+    db.session.commit()
+
+
+def updatePassword(user: Users, password: str) -> None:
+    user.password = password
+    db.session.commit()

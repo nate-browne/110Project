@@ -1,11 +1,18 @@
 /*
   Name: ExamplePage.tsx
-  Description: This file serves as an example for testing navigation features of 
+  Description: This file serves as an example for testing navigation features of
   react-navigation library
 */
-import React from 'react';
+import React, { Component } from 'react';
 import { Button, View, Text } from 'react-native';
-export default class ExamplePage extends React.Component {
+
+interface IAppProps {
+  navigation?: any;
+}
+
+interface IAppState {
+}
+export default class ExamplePage extends Component<IAppProps, IAppState> {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

@@ -1,4 +1,4 @@
-/*
+  /*
   Name: Login.tsx
   Description: This file renders the login page and handles sign up and logging in
   of user.
@@ -6,18 +6,33 @@
 
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { TextInput, Modal, Text, View, Alert, Image, ImageBackground } from 'react-native';
-import {Button } from 'react-native-elements';
-//import sjcl from 'sjcl';
+import { Text, View, Alert, Image, ImageBackground } from 'react-native';
+import {Button, Overlay, Input, Icon} from 'react-native-elements';
 import axios from 'axios';
+// @ts-ignore
+import configInfo from './url';
 
-const serverURL = 'http://localhost:5000' // I think this is the default flask one
+const serverURL = configInfo['serverURL'];
 const server = axios.create({
   baseURL: serverURL
 });
 
-type Props = {};
-export default class Login extends Component<Props> {
+
+interface IAppProps {
+  navigation?: any;
+}
+
+interface IAppState {
+}
+
+export default class Login extends Component<IAppProps, IAppState> {
+  static navigationOptions = {
+    headerTransparent: true,
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  };
+
   state = {
     loginVisible: false,
     signupVisible: false,
@@ -26,6 +41,7 @@ export default class Login extends Component<Props> {
     email: "",
     password: "",
   };
+
 
   setLoginVisible(visible: boolean) {
     this.setState({loginVisible: visible});
@@ -41,133 +57,212 @@ export default class Login extends Component<Props> {
 
   render() {
     return (
-    <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
-      <Modal
-        animationType="fade"
-        visible={this.state.loginVisible}
-        >
-        <View style={styles.container}>
-            <Text style={{fontSize: 48}}>Login Here</Text>
+      <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
+        <Image
+            style={styles.image}
+            source={require('../assets/logo.png')}
+          />
 
-            <View style={styles.textbox}>
-              <TextInput
-                style={styles.textinput}
-                placeholder="something@something.something"
-                onChangeText={(text) => this.setState({text})}
-              />
-            </View>
+        <Text style={styles.text}>
+          Welcome to RENT!
+        </Text>
 
-            <View style={styles.textbox}>
-              <TextInput
-                style={styles.textinput}
-                placeholder="Password"
-                onChangeText={(text) => this.setState({text})}
-              />
-            </View>
-
-            <View style={styles.button}>
-              <Button
-                raised={true}
-                title="Done"
-                onPress={() => {
-                  this.setLoginVisible(false);
-                }}
-              />
-            </View>
+        <View style={styles.button}>
+          <Button
+            raised={true}
+            title="Login"
+            onPress={() => {
+              this.setLoginVisible(true);
+            }}
+          />
         </View>
-      </Modal>
 
-      <Modal
-        animationType="fade"
-        visible={this.state.signupVisible}
-        >
-        <View style={styles.container}>
-            <Text style={{fontSize: 48}}>Signup Here</Text>
+        <View style={styles.button}>
+          <Button
+            raised={true}
+            title="Sign up"
+            onPress={() =>{
+              this.setSignupVisible(true);
+            }}
+          />
+        </View>
+        <Overlay
+          windowBackgroundColor="rgba(255, 255, 255, .5)"
+          isVisible={this.state.loginVisible}
+          onBackdropPress={() => this.setState({ loginVisible: false })}
+          >
+          <View style={styles.container}>
+              <Text style={{fontSize: 48}}>Login</Text>
 
-            <View style={styles.textbox}>
-              <TextInput
-                style={styles.textinput}
+              <Input
+                  inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                  placeholder="Email"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  leftIcon={
+                    <Icon name="email-outline" type="material-community" color="black" size={25} />
+                  }
+                  onChangeText={(text: string) => this.setState({email: text})}
+                />
+
+              <Input
+                  inputContainerStyle={styles.textinput}
+                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardAppearance="light"
+                  returnKeyType="done"
+                  placeholder="Password"
+                  leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                  onChangeText={(text: string) => this.setState({password: text})}
+              />
+              <View style={styles.button}>
+                <Button
+                  raised={true}
+                  title="Login"
+                  onPress={() => {
+                    server.post('/login', {
+                      email: this.state.email,
+                      password: this.state.password
+                    }).then(resp => {
+                      //login successful
+                      if(resp.status === 200) {
+                        this.props.navigation.navigate('RentalMain',{
+                          userName: resp.data.firstName,
+                          loggedIn: resp.data.loggedIn
+                        })
+                        console.log("Login Successful");
+                        this.setLoginVisible(false);
+                      }
+                      //login failed
+                      else if (resp.status === 404) {
+                        Alert.alert("Login Failed","Username or Password incorrect");
+                        console.log("Login Failed");
+                      }
+                    })
+                    .catch(err => {
+                      console.log('Error occurred',err);
+                    })
+                  }}
+                />
+              </View>
+          </View>
+        </Overlay>
+
+        <Overlay
+          windowBackgroundColor="rgba(255, 255, 255, .5)"
+          isVisible={this.state.signupVisible}
+          onBackdropPress={() => this.setState({ signupVisible: false })}
+          >
+          <View style={styles.container}>
+              <Text style={{fontSize: 48}}>Signup</Text>
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                 placeholder="First Name"
-                onChangeText={(text) => this.setState({text})}
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
+                onChangeText={(text) => this.setState({firstName: text})}
               />
-            </View>
 
-            <View style={styles.textbox}>
-              <TextInput
-                style={styles.textinput}
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                 placeholder="Last Name"
-                onChangeText={(text) => this.setState({text})}
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon
+                    name="user"
+                    type="simple-line-icon"
+                    color="black"
+                    size={25}
+                  />
+                }
+                onChangeText={(text) => this.setState({lastName: text})}
               />
-            </View>
 
-            <View style={styles.textbox}>
-              <TextInput
-                style={styles.textinput}
-                placeholder="something@something.something"
-                onChangeText={(text) => this.setState({text})}
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Email"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                keyboardType="email-address"
+                returnKeyType="next"
+                leftIcon={
+                  <Icon name="email-outline" type="material-community" color="black" size={25} />
+                }
+                onChangeText={(text) => this.setState({email: text})}
               />
-            </View>
 
-            <View style={styles.textbox}>
-              <TextInput
-                style={styles.textinput}
+
+
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                 placeholder="Password"
-                onChangeText={(text) => this.setState({text})}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="done"
+                secureTextEntry={true}
+                leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                onChangeText={(text) => this.setState({password: text})}
               />
-            </View>
 
-            <View style={styles.button}>
-              <Button
-                raised={true}
-                title="Done"
-                onPress={() => {
-                  server.post('/createuser', {
-                  });
-                }}
-              />
-            </View>
-        </View>
-        </Modal>
-
-
-      <Image
-          style={styles.image}
-          source={require('../assets/logo.png')}
-        />
-
-      <Text style={styles.text}>
-        Welcome to RENT!
-      </Text>
-
-      <View style={styles.button}>
-        <Button
-          raised={true}
-          title="Login"
-          onPress={() => {
-            this.setLoginVisible(true);
-          }}
-        />
-      </View>
-
-      <View style={styles.button}>
-        <Button
-          raised={true}
-          title="Sign up"
-          onPress={() =>{
-            this.setSignupVisible(true);
-          }}
-        />
-      </View>
-
-      <View style={styles.button}>
-        <Button
-          raised={true}
-          title="Test Page"
-          onPress={() => this.props.navigation.push('Example')}
-        />
-      </View>
-
-    </ImageBackground>
+              <View style={styles.button}>
+                <Button
+                  raised={true}
+                  title="Sign Up"
+                  onPress={() => {
+                    server.post('/createuser', {
+                      email: this.state.email,
+                      firstName: this.state.firstName,
+                      lastName: this.state.lastName,
+                      password: this.state.password
+                    }).then(resp => {
+                      if(resp.status === 201) {
+                        this.props.navigation.navigate('RentalMain',{
+                          userName: this.state.firstName,
+                          loggedIn: true
+                        })
+                        console.log("Account created");
+                        this.setSignupVisible(false);
+                      } else {
+                        Alert.alert('Account Exists', "We found an account with that email. Please sign in");
+                        this.props.navigation.navigate('Login')
+                        console.log("Exists");
+                      }
+                    }).catch(err => {
+                      console.log('Error occurred',err);
+                    });
+                  }}
+                />
+              </View>
+          </View>
+        </Overlay>
+      </ImageBackground>
     );
   }
 }
