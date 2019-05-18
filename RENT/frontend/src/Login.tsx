@@ -92,7 +92,7 @@ export default class Login extends Component<IAppProps, IAppState> {
     return (
       <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
         <Image
-            style={styles.imageIcon}
+            style={styles.image}
             source={require('../assets/logo.png')}
           />
 

@@ -40,8 +40,7 @@ keep it or yeet it).
 
 2. `python3`. This will also install `pip3` for you. Installation is available through `brew` I think.
 
-3. Flask, SQLAlchemy, and MYSQLClient. You can get these with `pip3 install flask`, `pip3 install flask_sqlalchemy`, and
-   `pip3 install mysqlclient`, respectively.
+3. Flask, SQLAlchemy, Flask-Login, and MYSQLClient. You can get these with `pip3 install flask`, `pip3 install flask_sqlalchemy`, `pip3 install flask-login`, and `pip3 install mysqlclient`, respectively.
 
 4. MySQLClient and passlib (for now). You can get this with `pip3 install mysqlclient` and `pip3 install passlib`
 
