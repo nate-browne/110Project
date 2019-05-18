@@ -156,6 +156,16 @@ def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
     return Rental.query.filter_by(id=rentalID).first()
 
 
+def getLeaseByLeaseID(leaseID: db.Integer) -> Optional[Lease]:
+    '''Returns a lease from the db by finding the matching leaseID'''
+    return Lease.query.filter_by(id=leaseID).first()
+
+
+def getDocByDocID(documentID: db.Integer) -> Optional[PropertyDocument]:
+    '''Returns a document from the db by finding the matching documentID'''
+    return PropertyDocument.query.filter_by(id=documentID).first()
+
+
 def getUserByEmail(email: str) -> Optional[Users]:
     return Users.query.filter_by(email=email).first()
 
