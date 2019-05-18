@@ -8,6 +8,7 @@ import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
 import { Alert, ImageBackground, View } from 'react-native';
 import {Button, Icon, Image, Input, Overlay, Text} from 'react-native-elements';
+import * as EmailValidator from 'email-validator';
 import axios from 'axios';
 // @ts-ignore
 import configInfo from './url';
@@ -40,6 +41,9 @@ export default class Login extends Component<IAppProps, IAppState> {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
+    emailError: false,
+    passwordError: false
   };
 
 
@@ -50,16 +54,46 @@ export default class Login extends Component<IAppProps, IAppState> {
   setSignupVisible(visible: boolean) {
     this.setState({signupVisible: visible});
   }
-
-  signupPressed(): void{
-    Alert.alert("Sign up here");
+  displayEmailError(): string {
+    if(this.state.emailError === true ) {
+      return "Please enter a valid email";
+    }
+    return "";
   }
-
+  displayPasswordError(): string {
+    if(this.state.passwordError === true) {
+      return "Passwords did not match"
+    }
+    return "";
+  }
+  createUser(): any {
+    server.post('/createuser', {
+      email: this.state.email,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      password: this.state.password
+    }).then(resp => {
+      if(resp.status === 201) {
+        this.props.navigation.navigate('RentalMain',{
+          userName: this.state.firstName,
+          loggedIn: true
+        })
+        console.log("Account created");
+        this.setSignupVisible(false);
+      } else {
+        Alert.alert('Account Exists', "We found an account with that email. Please sign in");
+        this.props.navigation.navigate('Login')
+        console.log("Exists");
+      }
+    }).catch(err => {
+      console.log('Error occurred',err);
+    });
+  }
   render() {
     return (
       <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
         <Image
-            style={styles.image}
+            style={styles.imageIcon}
             source={require('../assets/logo.png')}
           />
 
@@ -153,11 +187,10 @@ export default class Login extends Component<IAppProps, IAppState> {
               </View>
           </View>
         </Overlay>
-
         <Overlay
           windowBackgroundColor="rgba(255, 255, 255, .5)"
           isVisible={this.state.signupVisible}
-          onBackdropPress={() => this.setState({ signupVisible: false })}
+          onBackdropPress={() => this.setState({ signupVisible: false, passwordError: false, emailError: false })}
           >
           <View style={styles.container}>
               <Text style={{fontSize: 48}}>Signup</Text>
@@ -210,13 +243,13 @@ export default class Login extends Component<IAppProps, IAppState> {
                 keyboardAppearance="light"
                 keyboardType="email-address"
                 returnKeyType="next"
+                errorStyle={{ color: 'red' }}
+                errorMessage={this.displayEmailError()}
                 leftIcon={
                   <Icon name="email-outline" type="material-community" color="black" size={25} />
                 }
-                onChangeText={(text) => this.setState({email: text})}
+                onChangeText={(text) => this.setState({email: text, emailError: false})}
               />
-
-
 
               <Input
                 inputContainerStyle={styles.textinput}
@@ -230,33 +263,36 @@ export default class Login extends Component<IAppProps, IAppState> {
                 leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
                 onChangeText={(text) => this.setState({password: text})}
               />
+              <Input
+                inputContainerStyle={styles.textinput}
+                leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                placeholder="Confirm Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="light"
+                returnKeyType="done"
+                errorStyle={{ color: 'red' }}
+                errorMessage={this.displayPasswordError()}
+                secureTextEntry={true}
+                leftIcon={<Icon name="lock" type="simple-line-icon" color="black" size={25} />}
+                onChangeText={(text) => this.setState({confirmPassword: text, passwordError: false})}
+              />
 
               <View style={styles.button}>
                 <Button
                   raised={true}
                   title="Sign Up"
                   onPress={() => {
-                    server.post('/createuser', {
-                      email: this.state.email,
-                      firstName: this.state.firstName,
-                      lastName: this.state.lastName,
-                      password: this.state.password
-                    }).then(resp => {
-                      if(resp.status === 201) {
-                        this.props.navigation.navigate('RentalMain',{
-                          userName: this.state.firstName,
-                          loggedIn: true
-                        })
-                        console.log("Account created");
-                        this.setSignupVisible(false);
-                      } else {
-                        Alert.alert('Account Exists', "We found an account with that email. Please sign in");
-                        this.props.navigation.navigate('Login')
-                        console.log("Exists");
-                      }
-                    }).catch(err => {
-                      console.log('Error occurred',err);
-                    });
+                    if(EmailValidator.validate(this.state.email) &&
+                      this.state.password === this.state.confirmPassword) {
+                      this.createUser();
+                    }
+                    if( !EmailValidator.validate(this.state.email) ) {
+                      this.setState({emailError: true})
+                    }
+                    if( this.state.password !== this.state.confirmPassword) {
+                      this.setState({passwordError:true})
+                    }
                   }}
                 />
               </View>
