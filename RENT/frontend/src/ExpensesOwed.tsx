@@ -96,7 +96,7 @@ listMaria: [
           date: '05/11/19',
           paid: false
       },
-      
+
   ],
   listJenny: [
     {
@@ -138,7 +138,7 @@ listMaria: [
                   <ListItem
                     containerStyle={[l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}]}
                     key={i}
-                    onPress={() => { 
+                    onPress={() => {
                       let listMaria = [ ...this.state.listMaria];
                       listMaria[i].paid = !listMaria[i].paid;
                       this.setState( { listMaria } );
@@ -162,7 +162,7 @@ listMaria: [
                   <ListItem
                     containerStyle={l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}}
                     key={i}
-                    onPress={() => { 
+                    onPress={() => {
                       let listJames = [ ...this.state.listJames];
                       listJames[i].paid = !listJames[i].paid;
                       this.setState( { listJames } );
@@ -188,7 +188,7 @@ listMaria: [
                   <ListItem
                     containerStyle={l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}}
                     key={i}
-                    onPress={() => { 
+                    onPress={() => {
                       let listJenny = [ ...this.state.listJenny];
                       listJenny[i].paid = !listJenny[i].paid;
                       this.setState( { listJenny } );
@@ -213,7 +213,7 @@ listMaria: [
                   <ListItem
                     containerStyle={l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}}
                     key={i}
-                    onPress={() => { 
+                    onPress={() => {
                       let listBonnie = [ ...this.state.listBonnie];
                       listBonnie[i].paid = !listBonnie[i].paid;
                       this.setState( { listBonnie } );
@@ -232,7 +232,7 @@ listMaria: [
 
               <ScrollView style={styles.legendContainer}>
                     <Text style= {styles.text_name}> Legend </Text>
-                    <View> 
+                    <View>
                     {
                     this.state.list.map((l, i) => (
                     <ListItem
@@ -248,7 +248,7 @@ listMaria: [
                     }
                     </View>
                 </ScrollView>
-            
+
         </ScrollView>
           )
     }

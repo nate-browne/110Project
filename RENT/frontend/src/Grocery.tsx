@@ -82,7 +82,7 @@ export default class Grocery extends Component {
                       //edit item
                       Alert.alert("TODO: edit item")
                     }}
-                    onPress={() => { 
+                    onPress={() => {
                       let list = [ ...this.state.list];
                       list[i].done = !list[i].done;
                       this.setState( { list } );

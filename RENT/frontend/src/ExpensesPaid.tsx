@@ -96,7 +96,7 @@ export default class ExpensesPaid extends Component {
               date: '05/11/19',
               paid: false
           },
-          
+
       ],
       listJenny: [
         {
@@ -142,7 +142,7 @@ export default class ExpensesPaid extends Component {
                     <ListItem
                         containerStyle={[l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}]}
                         key={i}
-                        onPress={() => { 
+                        onPress={() => {
                         let listMaria = [ ...this.state.listMaria];
                         listMaria[i].paid = !listMaria[i].paid;
                         this.setState( { listMaria } );
@@ -167,7 +167,7 @@ export default class ExpensesPaid extends Component {
                     <ListItem
                         containerStyle={l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}}
                         key={i}
-                        onPress={() => { 
+                        onPress={() => {
                         let listJames = [ ...this.state.listJames];
                         listJames[i].paid = !listJames[i].paid;
                         this.setState( { listJames } );
@@ -194,7 +194,7 @@ export default class ExpensesPaid extends Component {
                     <ListItem
                         containerStyle={l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}}
                         key={i}
-                        onPress={() => { 
+                        onPress={() => {
                         let listJenny = [ ...this.state.listJenny];
                         listJenny[i].paid = !listJenny[i].paid;
                         this.setState( { listJenny } );
@@ -220,7 +220,7 @@ export default class ExpensesPaid extends Component {
                     <ListItem
                         containerStyle={l.paid ? {backgroundColor: '#55ff55', margin: 2} : {backgroundColor: '#ff4444', margin: 2}}
                         key={i}
-                        onPress={() => { 
+                        onPress={() => {
                         let listBonnie = [ ...this.state.listBonnie];
                         listBonnie[i].paid = !listBonnie[i].paid;
                         this.setState( { listBonnie } );
@@ -239,7 +239,7 @@ export default class ExpensesPaid extends Component {
 
                 <ScrollView style={styles.legendContainer}>
                     <Text style= {styles.text_name}> Legend </Text>
-                    <View> 
+                    <View>
                     {
                     this.state.list.map((l, i) => (
                     <ListItem
@@ -255,7 +255,7 @@ export default class ExpensesPaid extends Component {
                     }
                     </View>
                 </ScrollView>
-                
+
               </ScrollView>
             </View>
           )

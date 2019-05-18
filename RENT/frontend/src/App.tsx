@@ -23,7 +23,7 @@ const RootStack = createStackNavigator(
     RentalMain: RentalMain,
     Grocery: Grocery,
     ExpensesHome: ExpensesHome,
-    ExpensesOwed: ExpensesOwed, 
+    ExpensesOwed: ExpensesOwed,
     ExpensesPaid: ExpensesPaid,
     Bulletin: Bulletin,
     ContactInfo: ContactInfo,

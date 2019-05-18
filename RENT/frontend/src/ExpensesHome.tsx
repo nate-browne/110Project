@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-elements'
+import styles from './style/StyleSheet';
 interface IAppProps {
   navigation?: any;
 }
