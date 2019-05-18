@@ -1,15 +1,16 @@
 import {StyleSheet} from 'react-native';
+import { ClientRequest } from 'http';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
   },
   text: {
     fontSize: 36,
-    color: 'white',
+    color: 'teal',
     alignItems: 'stretch',
     textAlign: 'center',
     padding: 20,
@@ -19,7 +20,10 @@ const styles = StyleSheet.create({
   },
   textinput: {
     //fontSize: 18,
-    height: 36
+    height: 36,
+    width: 375 * 0.6,
+    justifyContent: "center",
+    alignItems: "center",
   },
   background: {
     width: '100%', 
@@ -27,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center',
   },
-  image: {
+  imageIcon: {
     width: 150,
     height: 150,
     alignItems: 'stretch',
@@ -35,6 +39,16 @@ const styles = StyleSheet.create({
   button: {
     width: '30%',
     margin: 10
+  },
+  flexContainer: {
+    flexDirection: "column",
+    padding: 100,
+  },
+  centerText : {
+    alignItems: "center",
+  },
+  iconBox : {
+    justifyContent: "center",
   },
 });
 

@@ -93,7 +93,7 @@ export default class Login extends Component<IAppProps, IAppState> {
     return (
       <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
         <Image
-            style={styles.image}
+            style={styles.imageIcon}
             source={require('../assets/logo.png')}
           />
 
@@ -290,7 +290,7 @@ export default class Login extends Component<IAppProps, IAppState> {
                     if( !EmailValidator.validate(this.state.email) ) {
                       this.setState({emailError: true})
                     }
-                    if(this.state.password !== this.state.confirmPassword) {
+                    if( this.state.password !== this.state.confirmPassword) {
                       this.setState({passwordError:true})
                     }
                   }}
