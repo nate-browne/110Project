@@ -72,9 +72,79 @@ def login():
 
     if _validate(user, password):
         login_user(user, remember=remember)
-        return jsonify({'firstName': user.firstName}), 200
+        return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:
         return jsonify({}), 404
+
+
+@app.route('/getinfo', methods=['GET'])
+@login_required
+def get_info():
+    userID = request.args.get('userID')
+    user = db.getUserById(userID)
+    if user is not None:
+        data = {}
+        data['firstName'] = user.firstName
+        data['lastName'] = user.lastName
+        data['phoneNumber'] = user.phoneNumber
+        data['email'] = user.email
+        return jsonify(data), 200
+    else:
+        return jsonify({'reason': "User not found"}), 404
+
+
+@app.route('/getroommates', methods=['GET'])
+@login_required
+def get_roommates():
+    userID = request.args.get('userID')
+    rentalID = request.args.get('rentalID')
+    rental = db.getRentalByRentalID(rentalID)
+    if rental is not None:
+        roommates = db.getRoomatesByID(rental.roommates, userID)
+        data = {}
+        for num in range(len(roommates)):
+            val = 'roommate' + repr(num)
+            data[val] = {}
+            name = roommates[num].firstName + roommates[num].lastName
+            data[val]['name'] = name
+            data[val]['phoneNumber'] = roommates[num].phoneNumber
+            data[val]['email'] = roommates[num].email
+        return jsonify(data), 200
+    else:
+        return jsonify({'reason': "Rental not found"}), 404
+
+
+@app.route('/getrentalIDs', methods=['GET'])
+@login_required
+def get_rental_IDs():
+    userID = request.args.get('userID')
+    user = db.getUserById(userID)
+    if user is not None:
+        data = {}
+        data['currentRental'] = user.currentRental
+        data['pastRental'] = user.pastRental
+        return jsonify(data), 200
+    else:
+        return jsonify({'reason': "User not found"}), 404
+
+
+@app.route('/getemergencyinfo', methods=['GET'])
+@login_required
+def get_emergency_info():
+    userID = request.args.get('userID')
+    contacts = db.getContactWithAssocUser(userID)
+    if len(contacts) != 0:
+        data = {}
+        for num in range(len(contacts)):
+            contact_str = 'contact' + repr(num)
+            data[contact_str] = {}
+            data[contact_str]['relation'] = contacts[num].relationship
+            name = contacts[num].firstName + contacts[num].lastName
+            data[contact_str]['name'] = name
+            data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
+        return jsonify(data), 200
+    else:
+        return jsonify({'reason': "No associated contacts found"}), 404
 
 
 def _validate(user: db.Users, password: str) -> bool:

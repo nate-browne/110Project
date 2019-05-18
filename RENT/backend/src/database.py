@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from flask_sqlalchemy import SQLAlchemy
 
 from config import app
@@ -11,11 +11,14 @@ class Users(db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
+    phoneNumber = db.Column(db.String(25), nullable=True)
     firstName = db.Column(db.String(255), nullable=False)
     lastName = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    rental1 = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
-    rental2 = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=True)
+    currentRental = db.Column(db.Integer, db.ForeignKey('Rental.id'),
+                              nullable=True)
+    pastRental = db.Column(db.Integer, db.ForeignKey('Rental.id'),
+                           nullable=True)
 
     def __repr__(self) -> str:
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
@@ -62,7 +65,7 @@ class Lease(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     landlordFirstName = db.Column(db.String(255), nullable=False)
     landlordLastName = db.Column(db.String(255), nullable=False)
-    landlordPhoneNumber = db.Column(db.String(10), nullable=False)
+    landlordPhoneNumber = db.Column(db.String(25), nullable=False)
     landlordEmail = db.Column(db.String(255), nullable=False)
     rentCost = db.Column(db.DECIMAL(13, 2), nullable=False, default=0)
     startDate = db.Column(db.Date, nullable=False)
@@ -114,10 +117,11 @@ class ContactInfo(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     firstName = db.Column(db.String(255), nullable=False)
     lastName = db.Column(db.String(255), nullable=False)
-    phoneNumber = db.Column(db.String(255), nullable=False)
+    phoneNumber = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(255), nullable=True)
     associatedUser = db.Column(db.Integer, db.ForeignKey('Users.id'),
                                nullable=False)
+    relationship = db.Column(db.String(255), nullable=False)
 
     def __repr__(self) -> str:
         return '<Contact Info>\nName: {} {}\nPhone Number: {}\
@@ -164,10 +168,21 @@ def getUserById(user_id: db.Integer) -> Optional[Users]:
     return Users.query.filter_by(id=user_id).first()
 
 
-def isUser(user) -> bool:
+def isUser(user: Users) -> bool:
     '''Checks if a user has created an account already'''
     u = Users.query.filter_by(email=user.email).first()
     return u is not None
+
+
+def getContactWithAssocUser(userID: db.Integer) -> List[ContactInfo]:
+    return ContactInfo.query.filter_by(associatedUser=userID).all()
+
+
+def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
+    u = Roommate.query.filter_by(id=matesID).first()
+    u = list(filter(lambda x: x.startswith('room'), dir(u)))
+    u = list(filter(lambda i: int(i) != userID), u)
+    return list(map(lambda i: getUserById(int(i)), u))
 
 
 def addUser(user: Users) -> None:
