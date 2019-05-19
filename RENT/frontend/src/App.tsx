@@ -20,21 +20,19 @@ import Home from "./Home";
 
 const RootStack = createStackNavigator(
   {
-    Login: Login,
-    Example: ExamplePage,
-    RentalMain: RentalMain,
-    Grocery: Grocery,
+    Bulletin: Bulletin,
+    ContactInfo: ContactInfo,
     ExpensesHome: ExpensesHome,
     ExpensesOwed: ExpensesOwed,
     ExpensesPaid: ExpensesPaid,
-    Bulletin: Bulletin,
-    ContactInfo: ContactInfo,
+    Grocery: Grocery,
+    Home: Home,
+    Login: Login,
     Logistics: Logistics,
-    Home: Home
-
+    RentalMain: RentalMain,
   },
   {
-    initialRouteName: "RentalMain",
+    initialRouteName: "Logistics",
   }
 );
 
