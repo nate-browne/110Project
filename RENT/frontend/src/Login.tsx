@@ -108,7 +108,7 @@ export default class Login extends Component<IAppProps, IAppState> {
         this.setLoginVisible(false);
       }
       //login failed
-      else if (resp.status === 404) {
+      else if (resp.status === 400) {
         Alert.alert("Login Failed","Username or Password incorrect");
         console.log("Login Failed");
       }

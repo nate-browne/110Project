@@ -7,16 +7,6 @@ import database as db
 import mailer
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return db.getUserById(user_id)
-
-
-@login_manager.unauthorized_handler
-def unauthorized():
-    return 403
-
-
 @app.route('/createuser', methods=['POST'])
 def createuser():
     email = request.json['email']
@@ -195,6 +185,14 @@ def get_emergency_info():
 def _validate(user: db.Users, password: str) -> bool:
     return user is not None and pbkdf2_sha256.verify(password, user.password)
 
-
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.getUserById(user_id)
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return 403
