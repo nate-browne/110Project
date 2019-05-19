@@ -11,7 +11,7 @@ interface IAppProps {
 interface IAppState {
 }
 export default class RentalMain extends Component<IAppProps, IAppState> {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = ({ navigation}) => {
       return {
         title: "Welcome back " + navigation.getParam('userName', '') + "!",
         headerStyle: {

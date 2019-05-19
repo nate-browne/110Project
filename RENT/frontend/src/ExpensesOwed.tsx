@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ScrollView, View } from 'react-native';
-import { Button, ListItem, Text } from 'react-native-elements'
+import { ListItem, Text } from 'react-native-elements'
 import styles from './style/Expenses-Stylesheet';
 
 export default class ExpensesOwed extends Component {

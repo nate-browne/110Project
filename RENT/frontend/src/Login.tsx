@@ -74,7 +74,8 @@ export default class Login extends Component<IAppProps, IAppState> {
       email: this.state.email,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      password: this.state.password
+      password: this.state.password,
+      phoneNumber: 7074301465
     }).then(resp => {
       if(resp.status === 201) {
         this.props.navigation.navigate('Home',{
@@ -119,7 +120,7 @@ export default class Login extends Component<IAppProps, IAppState> {
   }
   render() {
     return (
-      <View style={styles.loginContainer}>
+      <View>
 
         <Image source={require('../assets/rent-final.png')} style={styles.imageIcon}></Image>
 

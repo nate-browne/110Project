@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, ScrollView, Text, Image, View, TouchableOpacity, ImageBackground } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Alert, ScrollView, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import CountDown from 'react-native-countdown-component';
 import styles from './style/Logistics-Stylesheet';
 
@@ -47,7 +46,7 @@ export default class Logistics extends Component {
             <TouchableOpacity onPress={() => { Alert.alert("Make me bigger") }}>
               <Image style={{margin: 4, width: 225, height: 150}} source={{uri: 'http://davescosmicsubsatl.com/wp-content/uploads/parser/one-bedroom-apartment-interior-design-1.jpg'}}/>
             </TouchableOpacity>
-            
+
           </ScrollView>
 
           <Text style={styles.countdownHeader}> Contract: </Text>

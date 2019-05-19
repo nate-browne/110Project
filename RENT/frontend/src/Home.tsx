@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Alert, View, ScrollView } from 'react-native';
-import { Button, Icon, Image, Input, Overlay, Text} from 'react-native-elements';
+import { View, ScrollView } from 'react-native';
+import { Button,Input, Overlay, Text} from 'react-native-elements';
 import axios from 'axios';
 
 interface IAppProps {

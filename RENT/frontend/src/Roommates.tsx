@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, View, Alert } from 'react-native';
-import { Button, ListItem } from 'react-native-elements';
+import { View } from 'react-native';
+import { ListItem } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; // https://github.com/kohver/react-native-touchable-scale
 import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
-import styles from './style/GroceryMain-Stylesheet';
+import styles from './style/Grocery-Stylesheet';
 
-export default class Roommates extends Component {
+interface IAppProps {
+  navigation?: any;
+}
+
+interface IAppState {
+}
+export default class Roommates extends Component<IAppProps,IAppState> {
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
     list: [
