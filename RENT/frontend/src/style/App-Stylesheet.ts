@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   loginContainer: {
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    //alignItems: "center",
     backgroundColor: "#f6f7f8",
   },
 

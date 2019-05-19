@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, ScrollView, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import CountDown from 'react-native-countdown-component';
-import styles from './style/Logistics-Stylesheet';
+import styles from '../style/Logistics-Stylesheet';
 
 export default class Logistics extends Component {
 

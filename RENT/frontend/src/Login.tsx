@@ -120,7 +120,7 @@ export default class Login extends Component<IAppProps, IAppState> {
   }
   render() {
     return (
-      <View>
+      <View style={styles.loginContainer}>
 
         <Image source={require('../assets/rent-final.png')} style={styles.imageIcon}></Image>
 

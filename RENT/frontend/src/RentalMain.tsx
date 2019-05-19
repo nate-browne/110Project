@@ -53,7 +53,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                   this.props.navigation.push('Grocery');
                   break;
                 case 'Roommates':
-                  Alert.alert("You pressed roommates!");
+                this.props.navigation.push('Roommates');
                   break;
                 case 'Bulletin Board':
                   Alert.alert("You pressed bulletin board!");

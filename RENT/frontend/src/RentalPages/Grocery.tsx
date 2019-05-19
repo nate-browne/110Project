@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { Button, ListItem, Text } from 'react-native-elements'
-import styles from './style/Grocery-Stylesheet';
+import styles from '../style/Grocery-Stylesheet';
 
 export default class Grocery extends Component {
   state = {

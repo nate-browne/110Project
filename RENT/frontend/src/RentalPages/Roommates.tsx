@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; // https://github.com/kohver/react-native-touchable-scale
 import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
-import styles from './style/Grocery-Stylesheet';
+import styles from '../style/Grocery-Stylesheet';
 
 interface IAppProps {
   navigation?: any;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { Button, ListItem, Text } from 'react-native-elements'
-import styles from './style/Expenses-Stylesheet';
+import styles from '../style/Expenses-Stylesheet';
 
 export default class ExpensesPaid extends Component {
     state = {
