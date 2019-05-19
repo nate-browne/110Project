@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, TouchableHighlight, View } from 'react-native';
-import  FlatGrid from 'react-native-super-grid';
+import { FlatGrid } from 'react-native-super-grid';
 import { Icon, Text } from 'react-native-elements';
 import styles from './style/RentalMain-Stylesheet';
 
@@ -17,7 +17,6 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
         headerStyle: {
           backgroundColor: '#89cff0',
         },
-        headerLeft: null,
         headerBackTitle: "Home Page",
         headerTitleStyle: {
           fontWeight: 'bold',

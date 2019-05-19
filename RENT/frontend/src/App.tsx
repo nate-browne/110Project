@@ -15,6 +15,7 @@ import ExpensesOwed from "./ExpensesOwed";
 import ExpensesPaid from "./ExpensesPaid";
 import Bulletin from "./Bulletin";
 import ContactInfo from "./ContactInfo";
+import Home from "./Home";
 
 const RootStack = createStackNavigator(
   {
@@ -23,10 +24,11 @@ const RootStack = createStackNavigator(
     RentalMain: RentalMain,
     Grocery: Grocery,
     ExpensesHome: ExpensesHome,
-    ExpensesOwed: ExpensesOwed, 
+    ExpensesOwed: ExpensesOwed,
     ExpensesPaid: ExpensesPaid,
     Bulletin: Bulletin,
     ContactInfo: ContactInfo,
+    Home: Home
 
   },
   {
