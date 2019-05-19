@@ -14,6 +14,7 @@ import ExpensesHome from "./ExpensesHome";
 import ExpensesOwed from "./ExpensesOwed";
 import ExpensesPaid from "./ExpensesPaid";
 import Bulletin from "./Bulletin";
+import Logistics from "./Logistics";
 import ContactInfo from "./ContactInfo";
 import Home from "./Home";
 
@@ -28,6 +29,7 @@ const RootStack = createStackNavigator(
     ExpensesPaid: ExpensesPaid,
     Bulletin: Bulletin,
     ContactInfo: ContactInfo,
+    Logistics: Logistics,
     Home: Home
 
   },
