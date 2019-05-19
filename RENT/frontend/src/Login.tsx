@@ -88,11 +88,36 @@ export default class Login extends Component<IAppProps, IAppState> {
       console.log('Error occurred',err);
     });
   }
+  login(): any {
+    server.post('/login', {
+      email: this.state.email,
+      password: this.state.password
+    }).then(resp => {
+      //login successful
+      if(resp.status === 200) {
+        this.props.navigation.navigate('Home',{
+          userName: resp.data.firstName,
+          userID: resp.data.userID,
+          loggedIn: resp.data.loggedIn
+        })
+        console.log("Login Successful");
+        this.setLoginVisible(false);
+      }
+      //login failed
+      else if (resp.status === 404) {
+        Alert.alert("Login Failed","Username or Password incorrect");
+        console.log("Login Failed");
+      }
+    })
+    .catch(err => {
+      console.log('Error occurred',err);
+    })
+  }
   render() {
     return (
       <ImageBackground source={{uri: 'https://i.pinimg.com/originals/8c/af/9e/8caf9e448b13665f7922b97ce8cadd3b.jpg'}} style={styles.background}>
         <Image
-            style={styles.image}
+            style={styles.imageIcon}
             source={require('../assets/logo.png')}
           />
 
@@ -158,30 +183,7 @@ export default class Login extends Component<IAppProps, IAppState> {
                 <Button
                   raised={true}
                   title="Login"
-                  onPress={() => {
-                    server.post('/login', {
-                      email: this.state.email,
-                      password: this.state.password
-                    }).then(resp => {
-                      //login successful
-                      if(resp.status === 200) {
-                        this.props.navigation.navigate('Home',{
-                          userName: resp.data.firstName,
-                          loggedIn: resp.data.loggedIn
-                        })
-                        console.log("Login Successful");
-                        this.setLoginVisible(false);
-                      }
-                      //login failed
-                      else if (resp.status === 404) {
-                        Alert.alert("Login Failed","Username or Password incorrect");
-                        console.log("Login Failed");
-                      }
-                    })
-                    .catch(err => {
-                      console.log('Error occurred',err);
-                    })
-                  }}
+                  onPress={() => {this.login()}}
                 />
               </View>
           </View>

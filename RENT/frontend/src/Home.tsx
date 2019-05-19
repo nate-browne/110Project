@@ -9,12 +9,108 @@ interface IAppProps {
 
 interface IAppState {
 }
+class RentalForm extends Component<IAppProps, IAppState> {
+  render() {
+    return(
+      <View>
+        <Text style={{fontSize: 24}}>Create New Rental</Text>
 
+        <Input
+            //inputContainerStyle={styles.textinput}
+            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+            placeholder="Enter a name for your rental"
+            keyboardAppearance="light"
+            returnKeyType="next"
+            onChangeText={(text: string) => this.setState({email: text})}
+          />
+        <Input
+            //inputContainerStyle={styles.textinput}
+            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+            placeholder="Address"
+            keyboardAppearance="light"
+            returnKeyType="next"
+            onChangeText={(text: string) => this.setState({email: text})}
+          />
+
+        <Text style={{fontSize: 24}}>Landlord Information</Text>
+
+
+        <Input
+            //inputContainerStyle={styles.textinput}
+            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+            placeholder="Landlord's name"
+            keyboardAppearance="light"
+            returnKeyType="next"
+            onChangeText={(text: string) => this.setState({email: text})}
+          />
+        <Input
+            //inputContainerStyle={styles.textinput}
+            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+            placeholder="Phone number"
+            keyboardAppearance="light"
+            keyboardType="phone-pad"
+            returnKeyType="next"
+            onChangeText={(text: string) => this.setState({email: text})}
+          />
+
+          <Text style={{fontSize: 24}}>Leasing Information</Text>
+
+          <Input
+              //inputContainerStyle={styles.textinput}
+              leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+              placeholder="Start Date"
+              keyboardAppearance="light"
+              returnKeyType="next"
+              onChangeText={(text: string) => this.setState({email: text})}
+          />
+          <Input
+              //inputContainerStyle={styles.textinput}
+              leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+              placeholder="End Date"
+              keyboardAppearance="light"
+              returnKeyType="next"
+              onChangeText={(text: string) => this.setState({email: text})}
+          />
+          <Input
+              //inputContainerStyle={styles.textinput}
+              leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+              placeholder="Rent per month"
+              keyboardAppearance="light"
+              keyboardType="numeric"
+              returnKeyType="next"
+              onChangeText={(text: string) => this.setState({email: text})}
+          />
+
+
+          <Text style={{fontSize: 24}}>Roommate Invite</Text>
+
+          <Input
+              //inputContainerStyle={styles.textinput}
+              leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+              placeholder="Roommate email"
+              keyboardAppearance="light"
+              keyboardType="email-address"
+              returnKeyType="next"
+              onChangeText={(text: string) => this.setState({email: text})}
+          />
+          <Input
+              //inputContainerStyle={styles.textinput}
+              leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+              placeholder="Roommate email"
+              keyboardAppearance="light"
+              keyboardType="email-address"
+              returnKeyType="next"
+              onChangeText={(text: string) => this.setState({email: text})}
+          />
+
+          <Text style={{fontSize: 24}}>Documents and Images</Text>
+        </View>
+    )
+  }
+}
 export default class Home extends Component<IAppProps, IAppState> {
-  static navigationOptions = ({ navigation }) => {
-      return {
-        headerLeft: null
-      };
+  static navigationOptions = {
+      headerLeft: null
   };
   state = {
     visible: false,
@@ -26,10 +122,12 @@ export default class Home extends Component<IAppProps, IAppState> {
   }
 
   render() {
+    const userID = this.props.navigation.getParam("userID","NO-ID");
+    console.log(userID);
     return(
       <View>
         <Text>
-          First time using RENT? Add a rental below and start managing your properties right away!
+          First time using RENT? Add a rental below and start managing your properties right away
         </Text>
 
         <View>
@@ -57,109 +155,16 @@ export default class Home extends Component<IAppProps, IAppState> {
                   this.setVisible(false);
                 }}
               />
-              <Text style={{fontSize: 24}}>Create New Rental</Text>
-
-              <Input
-                  //inputContainerStyle={styles.textinput}
-                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                  placeholder="Enter a name for your rental"
-                  keyboardAppearance="light"
-                  returnKeyType="next"
-                  onChangeText={(text: string) => this.setState({email: text})}
+              <RentalForm/>
+              <View>
+                <Button
+                  raised={true}
+                  title="Create"
+                  onPress={() => {
+                    this.setVisible(false);
+                  }}
                 />
-              <Input
-                  //inputContainerStyle={styles.textinput}
-                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                  placeholder="Address"
-                  keyboardAppearance="light"
-                  returnKeyType="next"
-                  onChangeText={(text: string) => this.setState({email: text})}
-                />
-
-              <Text style={{fontSize: 24}}>Landlord Information</Text>
-
-
-              <Input
-                  //inputContainerStyle={styles.textinput}
-                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                  placeholder="Landlord's name"
-                  keyboardAppearance="light"
-                  returnKeyType="next"
-                  onChangeText={(text: string) => this.setState({email: text})}
-                />
-              <Input
-                  //inputContainerStyle={styles.textinput}
-                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                  placeholder="Phone number"
-                  keyboardAppearance="light"
-                  keyboardType="phone-pad"
-                  returnKeyType="next"
-                  onChangeText={(text: string) => this.setState({email: text})}
-                />
-
-                <Text style={{fontSize: 24}}>Leasing Information</Text>
-
-                <Input
-                    //inputContainerStyle={styles.textinput}
-                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="Start Date"
-                    keyboardAppearance="light"
-                    returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({email: text})}
-                />
-                <Input
-                    //inputContainerStyle={styles.textinput}
-                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="End Date"
-                    keyboardAppearance="light"
-                    returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({email: text})}
-                />
-                <Input
-                    //inputContainerStyle={styles.textinput}
-                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="Rent per month"
-                    keyboardAppearance="light"
-                    keyboardType="numeric"
-                    returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({email: text})}
-                />
-
-
-                <Text style={{fontSize: 24}}>Roommate Invite</Text>
-
-                <Input
-                    //inputContainerStyle={styles.textinput}
-                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="Roommate email"
-                    keyboardAppearance="light"
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({email: text})}
-                />
-                <Input
-                    //inputContainerStyle={styles.textinput}
-                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="Roommate email"
-                    keyboardAppearance="light"
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({email: text})}
-                />
-
-                <Text style={{fontSize: 24}}>Documents and Images</Text>
-
-
-                <View>
-                  <Button
-                    raised={true}
-                    title="Create"
-                    onPress={() => {
-                      this.setVisible(false);
-                    }}
-                  />
-                </View>
-
+              </View>
           </ScrollView>
         </Overlay>
 
