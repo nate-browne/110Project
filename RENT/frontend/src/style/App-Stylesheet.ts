@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 
 
 /**
@@ -19,6 +20,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f6f7f8",
+    height: '100%',
   },
 
   formFields: {
@@ -66,9 +68,11 @@ const styles = StyleSheet.create({
   },
 
   textinput: {
-    //fontSize: 18,
-    height: 36
+    height: 36,
+    width: '80%',
+    alignSelf: "center",
   },
+
   background: {
     width: '100%',
     height: '100%',

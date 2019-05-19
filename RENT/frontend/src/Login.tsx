@@ -36,7 +36,6 @@ export default class Login extends Component<IAppProps, IAppState> {
   };
 
   state = {
-    loginVisible: false,
     signupVisible: false,
     firstName: "",
     lastName: "",
@@ -46,10 +45,6 @@ export default class Login extends Component<IAppProps, IAppState> {
     emailError: false,
     passwordError: false
   };
-
-  setLoginVisible(visible: boolean) {
-    this.setState({loginVisible: visible});
-  }
 
   setSignupVisible(visible: boolean) {
     this.setState({signupVisible: visible});
@@ -105,7 +100,6 @@ export default class Login extends Component<IAppProps, IAppState> {
           loggedIn: resp.data.loggedIn
         })
         console.log("Login Successful");
-        this.setLoginVisible(false);
       }
       //login failed
       else if (resp.status === 400) {
@@ -126,7 +120,6 @@ export default class Login extends Component<IAppProps, IAppState> {
         <View style={styles.formFields}>
           <Input
                   inputContainerStyle={styles.textinput}
-                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   placeholder="Email"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -138,7 +131,6 @@ export default class Login extends Component<IAppProps, IAppState> {
 
           <Input
                   inputContainerStyle={styles.textinput}
-                  leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   secureTextEntry={true}
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -147,12 +139,10 @@ export default class Login extends Component<IAppProps, IAppState> {
                   placeholder="Password"
                   onChangeText={(text: string) => this.setState({password: text})}
           />
-
       </View>
 
       <View style={styles.loginButton}>
               <Button
-                raised={false}
                 title="Login"
                 buttonStyle={{backgroundColor:"#2bc0cd"}}
                 onPress={() => {this.login()}}
