@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       borderRadius: 5,
       padding: 10,
-      height: 250,
+      height: 150,
     },
     itemName: {
       fontSize: 16,
