@@ -6,17 +6,17 @@
 
 import React, {Component} from 'react';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import Login from "./Login";
-import ExamplePage from "./ExamplePage";
-import RentalMain from "./RentalMain";
-import Grocery from "./Grocery";
+import Bulletin from "./Bulletin";
+import ContactInfo from "./ContactInfo";
 import ExpensesHome from "./ExpensesHome";
 import ExpensesOwed from "./ExpensesOwed";
 import ExpensesPaid from "./ExpensesPaid";
-import Bulletin from "./Bulletin";
-import Logistics from "./Logistics";
-import ContactInfo from "./ContactInfo";
+import Grocery from "./Grocery";
 import Home from "./Home";
+import Login from "./Login";
+import Logistics from "./Logistics";
+import RentalMain from "./RentalMain";
+import Roommates from "./Roommates";
 
 const RootStack = createStackNavigator(
   {
@@ -30,6 +30,7 @@ const RootStack = createStackNavigator(
     Login: Login,
     Logistics: Logistics,
     RentalMain: RentalMain,
+    Roommates: Roommates
   },
   {
     initialRouteName: "Logistics",
