@@ -1,13 +1,57 @@
 import {StyleSheet} from 'react-native';
-import { ClientRequest } from 'http';
+
+
+/**
+ *  Color scheme:
+ * 
+ * #2bc0cd  - maximum blue green (icon color)
+ * #f6f7f8  - white smoke (background)
+ * 
+ */
+
+
+
 
 const styles = StyleSheet.create({
+
+  loginContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f6f7f8",
+  },
+
+  formFields: {
+    marginBottom: 40,
+  },
+
+  mainButton: {
+    width: '50%',
+    margin: 10,
+    marginBottom: 50,
+    backgroundColor: '#2bc0cd',
+  },
+
+  loginButton: {
+    width: '50%',
+    margin: 10,
+    marginBottom: 50,
+  },
+
+  serviceBar: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
+
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#f6f7f8",
     alignItems: 'center',
     justifyContent: 'space-evenly',
+    borderWidth: 2,
+    borderColor: 'grey',
   },
+
   text: {
     fontSize: 36,
     color: 'teal',
@@ -15,41 +59,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 20,
   },
-  textbox: {
-    borderColor: '#000'
+
+  linkText: {
+    fontSize: 14,
+    color: '#292f36',
   },
+
   textinput: {
-    //fontSize: 18,
+    marginTop: 5,
+    marginBottom: 5,
     height: 36,
-    width: 375 * 0.6,
+    width: '80%',
     justifyContent: "center",
     alignItems: "center",
   },
-  background: {
-    width: '100%', 
-    height: '100%', 
-    alignItems: 'center', 
-    justifyContent: 'center',
-  },
+
   imageIcon: {
     width: 150,
     height: 150,
     alignItems: 'stretch',
+    marginTop: 130,
+    marginBottom: 35,
   },
+
   button: {
-    width: '30%',
-    margin: 10
+    width: '40%',
+    margin: 10,
   },
-  flexContainer: {
-    flexDirection: "column",
-    padding: 100,
-  },
-  centerText : {
-    alignItems: "center",
-  },
-  iconBox : {
-    justifyContent: "center",
-  },
+
 });
 
 export default styles;
