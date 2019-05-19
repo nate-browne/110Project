@@ -1,6 +1,4 @@
 import {StyleSheet} from 'react-native';
-import { NavigationEvents } from 'react-navigation';
-
 
 /**
  *  Color scheme:
@@ -18,7 +16,7 @@ const styles = StyleSheet.create({
   loginContainer: {
     flexDirection: "column",
     justifyContent: "center",
-    //alignItems: "center",
+    alignItems: "center",
     backgroundColor: "#f6f7f8",
     height: '100%',
   },
