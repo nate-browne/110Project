@@ -7,7 +7,7 @@
 import React, {Component} from 'react';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import Bulletin from "./RentalPages/Bulletin";
-import ContactInfo from "./ContactInfo";
+import ContactInfo from "./RentalPages/ContactInfo";
 import ExpensesHome from "./RentalPages/ExpensesHome";
 import ExpensesOwed from "./RentalPages/ExpensesOwed";
 import ExpensesPaid from "./RentalPages/ExpensesPaid";
