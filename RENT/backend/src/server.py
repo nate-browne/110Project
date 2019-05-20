@@ -31,7 +31,7 @@ def createuser():
     email = request.json['email']
     firstName = request.json['firstName']
     lastName = request.json['lastName']
-    phoneNumber = 7074301465#request.json['phoneNumber']
+    phoneNumber = request.json['phoneNumber']
     password = pbkdf2_sha256.hash(request.json['password'])
     user = Users(email=email, firstName=firstName, lastName=lastName,
                  phoneNumber=phoneNumber, password=password)
@@ -53,13 +53,23 @@ def create_rental():
     the route '/updaterental'.\n
     The route expects that the data comes in with the following fields:\n
     item - JSON tag - description\n
-    address - 'address' - the address of the rental
+    address - 'address' - the address of the rental\n
+    userID - 'userID' - the userID of the person who created the rental
 
     This function will always return an empty JSON object and status code 201
     '''
+    # Pull fields from the request
     address = request.json['address']
+    userID = request.json['userID']
+
+    # grab the user and update their rental fields
+    user = dq.getUserById(userID)
+
+    # Create a rental and update the user's current rental
     rental = Rental(address=address)
     dq.addRental(rental)
+    dq.updateUserRentals(user, rental.id)
+
     return jsonify({}), 201
 
 
@@ -82,6 +92,7 @@ def _change_password(user: Users, password: str):
 def reset_password(email: str, password: str):
     user = dq.getUserByEmail(email)
     _change_password(user, password)
+    return jsonify({}), 201
 
 
 @app.route('/logout', methods=['POST'])
@@ -95,7 +106,7 @@ def logout():
 def login():
     email = request.json['email']
     password = request.json['password']
-    remember = True #if request.json['remember'] == 'true' else False
+    remember = True if request.json['remember'] == 'true' else False
 
     user = dq.getUserByEmail(email)
 
