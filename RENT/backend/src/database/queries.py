@@ -54,6 +54,12 @@ def updatePassword(user: Users, password: str) -> None:
     db.session.commit()
 
 
+def updateUserRentals(user: Users, rentalID: db.Integer) -> None:
+    user.pastRental = user.currentRental
+    user.currentRental = rentalID
+    db.session.commit()
+
+
 def addRental(rental: Rental) -> None:
     db.session.add(rental)
     db.session.commit()
