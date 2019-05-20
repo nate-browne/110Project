@@ -1,4 +1,4 @@
-from typing import Optional, List
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
 from config import app
@@ -7,7 +7,7 @@ db = SQLAlchemy(app)
 db.init_app(app)
 
 
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
@@ -24,9 +24,12 @@ class Users(db.Model):
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
             self.firstName, self.last_name, self.email, self.rental)
 
+    def get_id(self) -> bytes:
+        return self.id.encode('utf-8')
 
-class Roommate(db.Model):
-    __tablename__ = 'Roommate'
+
+class Roommates(db.Model):
+    __tablename__ = 'Roommates'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommate1 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
                           default=None)
@@ -62,6 +65,7 @@ class PropertyDocument(db.Model):
 
 
 class Lease(db.Model):
+    __tablename__ = 'Lease'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     landlordFirstName = db.Column(db.String(255), nullable=False)
     landlordLastName = db.Column(db.String(255), nullable=False)
@@ -79,17 +83,17 @@ class Rental(db.Model):
     __tablename__ = 'Rental'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommates = db.Column(db.Integer, db.ForeignKey('Roommates.id'),
-                          nullable=False)
+                          nullable=True, default=None)
     contactInfoList = db.Column(db.Integer,
                                 db.ForeignKey('ContactInfoList.id'),
-                                nullable=False)
+                                nullable=True, default=None)
     lease = db.Column(db.Integer, db.ForeignKey('Lease.id'),
-                      nullable=False)
+                      nullable=True, default=None)
     insurance = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
-                          nullable=False)
-    board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=False)
-    address = db.Column(db.String(255), nullable=False)
-    photo = db.Column(db.String(255), nullable=True)
+                          nullable=True, default=None)
+    board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=True,
+                      default=None)
+    address = db.Column(db.String(255), nullable=True, default=None)
 
     def __repr__(self) -> str:
         print_str = "<Rental>\nrentalID: {}\ndocumentID: {}\nroommatesListID:\
@@ -153,53 +157,3 @@ class ContactInfoList(db.Model):
                          nullable=True)
     contact10 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
                           nullable=True)
-
-
-def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
-    '''Returns a rental from the db by finding the matching rentalID'''
-    return Rental.query.filter_by(id=rentalID).first()
-
-
-def getLeaseByLeaseID(leaseID: db.Integer) -> Optional[Lease]:
-    '''Returns a lease from the db by finding the matching leaseID'''
-    return Lease.query.filter_by(id=leaseID).first()
-
-
-def getDocByDocID(documentID: db.Integer) -> Optional[PropertyDocument]:
-    '''Returns a document from the db by finding the matching documentID'''
-    return PropertyDocument.query.filter_by(id=documentID).first()
-
-
-def getUserByEmail(email: str) -> Optional[Users]:
-    return Users.query.filter_by(email=email).first()
-
-
-def getUserById(user_id: db.Integer) -> Optional[Users]:
-    return Users.query.filter_by(id=user_id).first()
-
-
-def isUser(user: Users) -> bool:
-    '''Checks if a user has created an account already'''
-    u = Users.query.filter_by(email=user.email).first()
-    return u is not None
-
-
-def getContactWithAssocUser(userID: db.Integer) -> List[ContactInfo]:
-    return ContactInfo.query.filter_by(associatedUser=userID).all()
-
-
-def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
-    u = Roommate.query.filter_by(id=matesID).first()
-    u = list(filter(lambda x: x.startswith('room'), dir(u)))
-    u = list(filter(lambda i: int(i) != userID), u)
-    return list(map(lambda i: getUserById(int(i)), u))
-
-
-def addUser(user: Users) -> None:
-    db.session.add(user)
-    db.session.commit()
-
-
-def updatePassword(user: Users, password: str) -> None:
-    user.password = password
-    db.session.commit()

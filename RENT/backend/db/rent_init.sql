@@ -5,7 +5,7 @@ USE rent;
 CREATE TABLE `Users` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`email` varchar(255) NOT NULL UNIQUE,
-	`phoneNumber` varchar(10),
+	`phoneNumber` varchar(25),
 	`firstName` varchar(255) NOT NULL,
 	`lastName` varchar(255) NOT NULL,
 	`password` varchar(255) NOT NULL,
@@ -35,8 +35,8 @@ CREATE TABLE `Lease` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`landlordFirstName` varchar(255) NOT NULL,
 	`landlordLastName` varchar(255) NOT NULL,
-	`landlordPhoneNumber` varchar(10),
-	`landlordEmail` varchar(255),
+	`landlordPhoneNumber` varchar(10) DEFAULT NULL,
+	`landlordEmail` varchar(255) DEFAULT NULL,
 	`rentCost` DECIMAL(13, 2) NOT NULL DEFAULT 0,
 	`startDate` DATE NOT NULL,
 	`endDate` DATE NOT NULL,
@@ -47,13 +47,12 @@ CREATE TABLE `Lease` (
 
 CREATE TABLE `Rental` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`roommates` bigint(20) NOT NULL,
-	`contactInfoList` bigint(20) NOT NULL,
-	`lease` bigint(20) NOT NULL,
-	`insurance` bigint(20) NOT NULL,
-	`board` bigint(20) NOT NULL,
-	`address` varchar(255) NOT NULL,
-	`photo` varchar(255),
+	`roommates` bigint(20) DEFAULT NULL,
+	`contactInfoList` bigint(20) DEFAULT NULL,
+	`lease` bigint(20) DEFAULT NULL,
+	`insurance` bigint(20) DEFAULT NULL,
+	`board` bigint(20) DEFAULT NULL,
+	`address` varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
