@@ -35,7 +35,7 @@ CREATE TABLE `Lease` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`landlordFirstName` varchar(255) NOT NULL,
 	`landlordLastName` varchar(255) NOT NULL,
-	`landlordPhoneNumber` varchar(10) DEFAULT NULL,
+	`landlordPhoneNumber` varchar(25) DEFAULT NULL,
 	`landlordEmail` varchar(255) DEFAULT NULL,
 	`rentCost` DECIMAL(13, 2) NOT NULL DEFAULT 0,
 	`startDate` DATE NOT NULL,
