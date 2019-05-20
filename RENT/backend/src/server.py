@@ -12,7 +12,7 @@ def createuser():
     email = request.json['email']
     firstName = request.json['firstName']
     lastName = request.json['lastName']
-    phoneNumber = request.json['phoneNumber']
+    phoneNumber = 7074301465#request.json['phoneNumber']
     password = pbkdf2_sha256.hash(request.json['password'])
     user = db.Users(email=email, firstName=firstName, lastName=lastName,
                     phoneNumber=phoneNumber, password=password)
@@ -58,7 +58,7 @@ def logout():
 def login():
     email = request.json['email']
     password = request.json['password']
-    remember = True if request.json['remember'] == 'true' else False
+    remember = True #if request.json['remember'] == 'true' else False
 
     user = db.getUserByEmail(email)
 

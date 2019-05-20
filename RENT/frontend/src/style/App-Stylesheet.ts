@@ -1,12 +1,11 @@
 import {StyleSheet} from 'react-native';
 
-
 /**
  *  Color scheme:
- * 
+ *
  * #2bc0cd  - maximum blue green (icon color)
  * #f6f7f8  - white smoke (background)
- * 
+ *
  */
 
 
@@ -19,6 +18,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f6f7f8",
+    height: '100%',
   },
 
   formFields: {
@@ -66,12 +66,16 @@ const styles = StyleSheet.create({
   },
 
   textinput: {
-    marginTop: 5,
-    marginBottom: 5,
     height: 36,
     width: '80%',
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: "center",
+  },
+
+  background: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   imageIcon: {

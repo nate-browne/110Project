@@ -1,9 +1,13 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+    container:{
+      borderRadius: 5
+    },
     header:{
       backgroundColor: "#00BFFF",
       height:200,
+      alignItems: 'flex-end',
     },
     avatar: {
       width: 130,
@@ -16,11 +20,6 @@ const styles = StyleSheet.create({
       position: 'absolute',
       marginTop:130
     },
-    name:{
-      fontSize:22,
-      color:"#FFFFFF",
-      fontWeight:'600',
-    },
     body:{
       marginTop:40,
     },
@@ -28,6 +27,9 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       padding:30,
+    },
+    button: {
+      padding: 10,
     },
     name:{
       fontSize:28,
@@ -55,6 +57,10 @@ const styles = StyleSheet.create({
       width:250,
       borderRadius:30,
       backgroundColor: "#00BFFF",
+    },
+    textinput: {
+      //fontSize: 18,
+      height: 36
     },
   });
 
