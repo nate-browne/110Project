@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, ScrollView, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Button, Overlay, Input, Icon } from 'react-native-elements';
-import styles from './style/Contact-Stylesheet';
+import styles from '../style/Contact-Stylesheet';
 
 export default class ContactInfo extends Component {
 
