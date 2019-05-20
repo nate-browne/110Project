@@ -68,9 +68,10 @@ class Lease(db.Model):
     __tablename__ = 'Lease'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     landlordFirstName = db.Column(db.String(255), nullable=False)
-    landlordLastName = db.Column(db.String(255), nullable=True, default=None)
-    landlordPhoneNumber = db.Column(db.String(25), nullable=True, default=None)
-    landlordEmail = db.Column(db.String(255), nullable=False)
+    landlordLastName = db.Column(db.String(255), nullable=False)
+    landlordPhoneNumber = db.Column(db.String(25), nullable=False,
+                                    default=None)
+    landlordEmail = db.Column(db.String(255), nullable=False, default=None)
     rentCost = db.Column(db.DECIMAL(13, 2), nullable=False, default=0)
     startDate = db.Column(db.Date, nullable=False)
     endDate = db.Column(db.Date, nullable=False)
