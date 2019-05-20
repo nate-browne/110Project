@@ -24,9 +24,6 @@ class Users(UserMixin, db.Model):
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
             self.firstName, self.last_name, self.email, self.rental)
 
-    def get_id(self) -> bytes:
-        return self.id.encode('utf-8')
-
 
 class Roommates(db.Model):
     __tablename__ = 'Roommates'
