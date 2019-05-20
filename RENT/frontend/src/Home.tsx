@@ -181,7 +181,8 @@ export default class Home extends Component<IAppProps, IAppState> {
                   onPress={() => {
                     this.setVisible(false);
                     server.post('/createrental', {
-                      address: this.state.address
+                      address: this.state.address,
+                      userID: userID
                     }).then(resp => {
                         console.log("Rental Created")
                     })
