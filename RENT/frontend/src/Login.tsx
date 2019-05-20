@@ -73,10 +73,6 @@ export default class Login extends Component<IAppProps, IAppState> {
       phoneNumber: 7074301465
     }).then(resp => {
       if(resp.status === 201) {
-        this.props.navigation.navigate('Home',{
-          userName: this.state.firstName,
-          loggedIn: true
-        })
         console.log("Account created");
         this.setSignupVisible(false);
       } else {
