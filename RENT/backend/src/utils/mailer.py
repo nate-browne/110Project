@@ -2,7 +2,7 @@ import csv
 from sys import argv
 import smtplib as s
 
-from generate import gen_keys
+from .generate import gen_keys
 
 smtp_server = 'smtp.gmail.com'  # Gmail
 
@@ -29,7 +29,7 @@ Returns:
     to_send = ''.join(message)
 
     # Open CSV file, grab email and password
-    with open('RENT/backend/src/info.csv', 'r') as infile:
+    with open('RENT/backend/src/utils/info.csv', 'r') as infile:
         read = csv.reader(infile, delimiter=',')
         next(read)
         for row in read:

@@ -1,34 +1,71 @@
 from flask import request, jsonify
 from passlib.hash import pbkdf2_sha256
-from flask_login import login_manager, login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user
 
-from config import app
-import database as db
-import mailer
+from utils import mailer
+from config import app, _login
+
+import database.queries as dq
+from database.models import Users, Rental
 
 
 @app.route('/createuser', methods=['POST'])
 def createuser():
+    '''This route is used to create a new user in the database.\n
+    It can only be reached via POST. To update a user's data, use
+    the route '/updateuser'.\n
+    The route expects that the data comes in with the following fields:\n
+    item - JSON tag - description\n
+    email - 'email' - The user's email\n
+    first name - 'firstName' - the user's first name\n
+    surname - 'lastName' - the user's surname\n
+    phoneNumber - 'phoneNumber' - the user's phoneNumber\n
+    password - 'password' - the user's password\n
+
+    If the user already exists in the database, it will return an empty JSON
+    object and status code 301 to signify this. If the user is
+    successfully added, it will return an empty JSON object and status
+    code 201.
+    '''
+
     email = request.json['email']
     firstName = request.json['firstName']
     lastName = request.json['lastName']
     phoneNumber = 7074301465#request.json['phoneNumber']
     password = pbkdf2_sha256.hash(request.json['password'])
-    user = db.Users(email=email, firstName=firstName, lastName=lastName,
-                    phoneNumber=phoneNumber, password=password)
+    user = Users(email=email, firstName=firstName, lastName=lastName,
+                 phoneNumber=phoneNumber, password=password)
 
     # check if user exists and redirect them if they do
-    if db.isUser(user):
+    if dq.isUser(user):
         return jsonify({}), 301
     else:
         # create user in the DB and return success
-        db.addUser(user)
+        dq.addUser(user)
         return jsonify({}), 201
+
+
+@app.route('/createrental', methods=['POST'])
+@login_required
+def create_rental():
+    '''This route is used to create a new rental in the database.\n
+    It can only be reached via POST. To update a rentals's data, use
+    the route '/updaterental'.\n
+    The route expects that the data comes in with the following fields:\n
+    item - JSON tag - description\n
+    address - 'address' - the address of the rental
+
+    This function will always return an empty JSON object and status code 201
+    '''
+    address = request.json['address']
+    rental = Rental(address=address)
+    dq.addRental(rental)
+    return jsonify({}), 201
 
 
 @app.route('/forgotpassword', methods=['POST'])
 def forgot_password():
-    user = db.getUserByEmail(request.json['email'])
+    user = dq.getUserByEmail(request.json['email'])
     if user is not None:
         temp = mailer.send_mail(user.email)
         _change_password(user, temp)
@@ -36,14 +73,14 @@ def forgot_password():
         return jsonify({'reason': "User not found"}), 404
 
 
-def _change_password(user: db.Users, password: str):
-    db.updatePassword(user, pbkdf2_sha256.hash(password))
+def _change_password(user: Users, password: str):
+    dq.updatePassword(user, pbkdf2_sha256.hash(password))
 
 
 @app.route('/resetpassword', methods=['POST'])
 @login_required
 def reset_password(email: str, password: str):
-    user = db.getUserByEmail(email)
+    user = dq.getUserByEmail(email)
     _change_password(user, password)
 
 
@@ -60,7 +97,7 @@ def login():
     password = request.json['password']
     remember = True #if request.json['remember'] == 'true' else False
 
-    user = db.getUserByEmail(email)
+    user = dq.getUserByEmail(email)
 
     if _validate(user, password):
         login_user(user, remember=remember)
@@ -73,7 +110,7 @@ def login():
 @login_required
 def get_address():
     rentalID = request.args.get('rentalID')
-    rental = db.getRentalByRentalID(rentalID)
+    rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
         return jsonify(rental.address), 200
     else:
@@ -84,9 +121,9 @@ def get_address():
 @login_required
 def get_lease_end_date():
     rentalID = request.args.get('rentalID')
-    rental = db.getRentalByRentalID(rentalID)
+    rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
-        lease = db.getLeaseByLeaseID(rental.lease)
+        lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
             return jsonify(lease.endDate), 200
         else:
@@ -99,11 +136,11 @@ def get_lease_end_date():
 @login_required
 def get_documents():
     rentalID = request.args.get('rentalID')
-    rental = db.getRentalByRentalID(rentalID)
+    rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
-        lease = db.getLeaseByLeaseID(rental.lease)
+        lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
-            doc = db.getDocByDocID(lease.document)
+            doc = dq.getDocByDocID(lease.document)
             if doc is not None:
                 return jsonify(doc.document), 200
         else:
@@ -116,7 +153,7 @@ def get_documents():
 @login_required
 def get_info():
     userID = request.args.get('userID')
-    user = db.getUserById(userID)
+    user = dq.getUserById(userID)
     if user is not None:
         data = {}
         data['firstName'] = user.firstName
@@ -133,9 +170,9 @@ def get_info():
 def get_roommates():
     userID = request.args.get('userID')
     rentalID = request.args.get('rentalID')
-    rental = db.getRentalByRentalID(rentalID)
+    rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
-        roommates = db.getRoomatesByID(rental.roommates, userID)
+        roommates = dq.getRoommatesByID(rental.roommates, userID)
         data = {}
         for num in range(len(roommates)):
             val = 'roommate' + repr(num)
@@ -153,7 +190,7 @@ def get_roommates():
 @login_required
 def get_rental_IDs():
     userID = request.args.get('userID')
-    user = db.getUserById(userID)
+    user = dq.getUserById(userID)
     if user is not None:
         data = {}
         data['currentRental'] = user.currentRental
@@ -167,7 +204,7 @@ def get_rental_IDs():
 @login_required
 def get_emergency_info():
     userID = request.args.get('userID')
-    contacts = db.getContactWithAssocUser(userID)
+    contacts = dq.getContactWithAssocUser(userID)
     if len(contacts) != 0:
         data = {}
         for num in range(len(contacts)):
@@ -182,17 +219,22 @@ def get_emergency_info():
         return jsonify({'reason': "No associated contacts found"}), 404
 
 
-def _validate(user: db.Users, password: str) -> bool:
+def _validate(user: Users, password: str) -> bool:
     return user is not None and pbkdf2_sha256.verify(password, user.password)
+
+
+def load_user(user_id):
+    return dq.getUserById(int(user_id))
+
+
+_login.user_loader(load_user)
+
+
+def unauthorized():
+    return jsonify({'reason': "Not logged in"}), 403
+
+
+_login.unauthorized_handler(unauthorized)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
-
-@login_manager.user_loader
-def load_user(user_id):
-    return db.getUserById(user_id)
-
-
-@login_manager.unauthorized_handler
-def unauthorized():
-    return 403
