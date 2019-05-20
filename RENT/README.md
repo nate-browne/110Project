@@ -62,8 +62,8 @@ Next, you'll need to `cd RENT/backend/src` and create a file called `config.py`.
 
 ```python
 from flask import Flask
+from flask_login import LoginManager
 
-# Local database URL for everyone
 DB_URL = 'mysql://root@localhost/rent'
 
 app = Flask(__name__)
@@ -71,6 +71,8 @@ app.secret_key = 'aabjeetGx2LaCC1a4opBUsc95a6KmbKX20hHIq8ie5r8FJx5S9fSTk2hYsz8\
 5BLfNxk9vjw'
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFACTIONS'] = False
+_login = LoginManager()
+_login.init_app(app)
 ```
 
 
