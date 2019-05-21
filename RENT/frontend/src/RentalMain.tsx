@@ -30,7 +30,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
         >
           <Icon name={"face"}  size={30}  />
         </TouchableOpacity>,
-        headerBackTitle: "Home Page",
+        headerBackTitle: "Rental Home",
         headerTitleStyle: {
           fontWeight: 'bold',
         },

@@ -88,7 +88,7 @@ export default class Login extends Component<IAppProps, IAppState> {
     server.post('/login', {
       email: this.state.email,
       password: this.state.password,
-      remember: true
+      remember: true  
     }).then(resp => {
       //login successful
       if(resp.status === 200) {
