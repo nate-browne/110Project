@@ -114,7 +114,7 @@ def login():
         login_user(user, remember=remember)
         return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:
-        return jsonify({{'reason': "User/Password doesn't match"}}), 400
+        return jsonify({'reason': "User/Password doesn't match"}), 400
 
 
 @app.route('/getaddress', methods=['GET'])

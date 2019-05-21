@@ -43,7 +43,9 @@ export default class Login extends Component<IAppProps, IAppState> {
     password: "",
     confirmPassword: "",
     emailError: false,
-    passwordError: false
+    passwordError: false,
+    loginError: false,
+    signupError: false
   };
 
   setSignupVisible(visible: boolean) {
@@ -63,7 +65,18 @@ export default class Login extends Component<IAppProps, IAppState> {
     }
     return "";
   }
-
+  displayLoginError(): string {
+    if(this.state.loginError === true ) {
+      return "Username or Password incorrect";
+    }
+    return "";
+  }
+  displaySignupError(): string {
+    if(this.state.signupError === true ) {
+      return "Account with above email exists. Please sign in.";
+    }
+    return "";
+  }
   createUser(): any {
     server.post('/createuser', {
       email: this.state.email,
@@ -76,19 +89,18 @@ export default class Login extends Component<IAppProps, IAppState> {
         console.log("Account created");
         this.setSignupVisible(false);
       } else {
-        Alert.alert('Account Exists', "We found an account with that email. Please sign in");
-        this.props.navigation.navigate('Login')
-        console.log("Exists");
       }
     }).catch(err => {
+      this.setState({signupError: true})
       console.log('Error occurred',err);
     });
   }
+
   login(): any {
     server.post('/login', {
       email: this.state.email,
       password: this.state.password,
-      remember: true  
+      remember: true
     }).then(resp => {
       //login successful
       if(resp.status === 200) {
@@ -101,11 +113,12 @@ export default class Login extends Component<IAppProps, IAppState> {
       }
       //login failed
       else if (resp.status === 400) {
-        Alert.alert("Login Failed","Username or Password incorrect");
+        this.setState({loginError: true})
         console.log("Login Failed");
       }
     })
     .catch(err => {
+      this.setState({loginError: true})
       console.log('Error occurred',err);
     })
   }
@@ -124,7 +137,7 @@ export default class Login extends Component<IAppProps, IAppState> {
                   keyboardAppearance="light"
                   keyboardType="email-address"
                   returnKeyType="next"
-                  onChangeText={(text: string) => this.setState({email: text})}
+                  onChangeText={(text: string) => this.setState({email: text, loginError: false})}
             />
 
           <Input
@@ -135,6 +148,8 @@ export default class Login extends Component<IAppProps, IAppState> {
                   keyboardAppearance="light"
                   returnKeyType="done"
                   placeholder="Password"
+                  errorStyle={{ color: 'red' }}
+                  errorMessage={this.displayLoginError()}
                   onChangeText={(text: string) => this.setState({password: text})}
           />
       </View>
@@ -173,7 +188,7 @@ export default class Login extends Component<IAppProps, IAppState> {
 
         <Overlay
         isVisible={this.state.signupVisible}
-        onBackdropPress={() => this.setState({ signupVisible: false, passwordError: false, emailError: false })}
+        onBackdropPress={() => this.setState({ signupVisible: false, passwordError: false, emailError: false, signupError: false })}
         containerStyle={styles.container}
         >
         <View style={styles.container}>
@@ -207,9 +222,9 @@ export default class Login extends Component<IAppProps, IAppState> {
               keyboardAppearance="light"
               keyboardType="email-address"
               returnKeyType="next"
-              errorStyle={{ color: 'red' }}
-              errorMessage={this.displayEmailError()}
-              onChangeText={(text) => this.setState({email: text, emailError: false})}
+              errorStyle={{ color: 'red', alignSelf: "center" }}
+              errorMessage={this.displayEmailError() + this.displaySignupError()}
+              onChangeText={(text) => this.setState({email: text, emailError: false, signupError: false})}
             />
 
             <Input
@@ -229,7 +244,7 @@ export default class Login extends Component<IAppProps, IAppState> {
               autoCorrect={false}
               keyboardAppearance="light"
               returnKeyType="done"
-              errorStyle={{ color: 'red' }}
+              errorStyle={{ color: 'red', alignSelf: "center" }}
               errorMessage={this.displayPasswordError()}
               secureTextEntry={true}
               onChangeText={(text) => this.setState({confirmPassword: text, passwordError: false})}
