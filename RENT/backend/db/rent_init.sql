@@ -96,6 +96,15 @@ CREATE TABLE `ContactInfo` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `CalendarEvent` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`eventName` varchar(255) NOT NULL,
+	`eventDate` DATE NOT NULL,
+	`eventDescription` varchar(255) DEFAULT NULL,
+	`rental` bigint(20) NOT NULL,
+	PRIMARY KEY (`id`)
+);
+
 ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`currentRental`) REFERENCES `Rental`(`id`);
 
 ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`pastRental`) REFERENCES `Rental`(`id`);
@@ -142,4 +151,8 @@ ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk8` FOREIGN KEY (
 
 ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk9` FOREIGN KEY (`contact10`) REFERENCES `ContactInfo`(`id`);
 
+ALTER TABLE `ContactInfo` ADD CONSTRAINT `ContactInfo_fk0` FOREIGN KEY (`associatedUser`) REFERENCES `Users`(`id`);
+
 ALTER TABLE `Note` ADD CONSTRAINT `Note_fk0` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);
+
+ALTER TABLE `CalendarEvent` ADD CONSTRAINT `CalendarEvent_fk0` FOREIGN KEY (`rental`) REFERENCES `Rental`(`id`);
