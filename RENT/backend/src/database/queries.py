@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
-from .models import Roommates
+from .models import Roommates, CalendarEvent
 
 
 def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
@@ -35,6 +35,10 @@ def isUser(user: Users) -> bool:
 
 def getContactWithAssocUser(userID: db.Integer) -> List[ContactInfo]:
     return ContactInfo.query.filter_by(associatedUser=userID).all()
+
+
+def getEventsWithRental(rentalID: db.Integer) -> List[CalendarEvent]:
+    return CalendarEvent.query.filter_by(rental=rentalID).all()
 
 
 def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
