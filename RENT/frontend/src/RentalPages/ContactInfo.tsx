@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import { Alert, ScrollView, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Button, Overlay, Input, Icon } from 'react-native-elements';
 import styles from '../style/Contact-Stylesheet';
+import axios from 'axios';
+
+// @ts-ignore
+import configInfo from '../url';
+
+const serverURL = configInfo['serverURL'];
+const server = axios.create({
+  baseURL: serverURL
+});
 
 export default class ContactInfo extends Component {
 
@@ -17,7 +26,7 @@ export default class ContactInfo extends Component {
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
+    phoneNumber: "",
 
     e1FirstName: "",
     e1LastName: "",
@@ -32,7 +41,22 @@ export default class ContactInfo extends Component {
   setEditVisible(visible: boolean) {
     this.setState({editVisible: visible});
   }
-
+  componentDidMount() {
+    server.get('/getinfo',{
+      params: {
+        userID: this.props.navigation.getParam("userID", 0)
+      }
+    }).then(resp => {
+      if(resp.status === 200) {
+        this.setState({firstName: resp.data.firstName})
+        this.setState({lastName: resp.data.lastName})
+        this.setState({email: resp.data.email})
+        this.setState({phoneNumber: resp.data.phoneNumber})
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -41,8 +65,8 @@ export default class ContactInfo extends Component {
           <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
-              <Text style={styles.name}>John Doe</Text>
-              <Text style={styles.info}>(123) 456-7890 / email@email.email</Text>
+              <Text style={styles.name}> {this.state.firstName} {this.state.lastName}</Text>
+              <Text style={styles.info}>{this.state.phoneNumber} / {this.state.email}</Text>
 
               <TouchableOpacity style={styles.buttonContainer}>
                 <Text> Emergency Contact 1 </Text>

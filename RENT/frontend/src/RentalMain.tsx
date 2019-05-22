@@ -26,11 +26,14 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
               backgroundColor:'#fff',
               borderRadius:50,
               marginRight: 10
-            }} onPress={ () => navigation.push('ContactInfo')}
+            }} onPress={ () => navigation.push('ContactInfo', {
+              userID: navigation.getParam("userID",""),
+              userName: navigation.getParam("userName","")
+            })}
         >
           <Icon name={"face"}  size={30}  />
         </TouchableOpacity>,
-        headerBackTitle: "Home Page",
+        headerBackTitle: "Rental Home",
         headerTitleStyle: {
           fontWeight: 'bold',
         },
