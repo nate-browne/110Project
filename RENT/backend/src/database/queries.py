@@ -63,3 +63,7 @@ def updateUserRentals(user: Users, rentalID: db.Integer) -> None:
 def addRental(rental: Rental) -> None:
     db.session.add(rental)
     db.session.commit()
+
+
+def getRentalRoommates(roommatesID: db.Integer) -> Optional[Roommates]:
+    return Roommates.query.filterby(id=roommatesID).first()

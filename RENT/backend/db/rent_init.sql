@@ -11,6 +11,7 @@ CREATE TABLE `Users` (
 	`password` varchar(255) NOT NULL,
 	`currentRental` bigint(20) DEFAULT NULL,
 	`pastRental` bigint(20) DEFAULT NULL,
+	`deactivated` BOOL NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
@@ -47,7 +48,7 @@ CREATE TABLE `Lease` (
 
 CREATE TABLE `Rental` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`roommates` bigint(20) DEFAULT NULL,
+	`roommates` bigint(20) NOT NULL,
 	`contactInfoList` bigint(20) DEFAULT NULL,
 	`lease` bigint(20) DEFAULT NULL,
 	`insurance` bigint(20) DEFAULT NULL,

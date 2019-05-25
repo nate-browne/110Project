@@ -6,7 +6,7 @@ from utils import mailer
 from config import app, _login
 
 import database.queries as dq
-from database.models import Users, Rental
+from database.models import Users, Rental, Roommates
 
 
 @app.route('/createuser', methods=['POST'])
@@ -45,6 +45,65 @@ def createuser():
         return jsonify({}), 201
 
 
+@app.route('/addroommate', methods=['POST'])
+@login_required
+def add_roommate():
+    '''This route is used to add a roommate to a given rental\n
+    It can only be reached via POST request.\n
+    The route expects that the data comes in with the following fields:\n
+    item - JSON tag - description
+    rentalID - 'rentalID' - ID of the rental to add the roommate to
+    email - 'email' - email of the roommmate to add
+    '''
+
+    rentalID = request.json['rentalID']
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+
+    if user is None:
+        return jsonify({'Reason': "User doesn't exist"}), 404
+
+    rental = dq.getRentalByRentalID(rentalID)
+    if rental is None:
+        return jsonify({'Reason': "Rental does not exist"}), 404
+
+    roommates = dq.getRentalRoommates(rental.roommates)
+
+    if roommates is not None:
+        # Filter out the roommate attributes from the field
+        mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
+        for ind, ent in enumerate(mates):
+            if ent is None:
+                ind += 1
+                dq.updateRoommate(roommates, ind, user.id)
+                dq.updateUserRentals(user, rentalID)
+                return jsonify({}), 201
+        return jsonify({'Reason': "Adding 6th Roommate is not allowed"}), 400
+    else:
+        err = "Roommates table somehow doesn't exist???"
+        return jsonify({'Reason': err}), 404
+
+
+@app.route('/deleteroommate', methods=['POST'])
+@login_required
+def delete_roommate():
+
+    rentalID = request.json['rentalID']
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+
+    roommatesID = dq.getRentalByRentalID(rentalID).roommates
+    roommates = dq.getRentalRoommates(roommatesID)
+    mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
+    for ind, ent in enumerate(mates):
+        if user.id == ent:
+            dq.updateUserRentals(user, None)
+            ind += 1
+            dq.updateRoommate(roommates, ind, None)
+            return jsonify({}), 201
+    return jsonify({'Reason': "Roommate isn't a roommate"}), 404
+
+
 @app.route('/createrental', methods=['POST'])
 @login_required
 def create_rental():
@@ -66,7 +125,9 @@ def create_rental():
     user = dq.getUserById(userID)
 
     # Create a rental and update the user's current rental
-    rental = Rental(address=address)
+    roommates = Roommates(roommate1=userID)
+    dq.addRoommatesRow(roommates)
+    rental = Rental(address=address, roommates=roommates.id)
     dq.addRental(rental)
     dq.updateUserRentals(user, rental.id)
 
