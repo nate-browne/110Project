@@ -23,7 +23,7 @@ export default class Logistics extends Component {
               digitTxtStyle={{color: '#555555'}}
               timeLabelStyle={{color: '#555555', fontWeight: 'bold'}}
               timeToShow={['D']}
-              timeLabels={{d: 'Days',}}
+              timeLabels={{d: 'Days left',}}
               style={{padding: 10}}
           />
           <Text style={styles.lease}> Lease ends on: 05/12/19 </Text>

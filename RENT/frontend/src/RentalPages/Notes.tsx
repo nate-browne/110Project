@@ -6,6 +6,8 @@ import styles from '../style/Grocery-Stylesheet';
 export default class Grocery extends Component {
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
+    currentName:"",
+    currentSubtitle:"",
     editVisible: false,
     addVisible: false,
     list: [
@@ -54,6 +56,8 @@ export default class Grocery extends Component {
                     key={i}
                     onLongPress={() => {
                       //edit item
+                      this.state.currentName=l.name;
+                      this.state.currentSubtitle=l.subtitle;
                       this.setEditVisible(true);
                     }}
                     onPress={() => {
@@ -92,6 +96,7 @@ export default class Grocery extends Component {
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Name"
+                    defaultValue={this.state.currentName}
                     autoCorrect={false}
                     keyboardAppearance="light"
                     leftIcon={
@@ -105,6 +110,7 @@ export default class Grocery extends Component {
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Description"
+                    defaultValue={this.state.currentSubtitle}
                     autoCorrect={false}
                     keyboardAppearance="light"
                     leftIcon={

@@ -45,10 +45,9 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
       { name: 'Leasing Info', code: '#2ecc71', icon:'info' },
       { name: 'Things to do', code: '#3498db', icon:'assignment' },
       { name: 'Roommates', code: '#9b59b6', icon:'group' },
-      { name: 'Bulletin Board', code: '#34495e', icon:'mode-edit' },
+      { name: 'Group Chat', code: '#34495e', icon:'chat' },
       { name: 'Calendar', code: '#16a085', icon:'insert-invitation' },
       { name: 'Expenses', code: '#16a085', icon:'attach-money' },
-      { name: 'Group Chat', code: '#3498db', icon:'chat' },
     ];
 
     return (

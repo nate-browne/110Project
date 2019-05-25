@@ -8,6 +8,8 @@ export default class Grocery extends Component {
     // this list is actually stored in backend - it's only here for viewing purposes
     editVisible: false,
     addVisible: false,
+    currentName: "",
+    currentSubtitle: "",
     list: [
       {
         name: 'Toilet Paper',
@@ -89,6 +91,8 @@ export default class Grocery extends Component {
                     key={i}
                     onLongPress={() => {
                       //edit item
+                      this.state.currentName=l.name;
+                      this.state.currentSubtitle=l.subtitle;
                       this.setEditVisible(true);
                     }}
                     onPress={() => {
@@ -114,6 +118,7 @@ export default class Grocery extends Component {
               onPress={() => { this.setAddVisible(true); }}
             />
           </View>
+
           <Overlay
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.editVisible}
@@ -127,6 +132,7 @@ export default class Grocery extends Component {
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Name"
+                    defaultValue={this.state.currentName}
                     autoCorrect={false}
                     keyboardAppearance="light"
                     leftIcon={
@@ -140,6 +146,7 @@ export default class Grocery extends Component {
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Description"
+                    defaultValue={this.state.currentSubtitle}
                     autoCorrect={false}
                     keyboardAppearance="light"
                     leftIcon={
