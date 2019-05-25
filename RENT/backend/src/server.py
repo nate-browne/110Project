@@ -96,7 +96,7 @@ def delete_roommate():
     roommates = dq.getRentalRoommates(roommatesID)
     mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
     for ind, ent in enumerate(mates):
-        if user.id == ent:
+        if user.id == getattr(roommates, ent):
             dq.updateUserRentals(user, None)
             ind += 1
             dq.updateRoommate(roommates, ind, None)
@@ -104,12 +104,12 @@ def delete_roommate():
     return jsonify({'Reason': "Roommate isn't a roommate"}), 404
 
 
-@app.route('/deleteuser', methods=['POST'])
+@app.route('/deactivate', methods=['POST'])
 @login_required
-def delete_user():
+def deactivate():
     email = request.json['email']
     user = dq.getUserByEmail(email)
-    dq.deleteUser(user)
+    dq.activate(user, True)
     return jsonify({}), 201
 
 
@@ -179,6 +179,7 @@ def login():
     user = dq.getUserByEmail(email)
 
     if _validate(user, password):
+        dq.activate(user, False)
         login_user(user, remember=remember)
         return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:

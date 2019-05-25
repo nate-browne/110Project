@@ -42,9 +42,9 @@ def getEventsWithRental(rentalID: db.Integer) -> List[CalendarEvent]:
 
 
 def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
-    u = Roommates.query.filter_by(id=matesID).first()
-    u = list(filter(lambda x: x.startswith('room'), dir(u)))
-    u = list(filter(lambda i: int(i) != userID), u)
+    u_org = Roommates.query.filter_by(id=matesID).first()
+    u = list(filter(lambda x: x.startswith('room'), dir(u_org)))
+    u = list(filter(lambda i: int(getattr(u_org, i)) != userID), u)
     return list(map(lambda i: getUserById(int(i)), u))
 
 
@@ -53,8 +53,8 @@ def addUser(user: Users) -> None:
     db.session.commit()
 
 
-def deleteUser(user: Users) -> None:
-    user.deactivated = True
+def activate(user: Users, state: bool) -> None:
+    user.deactivated = state
     db.session.commit()
 
 
