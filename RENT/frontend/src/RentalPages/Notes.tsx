@@ -87,6 +87,7 @@ export default class Grocery extends Component {
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.editVisible}
             onBackdropPress={() => this.setState({ editVisible: false })}
+            height={'50%'}
             >
 
             <ScrollView>
@@ -112,6 +113,7 @@ export default class Grocery extends Component {
                     placeholder="Item Description"
                     defaultValue={this.state.currentSubtitle}
                     autoCorrect={false}
+                    multiline={true}
                     keyboardAppearance="light"
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
@@ -119,6 +121,13 @@ export default class Grocery extends Component {
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
+
+                <Button
+                  title="Save"
+                  buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                  onPress={() => {this.setState({ editVisible: false }); Alert.alert("contact backend");}}
+                />
+
               </ScrollView>
 
           </Overlay>
@@ -128,6 +137,7 @@ export default class Grocery extends Component {
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.addVisible}
             onBackdropPress={() => this.setState({ addVisible: false })}
+            height={'50%'}
             >
 
             <ScrollView>
@@ -158,6 +168,13 @@ export default class Grocery extends Component {
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
+
+                <Button
+                  title="Save"
+                  buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                  onPress={() => {this.setState({ addVisible: false }); Alert.alert("contact backend");}}
+                />
+
               </ScrollView>
 
           </Overlay>
