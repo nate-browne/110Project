@@ -61,19 +61,19 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
             <TouchableHighlight onPress={()=> {
               switch(item.name){
                 case 'Leasing Info':
-                  Alert.alert("You pressed leasing info!");
+                  this.props.navigation.push('Logistics');
                   break;
                 case 'Grocery List':
                   this.props.navigation.push('Grocery');
                   break;
                 case 'Roommates':
-                  Alert.alert("You pressed roommates!");
+                  this.props.navigation.push('Roommates');
                   break;
                 case 'Bulletin Board':
                   Alert.alert("You pressed bulletin board!");
                   break;
                 case 'Calendar':
-                  Alert.alert("You pressed calendar!");
+                  this.props.navigation.push('Calendar');
                   break;
                 case 'Expenses':
                   this.props.navigation.push('ExpensesHome');
