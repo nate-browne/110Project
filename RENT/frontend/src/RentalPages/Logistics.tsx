@@ -3,6 +3,8 @@ import { Alert, ScrollView, Text, Image, TouchableOpacity, ImageBackground } fro
 import CountDown from 'react-native-countdown-component';
 import styles from '../style/Logistics-Stylesheet';
 
+const endDate = 25; // Number of days away
+
 export default class Logistics extends Component {
 
   render() {
@@ -14,14 +16,14 @@ export default class Logistics extends Component {
           <Text style={styles.address2}> La Jolla, CA 92210 </Text>
           <Text style={styles.countdownHeader}> Lease Ends In: </Text>
           <CountDown
-              until={24 * 60 * 10 + 30}
+              until={24 * 60 * 60 * endDate}
               size={30}
               onFinish={() => Alert.alert('Finished')}
               digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: '#555555'}}
               digitTxtStyle={{color: '#555555'}}
               timeLabelStyle={{color: '#555555', fontWeight: 'bold'}}
-              timeToShow={['D','H', 'M', 'S']}
-              timeLabels={{d: 'Days', h: 'Hour', m: 'Minute', s: 'Second'}}
+              timeToShow={['D']}
+              timeLabels={{d: 'Days',}}
               style={{padding: 10}}
           />
           <Text style={styles.lease}> Lease ends on: 05/12/19 </Text>
