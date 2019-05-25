@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
-from .models import Roommates
+from .models import Roommates, CalendarEvent
 
 
 def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
@@ -37,6 +37,10 @@ def getContactWithAssocUser(userID: db.Integer) -> List[ContactInfo]:
     return ContactInfo.query.filter_by(associatedUser=userID).all()
 
 
+def getEventsWithRental(rentalID: db.Integer) -> List[CalendarEvent]:
+    return CalendarEvent.query.filter_by(rental=rentalID).all()
+
+
 def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
     u = Roommates.query.filter_by(id=matesID).first()
     u = list(filter(lambda x: x.startswith('room'), dir(u)))
@@ -46,6 +50,11 @@ def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
 
 def addUser(user: Users) -> None:
     db.session.add(user)
+    db.session.commit()
+
+
+def deleteUser(user: Users) -> None:
+    user.deactivated = True
     db.session.commit()
 
 
@@ -67,3 +76,22 @@ def addRental(rental: Rental) -> None:
 
 def getRentalRoommates(roommatesID: db.Integer) -> Optional[Roommates]:
     return Roommates.query.filterby(id=roommatesID).first()
+
+
+def addRoommatesRow(roommates: Roommates) -> None:
+    db.session.add(roommates)
+    db.session.commit()
+
+
+def updateRoommate(roommate: Roommates, ind: int, userID: db.Integer) -> None:
+    if ind == 1:
+        roommate.roommate1 = userID
+    elif ind == 2:
+        roommate.roommate2 = userID
+    elif ind == 3:
+        roommate.roommate3 = userID
+    elif ind == 4:
+        roommate.roommate4 = userID
+    else:
+        roommate.roommate5 = userID
+    db.session.commit()
