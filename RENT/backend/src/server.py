@@ -59,9 +59,11 @@ def add_roommate():
     rentalID = request.json['rentalID']
     email = request.json['email']
     user = dq.getUserByEmail(email)
-
     if user is None:
         return jsonify({'Reason': "User doesn't exist"}), 404
+
+    if user.deactivated:
+        return jsonify({'Reason': "User is deactivated"}), 400
 
     rental = dq.getRentalByRentalID(rentalID)
     if rental is None:
@@ -73,11 +75,13 @@ def add_roommate():
         # Filter out the roommate attributes from the field
         mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
         for ind, ent in enumerate(mates):
-            if ent is None:
+            if getattr(roommates, ent) is None:
                 ind += 1
                 dq.updateRoommate(roommates, ind, user.id)
                 dq.updateUserRentals(user, rentalID)
                 return jsonify({}), 201
+            elif getattr(roommates, ent) == user.id:
+                return jsonify({'Reason': "Roommate already entered"}), 400
         return jsonify({'Reason': "Adding 6th Roommate is not allowed"}), 400
     else:
         err = "Roommates table somehow doesn't exist???"
@@ -91,6 +95,8 @@ def delete_roommate():
     rentalID = request.json['rentalID']
     email = request.json['email']
     user = dq.getUserByEmail(email)
+    if user.deactivated:
+        return jsonify({'Reason': "User is deactivated"}), 400
 
     roommatesID = dq.getRentalByRentalID(rentalID).roommates
     roommates = dq.getRentalRoommates(roommatesID)
@@ -104,12 +110,13 @@ def delete_roommate():
     return jsonify({'Reason': "Roommate isn't a roommate"}), 404
 
 
-@app.route('/deleteuser', methods=['POST'])
+@app.route('/deactivate', methods=['POST'])
 @login_required
-def delete_user():
+def deactivate():
     email = request.json['email']
     user = dq.getUserByEmail(email)
-    dq.deleteUser(user)
+    dq.activate(user, True)
+    logout_user()
     return jsonify({}), 201
 
 
@@ -179,6 +186,7 @@ def login():
     user = dq.getUserByEmail(email)
 
     if _validate(user, password):
+        dq.activate(user, False)
         login_user(user, remember=remember)
         return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:
@@ -191,7 +199,7 @@ def get_address():
     rentalID = request.args.get('rentalID')
     rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
-        return jsonify(rental.address), 200
+        return jsonify({'address': rental.address}), 200
     else:
         return jsonify({'reason': "Rental not found"}), 404
 
@@ -204,7 +212,7 @@ def get_lease_end_date():
     if rental is not None:
         lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
-            return jsonify(lease.endDate), 200
+            return jsonify({'endDate': lease.endDate}), 200
         else:
             return jsonify({'reason': "Lease not found"}), 404
     else:
@@ -221,7 +229,7 @@ def get_documents():
         if lease is not None:
             doc = dq.getDocByDocID(lease.document)
             if doc is not None:
-                return jsonify(doc.document), 200
+                return jsonify({'doc': doc.document}), 200
         else:
             return jsonify({'reason': "Lease not found"}), 404
     else:
