@@ -6,72 +6,25 @@ import styles from '../style/Grocery-Stylesheet';
 export default class Grocery extends Component {
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
+    currentName:"",
+    currentSubtitle:"",
     editVisible: false,
     addVisible: false,
-    currentName: "",
-    currentSubtitle: "",
     list: [
       {
-        name: 'Toilet Paper',
-        subtitle: 'Only 1 roll left!!!',
-        done: false
+        name: 'Grocery',
+        subtitle: 'Things to buy for apartment',
       },
       {
-        name: 'Apples',
-        subtitle: 'Need 7 for pie recipe',
-        done: false
+        name: 'Chores',
+        subtitle: 'Things to do for apartment',
       },
       {
-        name: 'White sugar',
-        subtitle: 'For apple pie :P',
-        done: true
-      },
-      {
-        name: 'Cinnamon',
-        subtitle: 'For apple pie recipe',
-        done: false
-      },
-      {
-        name: 'Flour',
-        subtitle: 'For apple pie - yummmmm',
-        done: true
-      },
-      {
-        name: 'Butter',
-        subtitle: 'For apple pie!!!',
-        done: true
-      },
-      {
-        name: 'Soy milk',
-        subtitle: 'I think Ralph\'s is having a promotion',
-        done: false
-      },
-      {
-        name: 'Whipped cream',
-        subtitle: 'This is happiness',
-        done: false
-      },
-      {
-        name: 'Ice cream',
-        subtitle: 'Topping for apple pie',
-        done: true
-      },
-      {
-        name: 'Balloons',
-        subtitle: 'For Surprise Party',
-        done: true
-      },
-      {
-        name: 'Cups',
-        subtitle: 'Also for party',
-        done: false
-      },
-      {
-        name: 'Eggs',
-        subtitle: '2 dozen please',
-        done: false
+        name: 'Notes',
+        subtitle: 'Things to know for apartment',
       },
     ]
+
   };
 
   setEditVisible(visible: boolean) {
@@ -96,9 +49,7 @@ export default class Grocery extends Component {
                       this.setEditVisible(true);
                     }}
                     onPress={() => {
-                      let list = [ ...this.state.list];
-                      list[i].done = !list[i].done;
-                      this.setState( { list } );
+                      this.props.navigation.push(l.name);
                     }}
                     title={
                       <Text style={[styles.text, l.done ? styles.text_crossed : styles.text]}>
@@ -118,7 +69,6 @@ export default class Grocery extends Component {
               onPress={() => { this.setAddVisible(true); }}
             />
           </View>
-
           <Overlay
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.editVisible}

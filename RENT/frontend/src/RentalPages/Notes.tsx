@@ -6,68 +6,33 @@ import styles from '../style/Grocery-Stylesheet';
 export default class Grocery extends Component {
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
+    currentName:"",
+    currentSubtitle:"",
     editVisible: false,
     addVisible: false,
-    currentName: "",
-    currentSubtitle: "",
     list: [
       {
-        name: 'Toilet Paper',
-        subtitle: 'Only 1 roll left!!!',
+        name: 'SOme weird stuff',
+        subtitle: 'This is a really long paragraph of things to include for this page. I am sure you are all going to read this',
         done: false
       },
       {
-        name: 'Apples',
-        subtitle: 'Need 7 for pie recipe',
+        name: 'Oh look a longer note!',
+        subtitle: 'BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH ',
         done: false
       },
       {
-        name: 'White sugar',
-        subtitle: 'For apple pie :P',
-        done: true
-      },
-      {
-        name: 'Cinnamon',
-        subtitle: 'For apple pie recipe',
-        done: false
-      },
-      {
-        name: 'Flour',
-        subtitle: 'For apple pie - yummmmm',
-        done: true
-      },
-      {
-        name: 'Butter',
-        subtitle: 'For apple pie!!!',
-        done: true
-      },
-      {
-        name: 'Soy milk',
-        subtitle: 'I think Ralph\'s is having a promotion',
-        done: false
-      },
-      {
-        name: 'Whipped cream',
-        subtitle: 'This is happiness',
-        done: false
-      },
-      {
-        name: 'Ice cream',
-        subtitle: 'Topping for apple pie',
-        done: true
-      },
-      {
-        name: 'Balloons',
+        name: 'Notes notes notes',
         subtitle: 'For Surprise Party',
-        done: true
+        done: false
       },
       {
-        name: 'Cups',
+        name: 'I like to write',
         subtitle: 'Also for party',
         done: false
       },
       {
-        name: 'Eggs',
+        name: 'Happy Happy Happy :)))))',
         subtitle: '2 dozen please',
         done: false
       },
@@ -118,7 +83,6 @@ export default class Grocery extends Component {
               onPress={() => { this.setAddVisible(true); }}
             />
           </View>
-
           <Overlay
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.editVisible}
