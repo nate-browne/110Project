@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
 Name: Login.tsx
 Description: This file renders the login page and handles sign up and logging in
@@ -152,4 +153,18 @@ render() {
   </View>
   )
 }
+=======
+import React, { Component } from 'react';
+import axios from 'axios';
+
+// @ts-ignore
+import configInfo from '../url';
+const serverURL = configInfo['serverURL'];
+const server = axios.create({
+  baseURL: serverURL
+});
+
+export default class Calendar extends Component {
+
+>>>>>>> a54488c9918cc1809e03a8d30449fce1e942c08f
 }
