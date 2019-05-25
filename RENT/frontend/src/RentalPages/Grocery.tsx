@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
-import { Button, ListItem, Text } from 'react-native-elements'
+import { Overlay, Input, Icon, Button, ListItem, Text } from 'react-native-elements'
 import styles from '../style/Grocery-Stylesheet';
 
 export default class Grocery extends Component {
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
+    editVisible: false,
+    addVisible: false,
     list: [
       {
         name: 'Toilet Paper',
@@ -70,6 +72,13 @@ export default class Grocery extends Component {
     ]
   };
 
+  setEditVisible(visible: boolean) {
+    this.setState({editVisible: visible});
+  }
+  setAddVisible(visible: boolean) {
+    this.setState({addVisible: visible});
+  }
+
     render() {
           return (
             <View style= {{width:'100%', height:'100%'}}>
@@ -80,7 +89,7 @@ export default class Grocery extends Component {
                     key={i}
                     onLongPress={() => {
                       //edit item
-                      Alert.alert("TODO: edit item")
+                      this.setEditVisible(true);
                     }}
                     onPress={() => {
                       let list = [ ...this.state.list];
@@ -102,9 +111,86 @@ export default class Grocery extends Component {
               title="+"
               buttonStyle={{height: 65, width: 65, borderRadius: 50}}
               // TODO add item to data base onPress
-              onPress={() => { Alert.alert('TODO: add item to database') }}
+              onPress={() => { this.setAddVisible(true); }}
             />
           </View>
+          <Overlay
+            windowBackgroundColor="rgba(255, 255, 255, .5)"
+            isVisible={this.state.editVisible}
+            onBackdropPress={() => this.setState({ editVisible: false })}
+            >
+
+            <ScrollView>
+                <Text style={{fontSize: 48}}>Edit Item</Text>
+
+                <Input
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Item Name"
+                    autoCorrect={false}
+                    keyboardAppearance="light"
+                    leftIcon={
+                      <Icon name="account" type="material-community" color="black" size={25} />
+                    }
+                    returnKeyType="next"
+                    onChangeText={(text: string) => this.setState({firstName: text})}
+                />
+
+                <Input
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Item Description"
+                    autoCorrect={false}
+                    keyboardAppearance="light"
+                    leftIcon={
+                      <Icon name="account" type="material-community" color="black" size={25} />
+                    }
+                    returnKeyType="next"
+                    onChangeText={(text: string) => this.setState({firstName: text})}
+                />
+              </ScrollView>
+
+          </Overlay>
+
+
+          <Overlay
+            windowBackgroundColor="rgba(255, 255, 255, .5)"
+            isVisible={this.state.addVisible}
+            onBackdropPress={() => this.setState({ addVisible: false })}
+            >
+
+            <ScrollView>
+                <Text style={{fontSize: 48}}>Add Item</Text>
+
+                <Input
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Item Name"
+                    autoCorrect={false}
+                    keyboardAppearance="light"
+                    leftIcon={
+                      <Icon name="account" type="material-community" color="black" size={25} />
+                    }
+                    returnKeyType="next"
+                    onChangeText={(text: string) => this.setState({firstName: text})}
+                />
+
+                <Input
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Item Description"
+                    autoCorrect={false}
+                    keyboardAppearance="light"
+                    leftIcon={
+                      <Icon name="account" type="material-community" color="black" size={25} />
+                    }
+                    returnKeyType="next"
+                    onChangeText={(text: string) => this.setState({firstName: text})}
+                />
+              </ScrollView>
+
+          </Overlay>
+
         </View>
           )
     }
