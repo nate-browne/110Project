@@ -19,7 +19,6 @@ import Login from "./Login";
 import Logistics from "./RentalPages/Logistics";
 import RentalMain from "./RentalMain";
 import Roommates from "./RentalPages/Roommates";
-import Calendar from "./RentalPages/Calendar";
 
 const RootStack = createStackNavigator(
   {
@@ -36,10 +35,9 @@ const RootStack = createStackNavigator(
     Logistics: Logistics,
     RentalMain: RentalMain,
     Roommates: Roommates,
-    Calendar: Calendar,
   },
   {
-    initialRouteName: "RentalMain",
+    initialRouteName: "Login",
   }
 );
 
