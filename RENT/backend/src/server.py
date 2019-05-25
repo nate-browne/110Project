@@ -45,6 +45,15 @@ def createuser():
         return jsonify({}), 201
 
 
+@app.route('/deleteuser', methods=['POST'])
+@login_required
+def delete_user():
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+    dq.deleteUser(user)
+    return jsonify({}), 201
+
+
 @app.route('/createrental', methods=['POST'])
 @login_required
 def create_rental():
@@ -83,13 +92,11 @@ def forgot_password():
         return jsonify({'reason': "User not found"}), 404
 
 
-def _change_password(user: Users, password: str):
-    dq.updatePassword(user, pbkdf2_sha256.hash(password))
-
-
 @app.route('/resetpassword', methods=['POST'])
 @login_required
-def reset_password(email: str, password: str):
+def reset_password():
+    email = request.json['email']
+    password = request.json['password']
     user = dq.getUserByEmail(email)
     _change_password(user, password)
     return jsonify({}), 201
@@ -228,6 +235,10 @@ def get_emergency_info():
         return jsonify(data), 200
     else:
         return jsonify({'reason': "No associated contacts found"}), 404
+
+
+def _change_password(user: Users, password: str):
+    dq.updatePassword(user, pbkdf2_sha256.hash(password))
 
 
 def _validate(user: Users, password: str) -> bool:
