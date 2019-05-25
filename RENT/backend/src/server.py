@@ -102,7 +102,7 @@ def delete_roommate():
     roommates = dq.getRentalRoommates(roommatesID)
     mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
     for ind, ent in enumerate(mates):
-        if user.id == ent:
+        if user.id == getattr(roommates, ent):
             dq.updateUserRentals(user, None)
             ind += 1
             dq.updateRoommate(roommates, ind, None)
