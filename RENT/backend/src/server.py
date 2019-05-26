@@ -1,3 +1,4 @@
+from datetime import datetime as d
 from flask import request, jsonify
 from passlib.hash import pbkdf2_sha256
 from flask_login import login_user, login_required, logout_user
@@ -156,6 +157,7 @@ def forgot_password():
     if user is not None:
         temp = mailer.send_mail(user.email)
         _change_password(user, temp)
+        return jsonify({}), 200
     else:
         return jsonify({'reason': "User not found"}), 404
 
@@ -212,7 +214,12 @@ def get_lease_end_date():
     if rental is not None:
         lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
-            return jsonify({'endDate': lease.endDate}), 200
+            dt = lease.endDate
+            daysTill = (d.today() - d.fromisoformat(dt)).days
+            data = {}
+            data['endDate'] = dt
+            data['daysTill'] = daysTill
+            return jsonify(data), 200
         else:
             return jsonify({'reason': "Lease not found"}), 404
     else:
@@ -304,6 +311,28 @@ def get_emergency_info():
         return jsonify(data), 200
     else:
         return jsonify({'reason': "No associated contacts found"}), 404
+
+
+@app.route('/updateuserinfo', methods=['POST'])
+@login_required
+def update_user_info():
+    firstName = request.json['firstName']
+    lastName = request.json['lastName']
+    phoneNumber = request.json['phoneNumber']
+    email = request.json['email']
+    userID = request.json['id']
+    user = dq.getUserById(userID)
+    check = dq.getUserByEmail(email)
+
+    if check is not None:
+        return jsonify({'Reason': "Email already in use"}), 400
+
+    dq.updateUserInfo(user, 'firstName', firstName)
+    dq.updateUserInfo(user, 'lastName', lastName)
+    dq.updateUserInfo(user, 'phoneNumber', phoneNumber)
+    dq.updateUserInfo(user, 'email', email)
+
+    return jsonify({}), 200
 
 
 def _change_password(user: Users, password: str):
