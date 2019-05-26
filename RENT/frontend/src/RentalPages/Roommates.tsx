@@ -118,7 +118,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                         leftIcon={
                           <Icon name="account" type="material-community" color="black" size={25} />
                         }
-                        returnKeyType="next"
+                        returnKeyType="done"
                         onChangeText={(text: string) => this.setState({firstName: text})}
                     />
                   </ScrollView>

@@ -75,10 +75,12 @@ def create_rental():
 
 @app.route('/forgotpassword', methods=['POST'])
 def forgot_password():
+    print("we actually called the route!")
     user = dq.getUserByEmail(request.json['email'])
     if user is not None:
         temp = mailer.send_mail(user.email)
         _change_password(user, temp)
+        return jsonify({}), 201
     else:
         return jsonify({'reason': "User not found"}), 404
 
@@ -111,7 +113,7 @@ def login():
     user = dq.getUserByEmail(email)
 
     if _validate(user, password):
-        login_user(user, remember=remember)
+        login_user(user, remember=remember, force=True)
         return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:
         return jsonify({'reason': "User/Password doesn't match"}), 400

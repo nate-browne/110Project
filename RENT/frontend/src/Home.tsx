@@ -61,6 +61,25 @@ export default class Home extends Component<IAppProps, IAppState> {
     })
   }
 
+  logout(): any {
+    server.post('/logout', {
+    }).then(resp => {
+      //login successful
+      if(resp.status === 200) {
+        this.props.navigation.navigate('Login',{
+        })
+        console.log("Logout Successful");
+      }
+      //login failed
+      else if (resp.status === 400) {
+        console.log("Login Failed");
+      }
+    })
+    .catch(err => {
+      console.log('Error occurred',err);
+    })
+  }
+
   render() {
     const userID = this.props.navigation.getParam("userID","NO-ID");
     let display;
@@ -93,6 +112,13 @@ export default class Home extends Component<IAppProps, IAppState> {
             title="Add Rental"
             onPress={() =>{
               this.setVisible(true);
+            }}
+          />
+          <Button
+            raised={true}
+            title="Logout"
+            onPress={() =>{
+              this.logout();
             }}
           />
         </View>
