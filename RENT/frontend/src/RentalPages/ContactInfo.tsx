@@ -108,6 +108,8 @@ export default class ContactInfo extends Component {
                     <Icon name="account" type="material-community" color="black" size={25} />
                   }
                   returnKeyType="next"
+                  blurOnSubmit = {false}
+                  onSubmitEditing = {() => {this.input1.focus()}}
                   onChangeText={(text: string) => this.setState({firstName: text})}
               />
               <Input
@@ -121,6 +123,9 @@ export default class ContactInfo extends Component {
                     <Icon name="account" type="material-community" color="black" size={25} />
                   }
                   returnKeyType="next"
+                  ref = {(input) => {this.input1 = input}}
+                  blurOnSubmit = {false}
+                  onSubmitEditing = {() => {this.input2.focus()}}
                   onChangeText={(text: string) => this.setState({lastName: text})}
               />
 
@@ -134,6 +139,9 @@ export default class ContactInfo extends Component {
                   keyboardAppearance="light"
                   keyboardType="email-address"
                   returnKeyType="next"
+                  ref = {(input) => {this.input2 = input}}
+                  blurOnSubmit = {false}
+                  onSubmitEditing = {() => {this.input3.focus()}}
                   leftIcon={
                     <Icon name="email-outline" type="material-community" color="black" size={25} />
                   }
@@ -150,6 +158,9 @@ export default class ContactInfo extends Component {
                   keyboardAppearance="light"
                   keyboardType="phone-pad"
                   returnKeyType="next"
+                  ref = {(input) => {this.input3 = input}}
+                  blurOnSubmit = {false}
+                  onSubmitEditing = {() => {this.input4.focus()}}
                   leftIcon={
                     <Icon name="phone" type="material-community" color="black" size={25} />
                   }
@@ -164,6 +175,9 @@ export default class ContactInfo extends Component {
                     defaultValue = {this.state.e1Relation}
                     keyboardAppearance="light"
                     returnKeyType="next"
+                    ref = {(input) => {this.input4 = input}}
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input5.focus()}}
                     leftIcon={
                       <Icon name="account-multiple-outline" type="material-community" color="black" size={25} />
                     }
@@ -180,6 +194,9 @@ export default class ContactInfo extends Component {
                         <Icon name="account" type="material-community" color="black" size={25} />
                       }
                       returnKeyType="next"
+                      ref = {(input) => {this.input5 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input6.focus()}}
                       onChangeText={(text: string) => this.setState({e1FirstName: text})}
                   />
 
@@ -194,6 +211,9 @@ export default class ContactInfo extends Component {
                         <Icon name="account" type="material-community" color="black" size={25} />
                       }
                       returnKeyType="next"
+                      ref = {(input) => {this.input6 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input7.focus()}}
                       onChangeText={(text: string) => this.setState({e1LastName: text})}
                   />
 
@@ -207,6 +227,9 @@ export default class ContactInfo extends Component {
                       keyboardAppearance="light"
                       keyboardType="phone-pad"
                       returnKeyType="next"
+                      ref = {(input) => {this.input7 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input8.focus()}}
                       leftIcon={
                         <Icon name="phone" type="material-community" color="black" size={25} />
                       }
@@ -221,6 +244,9 @@ export default class ContactInfo extends Component {
                      defaultValue = {this.state.e2Relation}
                      keyboardAppearance="light"
                      returnKeyType="next"
+                     ref = {(input) => {this.input8 = input}}
+                     blurOnSubmit = {false}
+                     onSubmitEditing = {() => {this.input9.focus()}}
                      leftIcon={
                        <Icon name="account-multiple-outline" type="material-community" color="black" size={25} />
                      }
@@ -237,6 +263,9 @@ export default class ContactInfo extends Component {
                          <Icon name="account" type="material-community" color="black" size={25} />
                        }
                        returnKeyType="next"
+                       ref = {(input) => {this.input9 = input}}
+                       blurOnSubmit = {false}
+                       onSubmitEditing = {() => {this.input10.focus()}}
                        onChangeText={(text: string) => this.setState({e2FirstName: text})}
                    />
                    <Input
@@ -250,6 +279,9 @@ export default class ContactInfo extends Component {
                          <Icon name="account" type="material-community" color="black" size={25} />
                        }
                        returnKeyType="next"
+                       ref = {(input) => {this.input10 = input}}
+                       blurOnSubmit = {false}
+                       onSubmitEditing = {() => {this.input11.focus()}}
                        onChangeText={(text: string) => this.setState({e2LastName: text})}
                    />
 
@@ -263,6 +295,9 @@ export default class ContactInfo extends Component {
                        keyboardAppearance="light"
                        keyboardType="phone-pad"
                        returnKeyType="next"
+                       ref = {(input) => {this.input11 = input}}
+                       blurOnSubmit = {false}
+                       onSubmitEditing = {() => {this.input12.focus()}}
                        leftIcon={
                          <Icon name="phone" type="material-community" color="black" size={25} />
                        }
