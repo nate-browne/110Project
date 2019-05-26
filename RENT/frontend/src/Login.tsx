@@ -6,7 +6,7 @@
 
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import {Button , Image, Input, Overlay} from 'react-native-elements';
 
 import * as EmailValidator from 'email-validator';

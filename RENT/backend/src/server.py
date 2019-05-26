@@ -75,10 +75,9 @@ def add_roommate():
     if roommates is not None:
         # Filter out the roommate attributes from the field
         mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
-        for ind, ent in enumerate(mates):
+        for ent in mates:
             if getattr(roommates, ent) is None:
-                ind += 1
-                dq.updateRoommate(roommates, ind, user.id)
+                dq.updateRoommate(roommates, ent, user.id)
                 dq.updateUserRentals(user, rentalID)
                 return jsonify({}), 201
             elif getattr(roommates, ent) == user.id:
@@ -102,11 +101,10 @@ def delete_roommate():
     roommatesID = dq.getRentalByRentalID(rentalID).roommates
     roommates = dq.getRentalRoommates(roommatesID)
     mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
-    for ind, ent in enumerate(mates):
+    for ent in mates:
         if user.id == getattr(roommates, ent):
             dq.updateUserRentals(user, None)
-            ind += 1
-            dq.updateRoommate(roommates, ind, None)
+            dq.updateRoommate(roommates, ent, None)
             return jsonify({}), 201
     return jsonify({'Reason': "Roommate isn't a roommate"}), 404
 
@@ -116,7 +114,7 @@ def delete_roommate():
 def deactivate():
     email = request.json['email']
     user = dq.getUserByEmail(email)
-    dq.activate(user, True)
+    dq.updateUserInfo(user, 'deactivated', False)
     logout_user()
     return jsonify({}), 201
 
@@ -188,7 +186,7 @@ def login():
     user = dq.getUserByEmail(email)
 
     if _validate(user, password):
-        dq.activate(user, False)
+        dq.updateUserInfo(user, 'deactivated', False)
         login_user(user, remember=remember)
         return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:
@@ -320,7 +318,7 @@ def update_user_info():
     lastName = request.json['lastName']
     phoneNumber = request.json['phoneNumber']
     email = request.json['email']
-    userID = request.json['id']
+    userID = request.json['userID']
     user = dq.getUserById(userID)
     check = dq.getUserByEmail(email)
 
@@ -335,8 +333,28 @@ def update_user_info():
     return jsonify({}), 200
 
 
+@app.route('/testupdateuserinfo', methods=['GET'])
+def testupdateuserinfo():
+    firstName = 'Kevin'
+    lastName = 'Bacon'
+    phoneNumber = '7142004622'
+    email = 'kbacon@apple.com'
+    userID = 1
+    user = dq.getUserById(userID)
+    check = dq.getUserByEmail(email)
+
+    if check is not None:
+        return "<h1>Update failed: Email in use</h1>"
+
+    dq.updateUserInfo(user, 'firstName', firstName)
+    dq.updateUserInfo(user, 'lastName', lastName)
+    dq.updateUserInfo(user, 'phoneNumber', phoneNumber)
+    dq.updateUserInfo(user, 'email', email)
+    return "<h1>User Updated</h1>"
+
+
 def _change_password(user: Users, password: str):
-    dq.updatePassword(user, pbkdf2_sha256.hash(password))
+    dq.updateUserInfo(user, 'password', pbkdf2_sha256.hash(password))
 
 
 def _validate(user: Users, password: str) -> bool:
