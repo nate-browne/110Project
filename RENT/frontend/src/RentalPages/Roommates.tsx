@@ -18,7 +18,6 @@ export default class Roommates extends Component<IAppProps,IAppState> {
     list: [
       {
         name: 'John Doe',
-        subtitle: 'Apple Pie Ingrediants',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
         color1: '#00ddff',
         color2: '#0c54f2',
@@ -26,7 +25,6 @@ export default class Roommates extends Component<IAppProps,IAppState> {
       },
       {
         name: 'Maria',
-        subtitle: 'Surprise Party items',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
         color1: '#770ba5',
         color2: '#e100ff',
@@ -34,11 +32,24 @@ export default class Roommates extends Component<IAppProps,IAppState> {
       },
       {
         name: 'James',
-        subtitle: 'Household items',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
         color1: '#FF9800',
         color2: '#F44336',
         done: true
+      },
+      {
+        name: 'Roommate #4',
+        avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
+        color1: '#770ba5',
+        color2: '#e100ff',
+        done: false
+      },
+      {
+        name: 'Roommate #5',
+        avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
+        color1: '#00ddff',
+        color2: '#0c54f2',
+        done: false
       },
     ]
   };
