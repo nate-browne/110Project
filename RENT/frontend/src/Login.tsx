@@ -6,7 +6,7 @@
 // Library Imports
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet';
-import { Alert, ScrollView, Text, View } from 'react-native';
+import { Alert, ScrollView, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import {Button , Image, Input, Overlay, CheckBox, Icon} from 'react-native-elements';
 import * as EmailValidator from 'email-validator';
 import axios from 'axios';
@@ -19,6 +19,9 @@ const server = axios.create({
   baseURL: serverURL
 });
 
+// Used to get rid of keyboard
+var dismissKeyboard = require('dismissKeyboard');
+
 // Thing needed for navigation
 interface IAppProps {
   navigation?: any;
@@ -27,6 +30,7 @@ interface IAppProps {
 // Yep
 interface IAppState {
 }
+
 
 export default class Login extends Component<IAppProps, IAppState> {
   // This contains styling for the navigation
@@ -155,6 +159,7 @@ export default class Login extends Component<IAppProps, IAppState> {
 
   render() {
     return (
+      <TouchableWithoutFeedback onPress = {dismissKeyboard}>
       <View style={styles.loginContainer}>
 
         <Image source={require('../assets/rent-final.png')} style={styles.imageIcon}></Image>
@@ -237,6 +242,7 @@ export default class Login extends Component<IAppProps, IAppState> {
         onBackdropPress={() => this.setState({ forgotVisible: false })}
         height={'50%'}
         >
+        <TouchableWithoutFeedback onPress = {dismissKeyboard}>
         <ScrollView>
           <Text style={{fontSize: 48}}>Forgot password</Text>
           <Input
@@ -249,7 +255,8 @@ export default class Login extends Component<IAppProps, IAppState> {
               leftIcon={
                 <Icon name="email" type="material-community" color="black" size={25} />
               }
-              returnKeyType="next"
+              returnKeyType="done"
+              onSubmitEditing = {() => {this.setState({ addVisible: false }); this.forgotPassword();}}
               onChangeText={(text: string) => this.setState({email: text})}
           />
           <Button
@@ -262,6 +269,7 @@ export default class Login extends Component<IAppProps, IAppState> {
             }
           />
         </ScrollView>
+        </TouchableWithoutFeedback>
       </Overlay>
 
 
@@ -275,6 +283,7 @@ export default class Login extends Component<IAppProps, IAppState> {
                                       signupError: false })}
         containerStyle={styles.container}
         >
+        <TouchableWithoutFeedback onPress = {dismissKeyboard}>
         <View style={styles.container}>
           <Input
             inputContainerStyle={styles.textinput}
@@ -394,8 +403,10 @@ export default class Login extends Component<IAppProps, IAppState> {
             />
           </View>
         </View>
+        </TouchableWithoutFeedback>
       </Overlay>
     </View>
+    </TouchableWithoutFeedback>
     );
   }
 }
