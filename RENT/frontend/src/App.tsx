@@ -43,7 +43,7 @@ const RootStack = createStackNavigator(
     Roommates: Roommates,
   },
   {
-    initialRouteName: "Login",
+    initialRouteName: "ContactInfo",
   }
 );
 

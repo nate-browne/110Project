@@ -109,8 +109,7 @@ export default class Login extends Component<IAppProps, IAppState> {
     }).then(resp => {
       if(resp.status === 201) {
         console.log("Account created");
-        this.setSignupVisible(false);
-      } else {
+        this.setState({signupVisible: false});
       }
     }).catch(err => {
       this.setState({signupError: true})

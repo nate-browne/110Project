@@ -28,19 +28,18 @@ export default class ContactInfo extends Component {
     email: "",
     phoneNumber: "",
 
-    e1FirstName: "",
-    e1LastName: "",
-    e1Phone: "",
 
-    e2FirstName: "",
-    e2LastName: "",
-    e2Phone: "",
+    e1Relation: "Mother",
+    e1FirstName: "Tammy",
+    e1LastName: "Mok",
+    e1Phone: "(123) 456-7890",
+
+    e2Relation: "Father",
+    e2FirstName: "Nate",
+    e2LastName: "Browne",
+    e2Phone: "(098) 765-4321",
   };
 
-
-  setEditVisible(visible: boolean) {
-    this.setState({editVisible: visible});
-  }
   componentDidMount() {
     server.get('/getinfo',{
       params: {
@@ -70,21 +69,21 @@ export default class ContactInfo extends Component {
 
               <TouchableOpacity style={styles.buttonContainer}>
                 <Text> Emergency Contact 1 </Text>
-                <Text> Mom </Text>
-                <Text> Tammy </Text>
-                <Text> (123) 456-7890</Text>
+                <Text> {this.state.e1Relation} </Text>
+                <Text> {this.state.e1FirstName} {this.state.e1LastName} </Text>
+                <Text> {this.state.e1Phone} </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.buttonContainer}>
-                <Text>Emergency Contact 2 </Text>
-                <Text> Dad </Text>
-                <Text> Nate </Text>
-                <Text> (123) 456-7890</Text>
+                <Text> Emergency Contact 2 </Text>
+                <Text> {this.state.e2Relation} </Text>
+                <Text> {this.state.e2FirstName} {this.state.e2LastName} </Text>
+                <Text> {this.state.e2Phone} </Text>
               </TouchableOpacity>
               <Button
                 title="edit"
                 buttonStyle={{height: 65, width: 65, borderRadius: 50}}
                 // TODO add item to data base onPress
-                onPress={() => { this.setEditVisible(true) }}
+                onPress={() => { this.setState({editVisible: true}); }}
               />
             </View>
         </View>
@@ -102,6 +101,7 @@ export default class ContactInfo extends Component {
                   inputContainerStyle={styles.textinput}
                   leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   placeholder="First Name"
+                  defaultValue = {this.state.firstName}
                   autoCorrect={false}
                   keyboardAppearance="light"
                   leftIcon={
@@ -114,6 +114,7 @@ export default class ContactInfo extends Component {
                   inputContainerStyle={styles.textinput}
                   leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   placeholder="Last Name"
+                  defaultValue = {this.state.lastName}
                   autoCorrect={false}
                   keyboardAppearance="light"
                   leftIcon={
@@ -127,6 +128,7 @@ export default class ContactInfo extends Component {
                   inputContainerStyle={styles.textinput}
                   leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   placeholder="Email"
+                  defaultValue = {this.state.email}
                   autoCapitalize="none"
                   autoCorrect={false}
                   keyboardAppearance="light"
@@ -142,6 +144,7 @@ export default class ContactInfo extends Component {
                   inputContainerStyle={styles.textinput}
                   leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                   placeholder="Phone"
+                  defaultValue = {this.state.phoneNumber}
                   autoCapitalize="none"
                   autoCorrect={false}
                   keyboardAppearance="light"
@@ -150,7 +153,7 @@ export default class ContactInfo extends Component {
                   leftIcon={
                     <Icon name="phone" type="material-community" color="black" size={25} />
                   }
-                  onChangeText={(text: string) => this.setState({email: text})}
+                  onChangeText={(text: string) => this.setState({phoneNumber: text})}
                 />
 
                 <Text style={{paddingTop: 10, fontSize: 26}}>Emergency Contact 1</Text>
@@ -158,43 +161,47 @@ export default class ContactInfo extends Component {
                     inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Relation"
+                    defaultValue = {this.state.e1Relation}
                     keyboardAppearance="light"
                     returnKeyType="next"
                     leftIcon={
                       <Icon name="account-multiple-outline" type="material-community" color="black" size={25} />
                     }
-                    onChangeText={(text: string) => this.setState({email: text})}
+                    onChangeText={(text: string) => this.setState({e1Relation: text})}
                   />
                   <Input
                       inputContainerStyle={styles.textinput}
                       leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                       placeholder="First Name"
+                      defaultValue = {this.state.e1FirstName}
                       autoCorrect={false}
                       keyboardAppearance="light"
                       leftIcon={
                         <Icon name="account" type="material-community" color="black" size={25} />
                       }
                       returnKeyType="next"
-                      onChangeText={(text: string) => this.setState({email: text})}
+                      onChangeText={(text: string) => this.setState({e1FirstName: text})}
                   />
 
                   <Input
                       inputContainerStyle={styles.textinput}
                       leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                       placeholder="Last Name"
+                      defaultValue = {this.state.e1LastName}
                       autoCorrect={false}
                       keyboardAppearance="light"
                       leftIcon={
                         <Icon name="account" type="material-community" color="black" size={25} />
                       }
                       returnKeyType="next"
-                      onChangeText={(text: string) => this.setState({email: text})}
+                      onChangeText={(text: string) => this.setState({e1LastName: text})}
                   />
 
                   <Input
                       inputContainerStyle={styles.textinput}
                       leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                       placeholder="Phone"
+                      defaultValue = {this.state.e1Phone}
                       autoCapitalize="none"
                       autoCorrect={false}
                       keyboardAppearance="light"
@@ -203,7 +210,7 @@ export default class ContactInfo extends Component {
                       leftIcon={
                         <Icon name="phone" type="material-community" color="black" size={25} />
                       }
-                      onChangeText={(text: string) => this.setState({email: text})}
+                      onChangeText={(text: string) => this.setState({e1Phone: text})}
                  />
 
                  <Text style={{paddingTop: 10, fontSize: 26}}>Emergency Contact 2</Text>
@@ -211,42 +218,46 @@ export default class ContactInfo extends Component {
                      inputContainerStyle={styles.textinput}
                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                      placeholder="Relation"
+                     defaultValue = {this.state.e2Relation}
                      keyboardAppearance="light"
                      returnKeyType="next"
                      leftIcon={
                        <Icon name="account-multiple-outline" type="material-community" color="black" size={25} />
                      }
-                     onChangeText={(text: string) => this.setState({email: text})}
+                     onChangeText={(text: string) => this.setState({e2Relation: text})}
                    />
                    <Input
                        inputContainerStyle={styles.textinput}
                        leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                        placeholder="First Name"
+                       defaultValue = {this.state.e2FirstName}
                        autoCorrect={false}
                        keyboardAppearance="light"
                        leftIcon={
                          <Icon name="account" type="material-community" color="black" size={25} />
                        }
                        returnKeyType="next"
-                       onChangeText={(text: string) => this.setState({email: text})}
+                       onChangeText={(text: string) => this.setState({e2FirstName: text})}
                    />
                    <Input
                        inputContainerStyle={styles.textinput}
                        leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                        placeholder="Last Name"
+                       defaultValue = {this.state.e2LastName}
                        autoCorrect={false}
                        keyboardAppearance="light"
                        leftIcon={
                          <Icon name="account" type="material-community" color="black" size={25} />
                        }
                        returnKeyType="next"
-                       onChangeText={(text: string) => this.setState({email: text})}
+                       onChangeText={(text: string) => this.setState({e2LastName: text})}
                    />
 
                    <Input
                        inputContainerStyle={styles.textinput}
                        leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                        placeholder="Phone"
+                       defaultValue = {this.state.e2Phone}
                        autoCapitalize="none"
                        autoCorrect={false}
                        keyboardAppearance="light"
@@ -255,7 +266,7 @@ export default class ContactInfo extends Component {
                        leftIcon={
                          <Icon name="phone" type="material-community" color="black" size={25} />
                        }
-                       onChangeText={(text: string) => this.setState({email: text})}
+                       onChangeText={(text: string) => this.setState({e2Phone: text})}
                   />
 
 
@@ -263,32 +274,7 @@ export default class ContactInfo extends Component {
                 <Button
                   raised={true}
                   title="Done"
-                  /*
-                  onPress={() => {
-                    server.post('/login', {
-                      email: this.state.email,
-                      password: this.state.password
-                    }).then(resp => {
-                      //login successful
-                      if(resp.status === 200) {
-                        this.props.navigation.navigate('RentalMain',{
-                          userName: resp.data.firstName,
-                          loggedIn: resp.data.loggedIn
-                        })
-                        console.log("Login Successful");
-                        this.setLoginVisible(false);
-                      }
-                      //login failed
-                      else if (resp.status === 404) {
-                        Alert.alert("Login Failed","Username or Password incorrect");
-                        console.log("Login Failed");
-                      }
-                    })
-                    .catch(err => {
-                      console.log('Error occurred',err);
-                    })
-                  }}
-                  */
+                  onPress={() => {Alert.alert('Make request to backend')}}
                 />
               </View>
           </ScrollView>
