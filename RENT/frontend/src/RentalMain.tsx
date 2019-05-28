@@ -64,7 +64,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                   this.props.navigation.push('LeasingInfo');
                   break;
                 case 'Things to do':
-                  this.props.navigation.push('GroceryMain');
+                  this.props.navigation.push('NotesMain');
                   break;
                 case 'Roommates':
                   this.props.navigation.push('Roommates');

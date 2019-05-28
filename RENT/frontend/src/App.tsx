@@ -13,7 +13,7 @@ import ExpensesHome from "./RentalPages/ExpensesHome";
 import ExpensesOwed from "./RentalPages/ExpensesOwed";
 import ExpensesPaid from "./RentalPages/ExpensesPaid";
 import Grocery from "./RentalPages/Grocery";
-import GroceryMain from "./RentalPages/GroceryMain";
+import NotesMain from "./RentalPages/NotesMain";
 import Notes from "./RentalPages/Notes";
 import Home from "./Home";
 import LeasingInfo from "./RentalPages/LeasingInfo";
@@ -31,7 +31,7 @@ const RootStack = createStackNavigator(
     ExpensesOwed: ExpensesOwed,
     ExpensesPaid: ExpensesPaid,
     Grocery: Grocery,
-    GroceryMain: GroceryMain,
+    NotesMain: NotesMain,
     Notes: Notes,
     Home: Home,
     LeasingInfo: LeasingInfo,
