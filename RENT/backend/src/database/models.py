@@ -165,3 +165,4 @@ class CalendarEvent(db.Model):
     eventDate = db.Column(db.Date, nullable=False)
     eventDescription = db.Column(db.String(255), default=None)
     rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=False)
+    isDeleted = db.Column(db.Boolean, nullable=False, default=False)

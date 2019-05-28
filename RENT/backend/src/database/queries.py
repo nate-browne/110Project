@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Any
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
 from .models import Roommates, CalendarEvent
@@ -53,13 +53,8 @@ def addUser(user: Users) -> None:
     db.session.commit()
 
 
-def activate(user: Users, state: bool) -> None:
-    user.deactivated = state
-    db.session.commit()
-
-
-def updatePassword(user: Users, password: str) -> None:
-    user.password = password
+def updateUserInfo(user: Users, attribute: str, obj: Any) -> None:
+    setattr(user, attribute, obj)
     db.session.commit()
 
 
@@ -83,15 +78,6 @@ def addRoommatesRow(roommates: Roommates) -> None:
     db.session.commit()
 
 
-def updateRoommate(roommate: Roommates, ind: int, userID: db.Integer) -> None:
-    if ind == 1:
-        roommate.roommate1 = userID
-    elif ind == 2:
-        roommate.roommate2 = userID
-    elif ind == 3:
-        roommate.roommate3 = userID
-    elif ind == 4:
-        roommate.roommate4 = userID
-    else:
-        roommate.roommate5 = userID
+def updateRoommate(roommate: Roommates, ent: str, userID: db.Integer) -> None:
+    setattr(roommate, ent, userID)
     db.session.commit()
