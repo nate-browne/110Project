@@ -61,6 +61,30 @@ export default class Home extends Component<IAppProps, IAppState> {
     })
   }
 
+  createRental(userID): string{
+    server.post('/createrental', {
+      address: this.state.address,
+      userID: userID
+    }).then(resp => {
+      server.get('/getrentalIDs', {
+        params: {
+          userID: userID
+        }
+      }).then(resp => {
+          if (resp.data.currentRental !== null ) {
+            this.setState({userRentals: this.state.userRentals + 1})
+            this.setState({currentID: resp.data.currentRental})
+          }
+          if (resp.data.pastRental !== null) {
+            this.setState({userRentals: this.state.userRentals + 1})
+            this.setState({past: resp.data.pastRental})
+          }
+      }).catch(err => {
+          console.log('Error occurred',err);
+      })
+    })
+  }
+
   logout(): any {
     server.post('/logout', {
     }).then(resp => {
@@ -79,6 +103,7 @@ export default class Home extends Component<IAppProps, IAppState> {
       console.log('Error occurred',err);
     })
   }
+
 
   render() {
     const userID = this.props.navigation.getParam("userID","NO-ID");
@@ -127,7 +152,7 @@ export default class Home extends Component<IAppProps, IAppState> {
           windowBackgroundColor="rgba(255, 255, 255, .5)"
           isVisible={this.state.visible}
           onBackdropPress={() => this.setState({ visible: false })}
-          fullScreen={true}
+          fullScreen={false}
           >
           <ScrollView>
               <Button
@@ -135,7 +160,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                 type='clear'
                 title="x"
                 onPress={() =>{
-                  this.setVisible(false);
+                  this.setState({ visible: false })
                 }}
               />
               <View>
@@ -147,6 +172,8 @@ export default class Home extends Component<IAppProps, IAppState> {
                     placeholder="Enter a name for your rental"
                     keyboardAppearance="light"
                     returnKeyType="next"
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input1.focus()}}
                     onChangeText={(text: string) => this.setState({name: text})}
                   />
                 <Input
@@ -155,6 +182,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                     placeholder="Address"
                     keyboardAppearance="light"
                     returnKeyType="next"
+                    ref = {(input) => {this.input1 = input}}
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input2.focus()}}
                     onChangeText={(text: string) => this.setState({address: text})}
                   />
 
@@ -167,6 +197,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                     placeholder="Landlord's name"
                     keyboardAppearance="light"
                     returnKeyType="next"
+                    ref = {(input) => {this.input2 = input}}
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input3.focus()}}
                     onChangeText={(text: string) => this.setState({landlord: text})}
                   />
                 <Input
@@ -176,6 +209,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                     keyboardAppearance="light"
                     keyboardType="phone-pad"
                     returnKeyType="next"
+                    ref = {(input) => {this.input3 = input}}
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input4.focus()}}
                     onChangeText={(text: string) => this.setState({phoneNumber: text})}
                   />
 
@@ -187,6 +223,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                       placeholder="Start Date"
                       keyboardAppearance="light"
                       returnKeyType="next"
+                      ref = {(input) => {this.input4 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input5.focus()}}
                       onChangeText={(text: string) => this.setState({start: text})}
                   />
                   <Input
@@ -195,6 +234,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                       placeholder="End Date"
                       keyboardAppearance="light"
                       returnKeyType="next"
+                      ref = {(input) => {this.input5 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input6.focus()}}
                       onChangeText={(text: string) => this.setState({end: text})}
                   />
                   <Input
@@ -204,6 +246,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                       keyboardAppearance="light"
                       keyboardType="numeric"
                       returnKeyType="next"
+                      ref = {(input) => {this.input6 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input7.focus()}}
                       onChangeText={(text: string) => this.setState({rent: text})}
                   />
 
@@ -217,6 +262,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                       keyboardAppearance="light"
                       keyboardType="email-address"
                       returnKeyType="next"
+                      ref = {(input) => {this.input7 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input8.focus()}}
                       onChangeText={(text: string) => this.setState({email: text})}
                   />
                   <Input
@@ -226,38 +274,25 @@ export default class Home extends Component<IAppProps, IAppState> {
                       keyboardAppearance="light"
                       keyboardType="email-address"
                       returnKeyType="next"
+                      ref = {(input) => {this.input8 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {
+                        this.createRental(userID);
+                        this.setVisible(false);
+                      }}
                       onChangeText={(text: string) => this.setState({email: text})}
                   />
 
-                  <Text style={{fontSize: 24}}>Documents and Images</Text>
+                  <Text style={{fontSize: 24, margin: 20}}>Documents and Images</Text>
                 </View>
               <View>
                 <Button
                   raised={true}
+                  style = {{margin: 20}}
                   title="Create"
                   onPress={() => {
+                    this.createRental(userID);
                     this.setVisible(false);
-                    server.post('/createrental', {
-                      address: this.state.address,
-                      userID: userID
-                    }).then(resp => {
-                      server.get('/getrentalIDs', {
-                        params: {
-                          userID: userID
-                        }
-                      }).then(resp => {
-                          if (resp.data.currentRental !== null ) {
-                            this.setState({userRentals: this.state.userRentals + 1})
-                            this.setState({currentID: resp.data.currentRental})
-                          }
-                          if (resp.data.pastRental !== null) {
-                            this.setState({userRentals: this.state.userRentals + 1})
-                            this.setState({past: resp.data.pastRental})
-                          }
-                      }).catch(err => {
-                          console.log('Error occurred',err);
-                      })
-                    })
                   }}
                 />
               </View>

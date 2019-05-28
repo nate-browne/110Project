@@ -27,13 +27,6 @@ export default class Grocery extends Component {
 
   };
 
-  setEditVisible(visible: boolean) {
-    this.setState({editVisible: visible});
-  }
-  setAddVisible(visible: boolean) {
-    this.setState({addVisible: visible});
-  }
-
     render() {
           return (
             <View style= {{width:'100%', height:'100%'}}>
@@ -66,7 +59,7 @@ export default class Grocery extends Component {
               title="+"
               buttonStyle={{height: 65, width: 65, borderRadius: 50}}
               // TODO add item to data base onPress
-              onPress={() => { this.setAddVisible(true); }}
+              onPress={() => { this.setState({ addVisible: true }); }}
             />
           </View>
           <Overlay

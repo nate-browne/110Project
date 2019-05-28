@@ -29,7 +29,8 @@ Returns:
     to_send = ''.join(message)
 
     # Open CSV file, grab email and password
-    with open('RENT/backend/src/utils/info.csv', 'r') as infile:
+    #with open('RENT/backend/src/utils/info.csv', 'r') as infile:
+    with open('/home/mpargani/110Project/RENT/backend/src/utils/info.csv', 'r') as infile:
         read = csv.reader(infile, delimiter=',')
         next(read)
         for row in read:

@@ -88,7 +88,10 @@ export default class Grocery extends Component {
                     key={i}
                     onLongPress={() => {
                       //edit item
-                      this.state.currentID = i
+                      this.state.currentID = i;
+                      this.state.tmp.name = this.state.list[i].name;
+                      this.state.tmp.subtitle = this.state.list[i].subtitle;
+                      this.state.tmp.done = this.state.list[i].done;
                       this.setState({editVisible: true});
                     }}
                     onPress={() => {
@@ -136,7 +139,7 @@ export default class Grocery extends Component {
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
                     returnKeyType="next"
-                    onChangeText={(text: string) => {this.state.list[this.state.currentID].name = text}}
+                    onChangeText={(text: string) => {this.state.tmp.name = text}}
                 />
 
                 <Input
@@ -151,13 +154,16 @@ export default class Grocery extends Component {
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
                     returnKeyType="next"
-                    onChangeText={(text: string) => {this.state.list[this.state.currentID].subtitle = text}}
+                    onChangeText={(text: string) => {this.state.tmp.subtitle = text}}
                 />
 
                 <Button
                   title="Save"
                   buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {this.setState({ editVisible: false });}}
+                  onPress={() => {
+                    this.state.list[this.state.currentID] = this.state.tmp;
+                    this.setState({ editVisible: false });
+                  }}
                 />
 
                 <Button

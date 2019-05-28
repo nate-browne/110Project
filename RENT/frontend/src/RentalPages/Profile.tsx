@@ -12,7 +12,7 @@ const server = axios.create({
   baseURL: serverURL
 });
 
-export default class ContactInfo extends Component {
+export default class Profile extends Component {
 
   static navigationOptions = {
     headerTransparent: true,
@@ -28,7 +28,6 @@ export default class ContactInfo extends Component {
     email: "",
     phoneNumber: "",
 
-
     e1Relation: "Mother",
     e1FirstName: "Tammy",
     e1LastName: "Mok",
@@ -38,6 +37,22 @@ export default class ContactInfo extends Component {
     e2FirstName: "Nate",
     e2LastName: "Browne",
     e2Phone: "(098) 765-4321",
+
+    tmpFirstName: "",
+    tmpLastName: "",
+    tmpEmail: "",
+    tmpPhoneNumber: "",
+
+    tmpE1Relation: "",
+    tmpE1FirstName: "",
+    tmpE1LastName: "",
+    tmpE1Phone: "",
+
+    tmpE2Relation: "",
+    tmpE2FirstName: "",
+    tmpE2LastName: "",
+    tmpE2Phone: "",
+
   };
 
   componentDidMount() {
@@ -73,6 +88,7 @@ export default class ContactInfo extends Component {
                 <Text> {this.state.e1FirstName} {this.state.e1LastName} </Text>
                 <Text> {this.state.e1Phone} </Text>
               </TouchableOpacity>
+
               <TouchableOpacity style={styles.buttonContainer}>
                 <Text> Emergency Contact 2 </Text>
                 <Text> {this.state.e2Relation} </Text>
@@ -83,7 +99,24 @@ export default class ContactInfo extends Component {
                 title="edit"
                 buttonStyle={{height: 65, width: 65, borderRadius: 50}}
                 // TODO add item to data base onPress
-                onPress={() => { this.setState({editVisible: true}); }}
+                onPress={() => {
+                  this.setState({editVisible: true});
+
+                  this.state.tmpFirstName = this.state.firstName;
+                  this.state.tmpLastName = this.state.lastName;
+                  this.state.tmpEmail = this.state.email;
+                  this.state.tmpPhoneNumber = this.state.phoneNumber;
+
+                  this.state.tmpE1Relation = this.state.e1Relation;
+                  this.state.tmpE1FirstName = this.state.e1FirstName;
+                  this.state.tmpE1LastName = this.state.e1LastName;
+                  this.state.tmpE1Phone = this.state.e1Phone;
+
+                  this.state.tmpE2Relation = this.state.e2Relation;
+                  this.state.tmpE2FirstName = this.state.e2FirstName;
+                  this.state.tmpE2LastName = this.state.e2LastName;
+                  this.state.tmpE2Phone = this.state.e2Phone;
+                }}
               />
             </View>
         </View>
@@ -110,7 +143,7 @@ export default class ContactInfo extends Component {
                   returnKeyType="next"
                   blurOnSubmit = {false}
                   onSubmitEditing = {() => {this.input1.focus()}}
-                  onChangeText={(text: string) => this.setState({firstName: text})}
+                  onChangeText={(text: string) => {this.state.tmpFirstName = text;}}
               />
               <Input
                   inputContainerStyle={styles.textinput}
@@ -126,7 +159,7 @@ export default class ContactInfo extends Component {
                   ref = {(input) => {this.input1 = input}}
                   blurOnSubmit = {false}
                   onSubmitEditing = {() => {this.input2.focus()}}
-                  onChangeText={(text: string) => this.setState({lastName: text})}
+                  onChangeText={(text: string) => {this.state.tmpLastName = text;}}
               />
 
               <Input
@@ -145,7 +178,7 @@ export default class ContactInfo extends Component {
                   leftIcon={
                     <Icon name="email-outline" type="material-community" color="black" size={25} />
                   }
-                  onChangeText={(text: string) => this.setState({email: text})}
+                  onChangeText={(text: string) => {this.state.tmpEmail = text;}}
                 />
 
               <Input
@@ -164,7 +197,7 @@ export default class ContactInfo extends Component {
                   leftIcon={
                     <Icon name="phone" type="material-community" color="black" size={25} />
                   }
-                  onChangeText={(text: string) => this.setState({phoneNumber: text})}
+                  onChangeText={(text: string) => {this.state.tmpPhoneNumber = text;}}
                 />
 
                 <Text style={{paddingTop: 10, fontSize: 26}}>Emergency Contact 1</Text>
@@ -181,7 +214,7 @@ export default class ContactInfo extends Component {
                     leftIcon={
                       <Icon name="account-multiple-outline" type="material-community" color="black" size={25} />
                     }
-                    onChangeText={(text: string) => this.setState({e1Relation: text})}
+                    onChangeText={(text: string) => {this.state.tmpE1Relation = text;}}
                   />
                   <Input
                       inputContainerStyle={styles.textinput}
@@ -197,7 +230,7 @@ export default class ContactInfo extends Component {
                       ref = {(input) => {this.input5 = input}}
                       blurOnSubmit = {false}
                       onSubmitEditing = {() => {this.input6.focus()}}
-                      onChangeText={(text: string) => this.setState({e1FirstName: text})}
+                      onChangeText={(text: string) => {this.state.tmpE1FirstName = text;}}
                   />
 
                   <Input
@@ -214,7 +247,7 @@ export default class ContactInfo extends Component {
                       ref = {(input) => {this.input6 = input}}
                       blurOnSubmit = {false}
                       onSubmitEditing = {() => {this.input7.focus()}}
-                      onChangeText={(text: string) => this.setState({e1LastName: text})}
+                      onChangeText={(text: string) => {this.state.tmpE1LastName = text;}}
                   />
 
                   <Input
@@ -233,7 +266,7 @@ export default class ContactInfo extends Component {
                       leftIcon={
                         <Icon name="phone" type="material-community" color="black" size={25} />
                       }
-                      onChangeText={(text: string) => this.setState({e1Phone: text})}
+                      onChangeText={(text: string) => {this.state.tmpE1Phone = text;}}
                  />
 
                  <Text style={{paddingTop: 10, fontSize: 26}}>Emergency Contact 2</Text>
@@ -250,7 +283,7 @@ export default class ContactInfo extends Component {
                      leftIcon={
                        <Icon name="account-multiple-outline" type="material-community" color="black" size={25} />
                      }
-                     onChangeText={(text: string) => this.setState({e2Relation: text})}
+                     onChangeText={(text: string) => {this.state.tmpE2Relation = text;}}
                    />
                    <Input
                        inputContainerStyle={styles.textinput}
@@ -266,7 +299,7 @@ export default class ContactInfo extends Component {
                        ref = {(input) => {this.input9 = input}}
                        blurOnSubmit = {false}
                        onSubmitEditing = {() => {this.input10.focus()}}
-                       onChangeText={(text: string) => this.setState({e2FirstName: text})}
+                       onChangeText={(text: string) => {this.state.tmpE2FirstName = text;}}
                    />
                    <Input
                        inputContainerStyle={styles.textinput}
@@ -282,7 +315,7 @@ export default class ContactInfo extends Component {
                        ref = {(input) => {this.input10 = input}}
                        blurOnSubmit = {false}
                        onSubmitEditing = {() => {this.input11.focus()}}
-                       onChangeText={(text: string) => this.setState({e2LastName: text})}
+                       onChangeText={(text: string) => {this.state.tmpE2LastName = text;}}
                    />
 
                    <Input
@@ -301,7 +334,7 @@ export default class ContactInfo extends Component {
                        leftIcon={
                          <Icon name="phone" type="material-community" color="black" size={25} />
                        }
-                       onChangeText={(text: string) => this.setState({e2Phone: text})}
+                       onChangeText={(text: string) => {this.state.tmpE2Phone = text;}}
                   />
 
 
@@ -309,7 +342,24 @@ export default class ContactInfo extends Component {
                 <Button
                   raised={true}
                   title="Done"
-                  onPress={() => {Alert.alert('Make request to backend')}}
+                  onPress={() => {
+                    this.state.firstName = this.state.tmpFirstName;
+                    this.state.lastName = this.state.tmpLastName;
+                    this.state.email = this.state.tmpEmail;
+                    this.state.phoneNumber = this.state.tmpPhoneNumber;
+
+                    this.state.e1Relation = this.state.tmpE1Relation;
+                    this.state.e1FirstName = this.state.tmpE1FirstName;
+                    this.state.e1LastName = this.state.tmpE1LastName;
+                    this.state.e1Phone = this.state.tmpE1Phone;
+
+                    this.state.e2Relation = this.state.tmpE2Relation;
+                    this.state.e2FirstName = this.state.tmpE2FirstName;
+                    this.state.e2LastName = this.state.tmpE2LastName ;
+                    this.state.e2Phone = this.state.tmpE2Phone;
+
+                    this.setState({editVisible: false})
+                  }}
                 />
               </View>
           </ScrollView>
