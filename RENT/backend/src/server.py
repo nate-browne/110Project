@@ -12,7 +12,7 @@ from database.models import PropertyDocument, Note
 
 
 @app.route('/createuser', methods=['POST'])
-def createuser():
+def create_user():
     '''This route is used to create a new user in the database.\n
     It can only be reached via POST. To update a user's data, use
     the route '/updateuser'.\n
@@ -53,8 +53,8 @@ def add_roommate():
     '''This route is used to add a roommate to a given rental\n
     It can only be reached via POST request.\n
     The route expects that the data comes in with the following fields:\n
-    item - JSON tag - description
-    rentalID - 'rentalID' - ID of the rental to add the roommate to
+    item - JSON tag - description\n
+    rentalID - 'rentalID' - ID of the rental to add the roommate to\n
     email - 'email' - email of the roommmate to add
     '''
 
