@@ -6,8 +6,10 @@
 
 import React, {Component} from 'react';
 import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import { View } from 'react-native';
-import {Button , Image, Input, Overlay} from 'react-native-elements';
+
+import { Alert, View } from 'react-native';
+import {Button , Image, Input, Overlay, CheckBox} from 'react-native-elements';
+
 
 import * as EmailValidator from 'email-validator';
 import axios from 'axios';
@@ -42,19 +44,33 @@ export default class Login extends Component<IAppProps, IAppState> {
     email: "",
     password: "",
     confirmPassword: "",
+    phoneNumber: "",
+    phoneError: false,
     emailError: false,
     passwordError: false,
     loginError: false,
-    signupError: false
+    signupError: false,
+    isRemembered: false,
   };
 
   setSignupVisible(visible: boolean) {
     this.setState({signupVisible: visible});
   }
 
+  toggleIsRemembered() {
+    this.setState({isRemembered: !this.state.isRemembered});
+  }
+
   displayEmailError(): string {
     if(this.state.emailError === true ) {
       return "Please enter a valid email";
+    }
+    return "";
+  }
+
+  displayPhoneError(): string {
+    if (this.state.phoneError === true) {
+      return "Please enter a valid phone number";
     }
     return "";
   }
@@ -83,7 +99,7 @@ export default class Login extends Component<IAppProps, IAppState> {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       password: this.state.password,
-      phoneNumber: 7074301465
+      phoneNumber: this.state.phoneNumber,
     }).then(resp => {
       if(resp.status === 201) {
         console.log("Account created");
@@ -160,7 +176,15 @@ export default class Login extends Component<IAppProps, IAppState> {
                 buttonStyle={{backgroundColor:"#2bc0cd"}}
                 onPress={() => {this.login()}}
               />
-        </View>
+      </View>
+
+      <CheckBox 
+        center title="Remember me" 
+        checked={this.state.isRemembered}
+        containerStyle={styles.clearCheckbox}
+        textStyle={styles.checkboxText}
+        onPress={() => {this.toggleIsRemembered()}}
+      />
 
         <View style={styles.serviceBar}>
 
@@ -188,7 +212,7 @@ export default class Login extends Component<IAppProps, IAppState> {
 
         <Overlay
         isVisible={this.state.signupVisible}
-        onBackdropPress={() => this.setState({ signupVisible: false, passwordError: false, emailError: false, signupError: false })}
+        onBackdropPress={() => this.setState({ signupVisible: false, passwordError: false, emailError: false, phoneError: false, signupError: false })}
         containerStyle={styles.container}
         >
         <View style={styles.container}>
@@ -225,6 +249,19 @@ export default class Login extends Component<IAppProps, IAppState> {
               errorStyle={{ color: 'red', alignSelf: "center" }}
               errorMessage={this.displayEmailError() + this.displaySignupError()}
               onChangeText={(text) => this.setState({email: text, emailError: false, signupError: false})}
+            />
+
+            <Input
+              inputContainerStyle={styles.textinput}
+              placeholder="Phone (optional)"
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardAppearance="light"
+              keyboardType="phone-pad"
+              returnKeyType="next"
+              errorStyle={{ color: 'red' }}
+              errorMessage={this.displayPhoneError()}
+              onChangeText={(text) => this.setState({phoneNumber: text, phoneError: false})}
             />
 
             <Input
