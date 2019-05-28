@@ -64,10 +64,11 @@ CREATE TABLE `Board` (
 
 CREATE TABLE `Note` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`date` DATE NOT NULL,
-	`value` varchar(500) NOT NULL,
+	`title` varchar(50) NOT NULL,
+	`description` varchar(500) NOT NULL,
 	`board` bigint(20) NOT NULL,
 	`isDeleted` BOOL NOT NULL DEFAULT 0,
+	`category` varchar(25) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 

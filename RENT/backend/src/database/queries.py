@@ -1,7 +1,7 @@
 from typing import Optional, List, Any
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
-from .models import Roommates, CalendarEvent, Board
+from .models import Roommates, CalendarEvent, Board, Note
 
 
 def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
@@ -84,6 +84,16 @@ def addLease(lease: Lease) -> None:
     db.session.commit()
 
 
+def addNote(note: Note) -> None:
+    db.session.add(note)
+    db.session.commit()
+
+
+def getNotesByBoardID(boardID: db.Integer) -> List[Note]:
+    n = Note.query.filter_by(board=boardID).all()
+    return list(filter(lambda n: not n.isDeleted, n))
+
+
 def getRentalRoommates(roommatesID: db.Integer) -> Optional[Roommates]:
     return Roommates.query.filter_by(id=roommatesID).first()
 
@@ -91,3 +101,7 @@ def getRentalRoommates(roommatesID: db.Integer) -> Optional[Roommates]:
 def addRoommatesRow(roommates: Roommates) -> None:
     db.session.add(roommates)
     db.session.commit()
+
+
+def getNoteByNoteID(noteID: db.Integer) -> Optional[Note]:
+    return Note.query.filter_by(id=noteID).first()

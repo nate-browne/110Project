@@ -12,7 +12,14 @@ const server = axios.create({
   baseURL: serverURL
 });
 
-export default class Profile extends Component {
+interface IAppProps {
+  navigation?: any;
+}
+
+interface IAppState {
+}
+
+export default class Profile extends Component<IAppProps, IAppState> {
 
   static navigationOptions = {
     headerTransparent: true,

@@ -92,7 +92,7 @@ class Rental(db.Model):
                           nullable=True, default=None)
     board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=True,
                       default=None)
-    address = db.Column(db.String(255), nullable=True, default=None)
+    address = db.Column(db.String(255), nullable=False)
 
     def __repr__(self) -> str:
         print_str = "<Rental>\nrentalID: {}\ndocumentID: {}\nroommatesListID:\
@@ -109,10 +109,11 @@ class Board(db.Model):
 class Note(db.Model):
     __tablename__ = 'Note'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    value = db.Column(db.String(500), nullable=False)
+    title = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
     board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=False)
     isDeleted = db.Column(db.Boolean, nullable=False, default=False)
+    category = db.Column(db.String(25), nullable=False)
 
 
 class ContactInfo(db.Model):
