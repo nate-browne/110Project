@@ -11,6 +11,7 @@ CREATE TABLE `Users` (
 	`password` varchar(255) NOT NULL,
 	`currentRental` bigint(20) DEFAULT NULL,
 	`pastRental` bigint(20) DEFAULT NULL,
+	`deactivated` BOOL NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
@@ -47,7 +48,7 @@ CREATE TABLE `Lease` (
 
 CREATE TABLE `Rental` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`roommates` bigint(20) DEFAULT NULL,
+	`roommates` bigint(20) NOT NULL,
 	`contactInfoList` bigint(20) DEFAULT NULL,
 	`lease` bigint(20) DEFAULT NULL,
 	`insurance` bigint(20) DEFAULT NULL,
@@ -93,6 +94,15 @@ CREATE TABLE `ContactInfo` (
 	`email` varchar(255),
 	`associatedUser` bigint(20) NOT NULL,
 	`relationship` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `CalendarEvent` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`eventName` varchar(255) NOT NULL,
+	`eventDate` DATE NOT NULL,
+	`eventDescription` varchar(255) DEFAULT NULL,
+	`rental` bigint(20) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -142,4 +152,8 @@ ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk8` FOREIGN KEY (
 
 ALTER TABLE `ContactInfoList` ADD CONSTRAINT `ContactInfoList_fk9` FOREIGN KEY (`contact10`) REFERENCES `ContactInfo`(`id`);
 
+ALTER TABLE `ContactInfo` ADD CONSTRAINT `ContactInfo_fk0` FOREIGN KEY (`associatedUser`) REFERENCES `Users`(`id`);
+
 ALTER TABLE `Note` ADD CONSTRAINT `Note_fk0` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);
+
+ALTER TABLE `CalendarEvent` ADD CONSTRAINT `CalendarEvent_fk0` FOREIGN KEY (`rental`) REFERENCES `Rental`(`id`);
