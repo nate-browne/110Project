@@ -82,6 +82,8 @@ export default class Grocery extends Component {
                   leftIcon={
                     <Icon name="account" type="material-community" color="black" size={25} />
                   }
+                  blurOnSubmit = {false}
+                  onSubmitEditing = {() => {this.input1.focus()}}
                   returnKeyType="next"
                   onChangeText={(text: string) => {this.state.tmp.name = text}}
               />
@@ -97,6 +99,8 @@ export default class Grocery extends Component {
                   leftIcon={
                     <Icon name="account" type="material-community" color="black" size={25} />
                   }
+                  ref = {(input) => {this.input1 = input}}
+                  blurOnSubmit = {false}
                   returnKeyType="next"
                   onChangeText={(text: string) => {this.state.tmp.subtitle = text}}
               />
@@ -141,6 +145,8 @@ export default class Grocery extends Component {
                   leftIcon={
                     <Icon name="account" type="material-community" color="black" size={25} />
                   }
+                  blurOnSubmit = {false}
+                  onSubmitEditing = {() => {this.input1.focus()}}
                   returnKeyType="next"
                   onChangeText={(text: string) => {this.state.tmp.name = text}}
               />
@@ -155,6 +161,8 @@ export default class Grocery extends Component {
                   leftIcon={
                     <Icon name="account" type="material-community" color="black" size={25} />
                   }
+                  ref = {(input) => {this.input1 = input}}
+                  blurOnSubmit = {false}
                   returnKeyType="next"
                   onChangeText={(text: string) => {this.state.tmp.subtitle = text}}
               />
