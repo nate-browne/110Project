@@ -7,7 +7,7 @@ from utils import mailer
 from config import app, _login
 
 import database.queries as dq
-from database.models import Users, Rental, Roommates
+from database.models import Users, Rental, Roommates, Note
 
 
 @app.route('/createuser', methods=['POST'])
@@ -117,6 +117,59 @@ def deactivate():
     dq.updateUserInfo(user, 'deactivated', False)
     logout_user()
     return jsonify({}), 201
+
+
+@app.route('/getnotes', methods=['POST'])
+@login_required
+def get_notes():
+    rentalID = request.json['rentalID']
+    rental = dq.getRentalByRentalID(rentalID)
+    notes = dq.getNotesByBoardID(rental.board)
+    data = {}
+    for note in notes:
+        if note.category in data:
+            data[note.category].append({'title': note.title,
+                                        'noteID': note.id,
+                                        'description': note.description})
+        else:
+            data[note.category] = list()
+            data[note.category].append({'title': note.title,
+                                        'noteID': note.id,
+                                        'description': note.description})
+    return jsonify(data), 200
+
+
+@app.route('/addnote', methods=['POST'])
+@login_required
+def add_note():
+    description = request.json['description']
+    title = request.json['title']
+    board = request.json['boardID']
+    category = request.json['category']
+    note = Note(description=description, title=title, board=board,
+                category=category)
+    dq.addNote(note)
+    return jsonify({}), 201
+
+
+@app.route('/deletenote', methods=['POST'])
+@login_required
+def delete_note():
+    noteID = request.json['noteID']
+    note = dq.getNoteByNoteID(noteID)
+    if note is not None:
+        dq.update(note, 'isDeleted', True)
+        return jsonify({}), 201
+    return jsonify({'Reason': "Note does not exist"}), 404
+
+
+@app.route('/clearnotes', methods=['POST'])
+@login_required
+def clear_notes():
+    notes = request.json['notes']
+    for note in notes:
+        n = dq.getNoteByNoteID(note)
+        dq.update(n, 'isDeleted', True)
 
 
 @app.route('/createrental', methods=['POST'])
