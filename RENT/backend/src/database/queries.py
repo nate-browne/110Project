@@ -1,7 +1,7 @@
-from typing import Optional, List
+from typing import Optional, List, Any
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
-from .models import Roommates
+from .models import Roommates, CalendarEvent
 
 
 def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
@@ -37,10 +37,14 @@ def getContactWithAssocUser(userID: db.Integer) -> List[ContactInfo]:
     return ContactInfo.query.filter_by(associatedUser=userID).all()
 
 
+def getEventsWithRental(rentalID: db.Integer) -> List[CalendarEvent]:
+    return CalendarEvent.query.filter_by(rental=rentalID).all()
+
+
 def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
-    u = Roommates.query.filter_by(id=matesID).first()
-    u = list(filter(lambda x: x.startswith('room'), dir(u)))
-    u = list(filter(lambda i: int(i) != userID), u)
+    u_org = Roommates.query.filter_by(id=matesID).first()
+    u = list(filter(lambda x: x.startswith('room'), dir(u_org)))
+    u = list(filter(lambda i: int(getattr(u_org, i)) != userID), u)
     return list(map(lambda i: getUserById(int(i)), u))
 
 
@@ -49,8 +53,8 @@ def addUser(user: Users) -> None:
     db.session.commit()
 
 
-def updatePassword(user: Users, password: str) -> None:
-    user.password = password
+def updateUserInfo(user: Users, attribute: str, obj: Any) -> None:
+    setattr(user, attribute, obj)
     db.session.commit()
 
 
@@ -62,4 +66,18 @@ def updateUserRentals(user: Users, rentalID: db.Integer) -> None:
 
 def addRental(rental: Rental) -> None:
     db.session.add(rental)
+    db.session.commit()
+
+
+def getRentalRoommates(roommatesID: db.Integer) -> Optional[Roommates]:
+    return Roommates.query.filter_by(id=roommatesID).first()
+
+
+def addRoommatesRow(roommates: Roommates) -> None:
+    db.session.add(roommates)
+    db.session.commit()
+
+
+def updateRoommate(roommate: Roommates, ent: str, userID: db.Integer) -> None:
+    setattr(roommate, ent, userID)
     db.session.commit()

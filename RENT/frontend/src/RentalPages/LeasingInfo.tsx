@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, ScrollView, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 
+
 import CountDown from 'react-native-countdown-component';
 import styles from '../style/Logistics-Stylesheet';
 import {Divider, Overlay} from "react-native-elements";
+
 
 const endDate = 25; // Number of days away
 
@@ -35,6 +37,7 @@ export default class Logistics extends Component {
         <ScrollView style={styles.container}>
 
           <Text style={styles.countdownHeader}> Lease ends in: </Text>
+
           <CountDown
               until={24 * 60 * 60 * endDate}
               size={30}
@@ -43,6 +46,7 @@ export default class Logistics extends Component {
               digitTxtStyle={{color: '#555555'}}
               timeLabelStyle={{color: '#555555', fontWeight: 'bold'}}
               timeToShow={['D']}
+
               timeLabels={{d: 'Days',}}
               style={{padding: 10}}
           />
@@ -73,6 +77,7 @@ export default class Logistics extends Component {
 
             <TouchableOpacity onPress={() => { Alert.alert("Make me bigger") }}>
               <Image style={{margin: 4, width: 225, height: 150, borderColor: "#000000", borderWidth:10}} source={{uri: 'http://davescosmicsubsatl.com/wp-content/uploads/parser/one-bedroom-apartment-interior-design-1.jpg'}}/>
+
             </TouchableOpacity>
 
           </ScrollView>
@@ -101,6 +106,7 @@ export default class Logistics extends Component {
             </TouchableOpacity>
           </ScrollView>
           <Text style={styles.countdownHeader}></Text>
+
         </ScrollView>
       </ImageBackground>
     );

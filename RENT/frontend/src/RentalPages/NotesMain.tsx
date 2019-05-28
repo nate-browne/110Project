@@ -27,13 +27,6 @@ export default class Grocery extends Component {
 
   };
 
-  setEditVisible(visible: boolean) {
-    this.setState({editVisible: visible});
-  }
-  setAddVisible(visible: boolean) {
-    this.setState({addVisible: visible});
-  }
-
     render() {
           return (
             <View style= {{width:'100%', height:'100%'}}>
@@ -66,13 +59,14 @@ export default class Grocery extends Component {
               title="+"
               buttonStyle={{height: 65, width: 65, borderRadius: 50}}
               // TODO add item to data base onPress
-              onPress={() => { this.setAddVisible(true); }}
+              onPress={() => { this.setState({ addVisible: true }); }}
             />
           </View>
           <Overlay
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.editVisible}
             onBackdropPress={() => this.setState({ editVisible: false })}
+            height={'50%'}
             >
 
             <ScrollView>
@@ -88,6 +82,8 @@ export default class Grocery extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
@@ -98,13 +94,23 @@ export default class Grocery extends Component {
                     placeholder="Item Description"
                     defaultValue={this.state.currentSubtitle}
                     autoCorrect={false}
+                    multiline={true}
                     keyboardAppearance="light"
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    ref = {(input) => {this.input1 = input}}
+                    blurOnSubmit = {false}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
+
+                <Button
+                  title="Save"
+                  buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                  onPress={() => {this.setState({ editVisible: false }); Alert.alert("contact backend");}}
+                />
+
               </ScrollView>
 
           </Overlay>
@@ -114,6 +120,7 @@ export default class Grocery extends Component {
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.addVisible}
             onBackdropPress={() => this.setState({ addVisible: false })}
+            height={'50%'}
             >
 
             <ScrollView>
@@ -128,6 +135,8 @@ export default class Grocery extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
@@ -141,9 +150,18 @@ export default class Grocery extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    ref = {(input) => {this.input1 = input}}
+                    blurOnSubmit = {false}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
+
+                <Button
+                  title="Save"
+                  buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                  onPress={() => {this.setState({ addVisible: false }); Alert.alert("contact backend");}}
+                />
+
               </ScrollView>
 
           </Overlay>

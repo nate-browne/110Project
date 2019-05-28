@@ -19,6 +19,7 @@ class Users(UserMixin, db.Model):
                               nullable=True)
     pastRental = db.Column(db.Integer, db.ForeignKey('Rental.id'),
                            nullable=True)
+    deactivated = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self) -> str:
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
@@ -81,7 +82,7 @@ class Rental(db.Model):
     __tablename__ = 'Rental'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommates = db.Column(db.Integer, db.ForeignKey('Roommates.id'),
-                          nullable=True, default=None)
+                          nullable=False)
     contactInfoList = db.Column(db.Integer,
                                 db.ForeignKey('ContactInfoList.id'),
                                 nullable=True, default=None)
@@ -155,3 +156,13 @@ class ContactInfoList(db.Model):
                          nullable=True)
     contact10 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
                           nullable=True)
+
+
+class CalendarEvent(db.Model):
+    __tablename__ = 'CalendarEvent'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    eventName = db.Column(db.String(255), nullable=False)
+    eventDate = db.Column(db.Date, nullable=False)
+    eventDescription = db.Column(db.String(255), default=None)
+    rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=False)
+    isDeleted = db.Column(db.Boolean, nullable=False, default=False)
