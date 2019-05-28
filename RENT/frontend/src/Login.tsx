@@ -8,6 +8,7 @@ import React, {Component} from 'react';
 import styles from './style/App-Stylesheet';
 import { Alert, ScrollView, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import {Button , Image, Input, Overlay, CheckBox, Icon} from 'react-native-elements';
+import { StackActions, NavigationActions } from 'react-navigation';
 import * as EmailValidator from 'email-validator';
 import axios from 'axios';
 
@@ -53,6 +54,8 @@ export default class Login extends Component<IAppProps, IAppState> {
     phoneError: false,
     emailError: false,
     passwordError: false,
+    passwordLengthError: false,
+
     loginError: false,
     signupError: false,
 
@@ -61,6 +64,16 @@ export default class Login extends Component<IAppProps, IAppState> {
     signupVisible: false,
     forgotVisible: false,
   };
+
+  resetNavigation(targetRoute: string) {
+    const resetAction = StackActions.reset({
+      index: 0, // <-- currect active route from actions array
+      actions: [
+        NavigationActions.navigate({ routeName: targetRoute }),
+      ],
+    });
+    this.props.navigation.dispatch(resetAction);
+  }
 
   toggleIsRemembered() {
     this.setState({isRemembered: !this.state.isRemembered});
@@ -80,11 +93,14 @@ export default class Login extends Component<IAppProps, IAppState> {
     return "";
   }
   displayPasswordError(): string {
-    if(this.state.passwordError) {
-      return "Passwords did not match"
-    }
-    return "";
+  if(this.state.passwordError) {
+    return "Passwords did not match"
+  } else if (this.state.passwordLengthError === true) {
+    return "Password must contain at least 5 characters"
   }
+  return "";
+  }
+
   displayLoginError(): string {
     if(this.state.loginError) {
       return "Username or Password incorrect";
@@ -280,7 +296,8 @@ export default class Login extends Component<IAppProps, IAppState> {
                                       passwordError: false,
                                       emailError: false,
                                       phoneError: false,
-                                      signupError: false })}
+                                      signupError: false,
+                                      passwordLengthError: false })}
         containerStyle={styles.container}
         >
         <TouchableWithoutFeedback onPress = {dismissKeyboard}>
@@ -379,7 +396,7 @@ export default class Login extends Component<IAppProps, IAppState> {
             errorStyle={{ color: 'red', alignSelf: "center" }}
             errorMessage={this.displayPasswordError()}
             secureTextEntry={true}
-            onChangeText={(text) => this.setState({confirmPassword: text, passwordError: false})}
+            onChangeText={(text) => this.setState({confirmPassword: text, passwordError: false, passwordLengthError: false})}
           />
 
           <View style={styles.button}>
@@ -393,11 +410,14 @@ export default class Login extends Component<IAppProps, IAppState> {
                   this.state.password === this.state.confirmPassword) {
                   this.createUser();
                 }
-                else if( !EmailValidator.validate(this.state.email) ) {
+                if( !EmailValidator.validate(this.state.email) ) {
                   this.setState({emailError: true})
                 }
-                else if( this.state.password !== this.state.confirmPassword) {
+                if( this.state.password !== this.state.confirmPassword) {
                   this.setState({passwordError:true})
+                }
+                if( this.state.password.length <= 4 ) {
+                  this.setState({passwordLengthError:true})
                 }
               }}
             />
