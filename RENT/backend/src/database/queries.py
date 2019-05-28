@@ -1,7 +1,7 @@
 from typing import Optional, List, Any
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
-from .models import Roommates, CalendarEvent
+from .models import Roommates, CalendarEvent, Board
 
 
 def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
@@ -53,8 +53,8 @@ def addUser(user: Users) -> None:
     db.session.commit()
 
 
-def updateUserInfo(user: Users, attribute: str, obj: Any) -> None:
-    setattr(user, attribute, obj)
+def update(table: Any, attribute: str, obj: Any) -> None:
+    setattr(table, attribute, obj)
     db.session.commit()
 
 
@@ -69,15 +69,25 @@ def addRental(rental: Rental) -> None:
     db.session.commit()
 
 
+def addBoard(board: Board) -> None:
+    db.session.add(board)
+    db.session.commit()
+
+
+def addPropertyDocument(document: PropertyDocument) -> None:
+    db.session.add(document)
+    db.session.commit()
+
+
+def addLease(lease: Lease) -> None:
+    db.session.add(lease)
+    db.session.commit()
+
+
 def getRentalRoommates(roommatesID: db.Integer) -> Optional[Roommates]:
     return Roommates.query.filter_by(id=roommatesID).first()
 
 
 def addRoommatesRow(roommates: Roommates) -> None:
     db.session.add(roommates)
-    db.session.commit()
-
-
-def updateRoommate(roommate: Roommates, ent: str, userID: db.Integer) -> None:
-    setattr(roommate, ent, userID)
     db.session.commit()

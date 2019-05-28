@@ -53,7 +53,7 @@ CREATE TABLE `Rental` (
 	`lease` bigint(20) DEFAULT NULL,
 	`insurance` bigint(20) DEFAULT NULL,
 	`board` bigint(20) DEFAULT NULL,
-	`address` varchar(255) DEFAULT NULL,
+	`address` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 

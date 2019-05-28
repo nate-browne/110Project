@@ -7,7 +7,8 @@ from utils import mailer
 from config import app, _login
 
 import database.queries as dq
-from database.models import Users, Rental, Roommates
+from database.models import Users, Rental, Roommates, Board, Lease
+from database.models import PropertyDocument
 
 
 @app.route('/createuser', methods=['POST'])
@@ -77,7 +78,7 @@ def add_roommate():
         mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
         for ent in mates:
             if getattr(roommates, ent) is None:
-                dq.updateRoommate(roommates, ent, user.id)
+                dq.update(roommates, ent, user.id)
                 dq.updateUserRentals(user, rentalID)
                 return jsonify({}), 201
             elif getattr(roommates, ent) == user.id:
@@ -104,7 +105,7 @@ def delete_roommate():
     for ent in mates:
         if user.id == getattr(roommates, ent):
             dq.updateUserRentals(user, None)
-            dq.updateRoommate(roommates, ent, None)
+            dq.update(roommates, ent, None)
             return jsonify({}), 201
     return jsonify({'Reason': "Roommate isn't a roommate"}), 404
 
@@ -114,9 +115,52 @@ def delete_roommate():
 def deactivate():
     email = request.json['email']
     user = dq.getUserByEmail(email)
-    dq.updateUserInfo(user, 'deactivated', False)
+    dq.update(user, 'deactivated', False)
     logout_user()
     return jsonify({}), 201
+
+
+@app.route('/addlease', methods=['POST'])
+@login_required
+def add_lease():
+    rentalID = request.json['rentalID']
+    rental = dq.getRentalByRentalID(rentalID)
+    landlordFirstName = request.json['landlordFirstName']
+    landlordLastName = request.json['landlordLastName']
+    landlordPhoneNumber = request.json['landlordPhoneNumber']
+    landlordEmail = request.json['landlordEmail']
+    rentCost = request.json['rentCost']
+    if rentCost == "":
+        rentCost = 0
+    startDate = request.json['startDate']
+    endDate = request.json['endDate']
+    rentDueDate = request.json['rentDueDate']
+    docName = request.json['docName']
+    document = request.json['document']
+    leaseDoc = PropertyDocument(document=document, docName=docName)
+    dq.addPropertyDocument(leaseDoc)
+
+    lease = Lease(landlordFirstName=landlordFirstName,
+                  landlordLastName=landlordLastName,
+                  landlordPhoneNumber=landlordPhoneNumber,
+                  landlordEmail=landlordEmail,
+                  rentCost=rentCost, startDate=startDate, endDate=endDate,
+                  rentDueDate=rentDueDate, docName=docName,
+                  document=leaseDoc.id)
+    dq.addLease(lease)
+    dq.update(rental, 'lease', lease.id)
+
+
+@app.route('/addinsurancedocument', methods=['POST'])
+@login_required
+def add_insurance_document():
+    rentalID = request.json['rentalID']
+    rental = dq.getRentalByRentalID(rentalID)
+    docName = request.json['docName']
+    document = request.json['document']
+    insuranceDoc = PropertyDocument(document=document, docName=docName)
+    dq.addPropertyDocument(insuranceDoc)
+    dq.update(rental, 'insurance', insuranceDoc.id)
 
 
 @app.route('/createrental', methods=['POST'])
@@ -143,6 +187,9 @@ def create_rental():
     roommates = Roommates(roommate1=userID)
     dq.addRoommatesRow(roommates)
     rental = Rental(address=address, roommates=roommates.id)
+    board = Board()
+    rental.board = board.id
+    dq.addBoard(board)
     dq.addRental(rental)
     dq.updateUserRentals(user, rental.id)
 
@@ -186,7 +233,7 @@ def login():
     user = dq.getUserByEmail(email)
 
     if _validate(user, password):
-        dq.updateUserInfo(user, 'deactivated', False)
+        dq.update(user, 'deactivated', False)
         login_user(user, remember=remember)
         return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:
@@ -325,36 +372,36 @@ def update_user_info():
     if check is not None:
         return jsonify({'Reason': "Email already in use"}), 400
 
-    dq.updateUserInfo(user, 'firstName', firstName)
-    dq.updateUserInfo(user, 'lastName', lastName)
-    dq.updateUserInfo(user, 'phoneNumber', phoneNumber)
-    dq.updateUserInfo(user, 'email', email)
+    dq.update(user, 'firstName', firstName)
+    dq.update(user, 'lastName', lastName)
+    dq.update(user, 'phoneNumber', phoneNumber)
+    dq.update(user, 'email', email)
 
     return jsonify({}), 200
 
 
-@app.route('/testupdateuserinfo', methods=['GET'])
-def testupdateuserinfo():
-    firstName = 'Kevin'
-    lastName = 'Bacon'
-    phoneNumber = '7142004622'
-    email = 'kbacon@apple.com'
-    userID = 1
-    user = dq.getUserById(userID)
-    check = dq.getUserByEmail(email)
+# @app.route('/testupdateuserinfo', methods=['GET'])
+# def testupdateuserinfo():
+#     firstName = 'Kevin'
+#     lastName = 'Bacon'
+#     phoneNumber = '7142004622'
+#     email = 'kbacon@apple.com'
+#     userID = 1
+#     user = dq.getUserById(userID)
+#     check = dq.getUserByEmail(email)
 
-    if check is not None:
-        return "<h1>Update failed: Email in use</h1>"
+#     if check is not None:
+#         return "<h1>Update failed: Email in use</h1>"
 
-    dq.updateUserInfo(user, 'firstName', firstName)
-    dq.updateUserInfo(user, 'lastName', lastName)
-    dq.updateUserInfo(user, 'phoneNumber', phoneNumber)
-    dq.updateUserInfo(user, 'email', email)
-    return "<h1>User Updated</h1>"
+#     dq.updateUserInfo(user, 'firstName', firstName)
+#     dq.updateUserInfo(user, 'lastName', lastName)
+#     dq.updateUserInfo(user, 'phoneNumber', phoneNumber)
+#     dq.updateUserInfo(user, 'email', email)
+#     return "<h1>User Updated</h1>"
 
 
 def _change_password(user: Users, password: str):
-    dq.updateUserInfo(user, 'password', pbkdf2_sha256.hash(password))
+    dq.update(user, 'password', pbkdf2_sha256.hash(password))
 
 
 def _validate(user: Users, password: str) -> bool:
