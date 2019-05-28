@@ -53,8 +53,8 @@ def add_roommate():
     '''This route is used to add a roommate to a given rental\n
     It can only be reached via POST request.\n
     The route expects that the data comes in with the following fields:\n
-    item - JSON tag - description
-    rentalID - 'rentalID' - ID of the rental to add the roommate to
+    item - JSON tag - description\n
+    rentalID - 'rentalID' - ID of the rental to add the roommate to\n
     email - 'email' - email of the roommmate to add
     '''
 
@@ -92,7 +92,6 @@ def add_roommate():
 @app.route('/deleteroommate', methods=['POST'])
 @login_required
 def delete_roommate():
-
     rentalID = request.json['rentalID']
     email = request.json['email']
     user = dq.getUserByEmail(email)
