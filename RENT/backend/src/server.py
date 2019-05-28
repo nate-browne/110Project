@@ -8,7 +8,7 @@ from config import app, _login
 
 import database.queries as dq
 from database.models import Users, Rental, Roommates, Board, Lease
-from database.models import PropertyDocument, Note
+from database.models import PropertyDocument, Note, CalendarEvent
 
 
 @app.route('/createuser', methods=['POST'])
@@ -43,7 +43,7 @@ def create_user():
         return jsonify({}), 301
     else:
         # create user in the DB and return success
-        dq.addUser(user)
+        dq.add(user)
         return jsonify({}), 201
 
 
@@ -137,7 +137,7 @@ def add_lease():
     docName = request.json['docName']
     document = request.json['document']
     leaseDoc = PropertyDocument(document=document, docName=docName)
-    dq.addPropertyDocument(leaseDoc)
+    dq.add(leaseDoc)
 
     lease = Lease(landlordFirstName=landlordFirstName,
                   landlordLastName=landlordLastName,
@@ -146,7 +146,7 @@ def add_lease():
                   rentCost=rentCost, startDate=startDate, endDate=endDate,
                   rentDueDate=rentDueDate, docName=docName,
                   document=leaseDoc.id)
-    dq.addLease(lease)
+    dq.add(lease)
     dq.update(rental, 'lease', lease.id)
 
 
@@ -158,14 +158,14 @@ def add_insurance_document():
     docName = request.json['docName']
     document = request.json['document']
     insuranceDoc = PropertyDocument(document=document, docName=docName)
-    dq.addPropertyDocument(insuranceDoc)
+    dq.add(insuranceDoc)
     dq.update(rental, 'insurance', insuranceDoc.id)
 
 
-@app.route('/getnotes', methods=['POST'])
+@app.route('/getnotes', methods=['GET'])
 @login_required
 def get_notes():
-    rentalID = request.json['rentalID']
+    rentalID = request.args.get('rentalID')
     rental = dq.getRentalByRentalID(rentalID)
     notes = dq.getNotesByBoardID(rental.board)
     data = {}
@@ -182,16 +182,50 @@ def get_notes():
     return jsonify(data), 200
 
 
+@app.route('/getcalendarevents', methods=['GET'])
+@login_required
+def get_calendar_events():
+    rentalID = request.args.get('rentalID')
+    events = dq.getEventsWithRental(rentalID)
+    return jsonify(events), 200
+
+
+@app.route('/addcalendarevent', methods=['POST'])
+@login_required
+def add_calendar_event():
+    rentalID = request.json['rentalID']
+    eventName = request.json['eventName']
+    eventDate = request.json['eventDate']
+    eventDescription = request.json['eventDescription']
+    event = CalendarEvent(eventName=eventName, eventDate=eventDate,
+                          eventDescription=eventDescription, rental=rentalID)
+    dq.add(event)
+    return jsonify({}), 201
+
+
+@app.route('/deletecalendarevent', methods=['POST'])
+@login_required
+def delete_calendar_event():
+    eventID = request.json['eventID']
+    event = dq.getEventByEventID(eventID)
+    if event is not None:
+        dq.update(event, 'isDeleted', True)
+        return jsonify({}), 201
+    return jsonify({'Reason': "Event does not exist"}), 404
+
+
 @app.route('/addnote', methods=['POST'])
 @login_required
 def add_note():
     description = request.json['description']
     title = request.json['title']
-    board = request.json['boardID']
+    rentalID = request.json['rentalID']
+    rental = dq.getRentalByRentalID(rentalID)
+    board = rental.board
     category = request.json['category']
     note = Note(description=description, title=title, board=board,
                 category=category)
-    dq.addNote(note)
+    dq.add(note)
     return jsonify({}), 201
 
 
@@ -237,15 +271,16 @@ def create_rental():
 
     # Create a rental and update the user's current rental
     roommates = Roommates(roommate1=userID)
-    dq.addRoommatesRow(roommates)
+    dq.add(roommates)
     rental = Rental(address=address, roommates=roommates.id)
     board = Board()
     rental.board = board.id
-    dq.addBoard(board)
-    dq.addRental(rental)
+    dq.add(board)
+    dq.add(rental)
     dq.updateUserRentals(user, rental.id)
+    data = rental.id
 
-    return jsonify({}), 201
+    return jsonify(data), 201
 
 
 @app.route('/forgotpassword', methods=['POST'])
