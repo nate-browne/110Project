@@ -103,6 +103,7 @@ CREATE TABLE `CalendarEvent` (
 	`eventDate` DATE NOT NULL,
 	`eventDescription` varchar(255) DEFAULT NULL,
 	`rental` bigint(20) NOT NULL,
+	`isDeleted` BOOL NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
