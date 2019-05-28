@@ -12,7 +12,7 @@ from database.models import PropertyDocument, Note
 
 
 @app.route('/createuser', methods=['POST'])
-def createuser():
+def create_user():
     '''This route is used to create a new user in the database.\n
     It can only be reached via POST. To update a user's data, use
     the route '/updateuser'.\n
