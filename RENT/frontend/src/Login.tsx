@@ -34,6 +34,7 @@ interface IAppState {
 
 
 export default class Login extends Component<IAppProps, IAppState> {
+  [x: string]: any;
   // This contains styling for the navigation
   static navigationOptions = {
     headerTransparent: true,

@@ -12,6 +12,8 @@ interface IAppProps {
 interface IAppState {
 }
 export default class Roommates extends Component<IAppProps,IAppState> {
+  [x: string]: any;
+
   state = {
     addVisible: false,
     deleteVisible: false,
