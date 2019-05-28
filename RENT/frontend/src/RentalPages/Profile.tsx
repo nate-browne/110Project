@@ -46,7 +46,6 @@ export default class Profile extends Component {
       Alert.alert("error");
     });
   }
-
   static navigationOptions = {
     headerTransparent: true,
     headerTitleStyle: {
@@ -88,6 +87,22 @@ export default class Profile extends Component {
 
   };
 
+  componentDidMount() {
+    server.get('/getinfo',{
+      params: {
+        userID: this.props.navigation.getParam("userID", 0)
+      }
+    }).then(resp => {
+      if(resp.status === 200) {
+        this.setState({firstName: resp.data.firstName})
+        this.setState({lastName: resp.data.lastName})
+        this.setState({email: resp.data.email})
+        this.setState({phoneNumber: resp.data.phoneNumber})
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
   render() {
     return (
       <ScrollView style={styles.container}>

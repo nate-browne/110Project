@@ -84,6 +84,7 @@ export default class Grocery extends Component {
                   }
                   blurOnSubmit = {false}
                   onSubmitEditing = {() => {this.input1.focus()}}
+
                   returnKeyType="next"
                   onChangeText={(text: string) => {this.state.tmp.name = text}}
               />
