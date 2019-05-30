@@ -111,16 +111,16 @@ export default class Profile extends Component {
                 <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
                 <Text style={{textAlign: 'center', marginTop:20,marginBottom:25,
                               color: '#333333', fontWeight:"500", fontSize:35}}>
-                    {this.state.firstName} Name Namesss {this.state.lastName}
+                    {this.state.firstName} {this.state.lastName}
                 </Text>
                 <Divider style={styles.divider} />
                 <Text style={{textAlign: 'center', marginVertical:5, marginTop:10,
                     color: '#777777', fontWeight:"300", fontSize:14}}>
-                   ({this.state.phoneNumber} temp phone)
+                   ({this.state.phoneNumber})
                 </Text>
                 <Text style={{textAlign: 'center', marginBottom:10,
                 color: '#777777', fontWeight:"300", fontSize:14}}>
-                {this.state.email} tempEmail@someaddress
+                {this.state.email}
                 </Text>
                 <Divider style={styles.divider} />
                 <Text style={styles.emergency}>Emergency Contact 1</Text>
