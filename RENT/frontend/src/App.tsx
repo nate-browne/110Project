@@ -1,35 +1,46 @@
+/*
+  Name: ExamplePage.tsx
+  Description: This page is the main entry point of our app.
+  Contains main navagation stack
+*/
+
 import React, {Component} from 'react';
-import styles from './style/Stylesheet'; // This is how you can import stuff from other folders
-import { Text, View, Alert, Vibration } from 'react-native';
-import {Button, Icon} from 'react-native-elements';
-import sha256 from 'sjcl';
-import axios from 'axios';
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import Bulletin from "./RentalPages/Bulletin";
+import ContactInfo from "./RentalPages/ContactInfo";
+import ExpensesHome from "./RentalPages/ExpensesHome";
+import ExpensesOwed from "./RentalPages/ExpensesOwed";
+import ExpensesPaid from "./RentalPages/ExpensesPaid";
+import Grocery from "./RentalPages/Grocery";
+import Home from "./Home";
+import Login from "./Login";
+import Logistics from "./RentalPages/Logistics";
+import RentalMain from "./RentalMain";
+import Roommates from "./RentalPages/Roommates";
 
-const serverURL = 'http://localhost:5000' // I think this is the default flask one
-const server = axios.create({
-  baseURL: serverURL
-});
-
-type Props = {};
-export default class App extends Component<Props> {
-
-  buttonPressed(): void {
-    Alert.alert("Ahhh!", "Sup lol you found me dude");
-    Vibration.vibrate(300);
+const RootStack = createStackNavigator(
+  {
+    Bulletin: Bulletin,
+    ContactInfo: ContactInfo,
+    ExpensesHome: ExpensesHome,
+    ExpensesOwed: ExpensesOwed,
+    ExpensesPaid: ExpensesPaid,
+    Grocery: Grocery,
+    Home: Home,
+    Login: Login,
+    Logistics: Logistics,
+    RentalMain: RentalMain,
+    Roommates: Roommates
+  },
+  {
+    initialRouteName: "Login",
   }
+);
 
+const AppContainer = createAppContainer(RootStack);
+
+export default class App extends Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Hello group, this is much better than the simulator</Text>
-        <Button
-          icon={<Icon name='g-translate' size={15} color="white"/>}
-          raised={true}
-          title="Press Me, I do nothing!"
-          onPress={this.buttonPressed}
-        />
-      </View>
-    );
-  }
+      return <AppContainer />;
+    }
 }
-

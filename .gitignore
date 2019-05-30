@@ -3,6 +3,7 @@ __pycache__/*
 .DS_Store
 node_modules/**/*
 node_modules/
+.expo/*
 .expo/
 npm-debug.*
 *.jks
@@ -12,6 +13,10 @@ npm-debug.*
 .idea
 *.swp
 .vscode
+.vscode/*
 .atom
 .babel.7.4.4.development.json
 packager-info.json
+config.py
+yarn-error.log
+url.js
