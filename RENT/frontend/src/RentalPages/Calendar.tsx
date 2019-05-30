@@ -6,7 +6,11 @@ of user.
 
 import React, {Component} from 'react';
 //import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
+<<<<<<< HEAD
 import {Text, Alert, View, ScrollView, TouchableOpacity} from 'react-native';
+=======
+import { Text, View, ScrollView } from 'react-native';
+>>>>>>> 1d7322edf16779f355b1e6dd0e73d8c87431b40a
 import {Button, Icon, Image, Input, Overlay} from 'react-native-elements';
 import Calendar from 'react-native-calendario';
 
@@ -16,7 +20,7 @@ import axios from 'axios';
 import configInfo from './url';
 
 export default class Login extends Component {
-
+  [x: string]: any;
   state = {
     editVisible: false,
     firstName: "",

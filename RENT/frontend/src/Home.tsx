@@ -19,6 +19,7 @@ interface IAppState {
 }
 
 export default class Home extends Component<IAppProps, IAppState> {
+  [x: string]: any;
   static navigationOptions = {
       headerLeft: null,
       headerBackTitle: "Rentals"
@@ -61,7 +62,7 @@ export default class Home extends Component<IAppProps, IAppState> {
     })
   }
 
-  createRental(userID): string{
+  createRental(userID: any): void{
     server.post('/createrental', {
       address: this.state.address,
       userID: userID

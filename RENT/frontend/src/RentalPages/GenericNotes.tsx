@@ -5,6 +5,7 @@ import styles from '../style/Grocery-Stylesheet';
 
 export default class Grocery extends Component {
   // State of this instance
+  [x: string]: any;
   state = {
     // Need to retrieve all of this from the backend
     editVisible: false,
