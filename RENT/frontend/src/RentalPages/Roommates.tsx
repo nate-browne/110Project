@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, View } from 'react-native';
+import { Alert, Text, ScrollView, View } from 'react-native';
 import { Overlay, Icon, Button, Input, ListItem } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; // https://github.com/kohver/react-native-touchable-scale
 import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
@@ -12,6 +12,25 @@ interface IAppProps {
 interface IAppState {
 }
 export default class Roommates extends Component<IAppProps,IAppState> {
+  [x: string]: any;
+
+  static navigationOptions = ({ navigation }) => {
+        return {
+            title: "Your Roommates!",
+            headerStyle: {
+                backgroundColor: '#2bc0cd',
+
+            },
+
+            headerBackTitle: "Rental Home",
+            headerTitleStyle: {
+                fontWeight: 'bold',
+                color: "white",
+            },
+            headerTintColor: "white",
+
+        };
+    };
   state = {
     addVisible: false,
     deleteVisible: false,
@@ -26,32 +45,32 @@ export default class Roommates extends Component<IAppProps,IAppState> {
     list: [
       {
         name: 'John Doe',
-        color1: '#00ddff',
+        color1: '#93b7be',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
         color2: '#0c54f2',
       },
       {
         name: 'Maria',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
-        color1: '#770ba5',
+        color1: '#6e8898',
         color2: '#e100ff',
       },
       {
         name: 'James',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
-        color1: '#FF9800',
+        color1: '#9fb1bc',
         color2: '#F44336',
       },
       {
         name: 'Roommate #4',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
-        color1: '#770ba5',
+        color1: '#3f6377',
         color2: '#e100ff',
       },
       {
         name: 'Roommate #5',
         avatar_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
-        color1: '#00ddff',
+        color1: '#9fb1bc',
         color2: '#0c54f2',
       },
     ]
@@ -59,53 +78,70 @@ export default class Roommates extends Component<IAppProps,IAppState> {
 
   render() {
     return (
-      <View style = {{width:'100%', height:'100%'}}>
-        <ScrollView>
-        {
-          this.state.list.map((l, i) => (
-            <ListItem
-              key={i}
-              containerStyle={{margin: 5}}
-              onPress={() => {
-                this.props.navigation.push('Profile');
-              }}
-              onLongPress = {() => {
-                this.state.currentID = i;
-                this.setState({deleteVisible: true});
-              }}
-              Component={TouchableScale}
-              friction={90} //
-              tension={100} // These props are passed to the parent component (here TouchableScale)
-              activeScale={0.95} //
-              linearGradientProps={{
-                colors: [ l.color1 , l.color2],
-                start: [1, 0],
-                end: [0.2, 0],
-              }}
-              leftAvatar={{ rounded: true, source: { uri: l.avatar_url } }}
-              title={l.name}
-              titleStyle={{ color: 'white', fontWeight: 'bold' }}
-              subtitleStyle={{ color: 'white' }}
-              chevronColor="white"
-              chevron
-            />
-          ))
-        }
+        <View style = {{width:'100%', height:'100%'}}>
+          <ScrollView>
+            {
+              this.state.list.map((l, i) => (
+                  <ListItem
+                      key={i}
+                      onPress={() => {
+                        this.props.navigation.push('Profile');
+                      }}
+                      onLongPress = {() => {
+                        this.state.currentID = i;
+                        this.setState({deleteVisible: true});
+                        Alert.alert(
+                            'Delete Roommate?',
+                            'This will permanently delete this roommate.',
+                            [
+                              {
+                                text: 'Cancel',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                              },
+                              {text: 'OK', onPress: () =>  {
+                                  this.state.list.splice(this.state.currentID, 1);
+                                  this.setState({deleteVisible: false});
+                                }},
+                            ],
+                            {cancelable: false},
+                        );
+                      }}/*
+                      Component={TouchableScale}
+                      friction={90} //
+                      tension={100} // These props are passed to the parent component (here TouchableScale)
+                      activeScale={0.95} //
+                      linearGradientProps={{
+                        colors: [ l.color1 , l.color1],
+                        start: [1, 0],
+                        end: [0.2, 0],
+                      }}*/
+                      style = {{borderColor: "#BBBBBB", borderBottomWidth:1}}
+                      leftAvatar={{ rounded: true, source: { uri: l.avatar_url } }}
+                      title={l.name}
+                      titleStyle={{ color: '#555555', fontSize: 20}}
+                      subtitleStyle={{ color: '#555555' }}
+                      chevronColor="#555555"
+                      chevron
+                  />
+              ))
+            }
           </ScrollView>
           <View style={{alignItems: 'flex-end', padding: 20}}>
             <Button
-              title="+"
-              buttonStyle={{height: 65, width: 65, borderRadius: 50}}
-              // TODO add item to data base onPress
-              onPress={() => { this.setState({addVisible: true}); }}
+                title="+"
+                titleStyle={{color: "#999999", fontSize:25}}
+                type="outline"
+                buttonStyle={{height: 65, width: 65, borderRadius: 50,  borderColor: "#999999", borderWidth:2}}
+                // TODO add item to data base onPress
+                onPress={() => { this.setState({addVisible: true}); }}
             />
           </View>
-
           <Overlay
-            windowBackgroundColor="rgba(255, 255, 255, .5)"
-            isVisible={this.state.addVisible}
-            onBackdropPress={() => this.setState({ addVisible: false })}
-            >
+              windowBackgroundColor="rgba(255, 255, 255, .5)"
+              isVisible={this.state.addVisible}
+              onBackdropPress={() => this.setState({ addVisible: false })}
+          >
 
             <ScrollView>
               <Text style={{fontSize: 48}}>Add Roommate</Text>
@@ -144,35 +180,16 @@ export default class Roommates extends Component<IAppProps,IAppState> {
               />
 
               <Button
-                title="Add Roommate"
-                onPress={() => {
-                  this.setState({list: [...this.state.list, this.state.tmp]});
-                  this.setState({addVisible: false});
-                }}
-              />
-              </ScrollView>
-            </Overlay>
-
-            <Overlay
-              windowBackgroundColor="rgba(255, 255, 255, .5)"
-              height='50%'
-              isVisible={this.state.deleteVisible}
-              onBackdropPress={() => this.setState({ deleteVisible: false })}
-              >
-
-              <ScrollView>
-                <Text style={{fontSize: 48}}>Remove Roommate</Text>
-
-                <Button
-                  title="Remove Roommate"
+                  title="Add Roommate"
                   onPress={() => {
-                    this.state.list.splice(this.state.currentID, 1);
-                    this.setState({deleteVisible: false});
+                    this.setState({list: [...this.state.list, this.state.tmp]});
+                    this.setState({addVisible: false});
                   }}
-                />
-              </ScrollView>
-            </Overlay>
-          </View>
-        )
-    }
+              />
+            </ScrollView>
+          </Overlay>
+
+        </View>
+    )
+  }
 }

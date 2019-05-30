@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     itemContainer: {
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 5,
+      borderRadius: 1,
       padding: 10,
       height: 150,
     },

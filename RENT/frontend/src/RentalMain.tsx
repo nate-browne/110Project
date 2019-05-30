@@ -15,14 +15,14 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
       return {
         title: "Welcome back " + navigation.getParam('userName', '') + "!",
         headerStyle: {
-          backgroundColor: '#89cff0',
+          backgroundColor: '#2bc0cd',
         },
         headerRight:  <TouchableOpacity
             style={{
               alignItems:'center',
               justifyContent:'center',
-              width:50,
-              height:50,
+              width:45,
+              height:45,
               backgroundColor:'#fff',
               borderRadius:50,
               marginRight: 10
@@ -36,18 +36,19 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
         headerBackTitle: "Rental Home",
         headerTitleStyle: {
           fontWeight: 'bold',
+          color: "white",
         },
 
       };
     };
   render() {
     const items = [
-      { name: 'Leasing Info', code: '#2ecc71', icon:'info' },
-      { name: 'Things to do', code: '#3498db', icon:'assignment' },
-      { name: 'Roommates', code: '#9b59b6', icon:'group' },
-      { name: 'Group Chat', code: '#34495e', icon:'chat' },
-      { name: 'Calendar', code: '#16a085', icon:'insert-invitation' },
-      { name: 'Expenses', code: '#16a085', icon:'attach-money' },
+      { name: 'Leasing Info', code: '#919f98', icon:'info' },
+      { name: 'Things to do', code: '#4d5057', icon:'assignment' },
+      { name: 'Roommates', code: '#34495e', icon:'group' },
+      { name: 'Group Chat', code: '#aac4d2', icon:'chat' },
+      { name: 'Calendar', code: '#a2d0d4', icon:'insert-invitation' },
+      { name: 'Expenses', code: '#175676', icon:'attach-money' },
     ];
 
     return (
@@ -84,7 +85,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
             }}
             activeOpacity= {0.5} style={[styles.itemContainer, { backgroundColor: item.code }]}>
               <View>
-                <Icon name={item.icon} color='white' size={49}/>
+                <Icon name={item.icon} color='white' size={45}/>
                 <Text style={styles.itemName}>{item.name}</Text>
               </View>
             </TouchableHighlight>

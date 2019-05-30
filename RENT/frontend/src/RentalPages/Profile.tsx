@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, ScrollView, Text, View, Image, TouchableOpacity } from 'react-native';
-import { Button, Overlay, Input, Icon } from 'react-native-elements';
+import { Button, Overlay, Input, Icon, Card, Divider } from 'react-native-elements';
 import styles from '../style/Contact-Stylesheet';
 import axios from 'axios';
 
@@ -105,14 +105,69 @@ export default class Profile extends Component {
   }
   render() {
     return (
+        <View style = {{backgroundColor:"#666666", flex: 1}}>
+            <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
+                backgroundColor: "#FFFFFF", flex:1}}>
+                <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
+                <Text style={{textAlign: 'center', marginTop:20,marginBottom:25,
+                              color: '#333333', fontWeight:"500", fontSize:35}}>
+                    {this.state.firstName} Name Namesss {this.state.lastName}
+                </Text>
+                <Divider style={styles.divider} />
+                <Text style={{textAlign: 'center', marginVertical:5, marginTop:10,
+                    color: '#777777', fontWeight:"300", fontSize:14}}>
+                   ({this.state.phoneNumber} temp phone)
+                </Text>
+                <Text style={{textAlign: 'center', marginBottom:10,
+                color: '#777777', fontWeight:"300", fontSize:14}}>
+                {this.state.email} tempEmail@someaddress
+                </Text>
+                <Divider style={styles.divider} />
+                <Text style={styles.emergency}>Emergency Contact 1</Text>
+                <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")} >
+                    <Text style={styles.contactInfo}> {this.state.e1FirstName} {this.state.e1LastName} </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+                    <Text style={styles.contactInfo}> Relationship: {this.state.e1Relation} </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+                    <Text style={styles.contactInfo}> {this.state.e1Phone} </Text>
+                </TouchableOpacity>
+                <Divider style={{ marginTop:20, backgroundColor: '#AAAAAA', height: 2,}} />
+                <Text style={styles.emergency}>Emergency Contact 2</Text>
+                <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+                    <Text style={styles.contactInfo}> {this.state.e2FirstName} {this.state.e2LastName} </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+                    <Text style={styles.contactInfo}> Relationship: {this.state.e2Relation} </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+                    <Text style={styles.contactInfo}> {this.state.e2Phone} </Text>
+                </TouchableOpacity>
+                <Divider style={{ marginTop:20, marginBottom:20, backgroundColor: '#AAAAAA', height: 2,}} />
+                <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+                <Text style={{
+                    textAlign:"center",
+                    fontSize: 14,
+                    color:'#777777', textDecorationLine:"underline"}}> edit </Text>
+                </TouchableOpacity>
+            </ScrollView>
+
+        </View>
+
+        /*
       <ScrollView style={styles.container}>
-          <View style={styles.header}>
+          <View style={{ backgroundColor: "#2bc0cd",
+              height:200,
+              alignItems: 'flex-end',
+                flex: .25,}}>
           </View>
           <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <Text style={styles.name}> {this.state.firstName} {this.state.lastName}</Text>
               <Text style={styles.info}>{this.state.phoneNumber} / {this.state.email}</Text>
+
 
               <TouchableOpacity style={styles.buttonContainer}>
                 <Text> Emergency Contact 1 </Text>
@@ -396,7 +451,7 @@ export default class Profile extends Component {
               </View>
           </ScrollView>
         </Overlay>
-      </ScrollView>
+      </ScrollView>*/
     );
   }
 }

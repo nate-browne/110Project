@@ -14,6 +14,7 @@ import axios from 'axios';
 
 // @ts-ignore
 import configInfo from './url';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 const serverURL = configInfo['serverURL'];
 const server = axios.create({
@@ -258,7 +259,8 @@ export default class Login extends Component<IAppProps, IAppState> {
         height={'50%'}
         >
         <TouchableWithoutFeedback onPress = {dismissKeyboard}>
-        <ScrollView>
+        <KeyboardAwareScrollView>
+          <View>
           <Text style={{fontSize: 48}}>Forgot password</Text>
           <Input
               //inputContainerStyle={styles.textinput}
@@ -284,10 +286,10 @@ export default class Login extends Component<IAppProps, IAppState> {
               }
             }
           />
-        </ScrollView>
+          </View>
+        </KeyboardAwareScrollView>
         </TouchableWithoutFeedback>
       </Overlay>
-
 
         <Overlay
         isVisible={this.state.signupVisible}
@@ -301,7 +303,10 @@ export default class Login extends Component<IAppProps, IAppState> {
         containerStyle={styles.container}
         >
         <TouchableWithoutFeedback onPress = {dismissKeyboard}>
+
+
         <View style={styles.container}>
+
           <Input
             inputContainerStyle={styles.textinput}
             placeholder="First Name"
