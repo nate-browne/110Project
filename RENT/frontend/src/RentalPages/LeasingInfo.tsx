@@ -6,7 +6,6 @@ import CountDown from 'react-native-countdown-component';
 import styles from '../style/Logistics-Stylesheet';
 import {Divider, Overlay} from "react-native-elements";
 
-
 const endDate = 25; // Number of days away
 
 export default class Logistics extends Component {
