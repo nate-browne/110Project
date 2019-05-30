@@ -4,6 +4,7 @@ import { Overlay, Input, Icon, Button, ListItem, Text } from 'react-native-eleme
 import styles from '../style/Grocery-Stylesheet';
 
 export default class Grocery extends Component {
+  [x: string]: any;
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
     currentName:"",

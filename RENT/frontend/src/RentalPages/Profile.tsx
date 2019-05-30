@@ -13,7 +13,7 @@ const server = axios.create({
 });
 
 export default class Profile extends Component {
-
+  [x: string]: any;
   constructor(props) {
     super(props);
     server.get('/getinfo',{
