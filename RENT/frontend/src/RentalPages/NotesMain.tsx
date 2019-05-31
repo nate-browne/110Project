@@ -4,6 +4,7 @@ import { Overlay, Input, Icon, Button, ListItem, Text } from 'react-native-eleme
 import styles from '../style/Grocery-Stylesheet';
 
 export default class Grocery extends Component {
+  [x: string]: any;
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
     currentName:"",
@@ -82,6 +83,8 @@ export default class Grocery extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
@@ -97,6 +100,8 @@ export default class Grocery extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    ref = {(input) => {this.input1 = input}}
+                    blurOnSubmit = {false}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
@@ -131,6 +136,8 @@ export default class Grocery extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />
@@ -144,6 +151,8 @@ export default class Grocery extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
+                    ref = {(input) => {this.input1 = input}}
+                    blurOnSubmit = {false}
                     returnKeyType="next"
                     onChangeText={(text: string) => this.setState({firstName: text})}
                 />

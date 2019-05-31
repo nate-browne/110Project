@@ -21,11 +21,20 @@ const styles = StyleSheet.create({
       paddingTop: 20,
     },
     countdownHeader: {
-      fontSize: 24,
-      color: '#000',
-      textAlign: 'center',
-      fontWeight: "700",
-      paddingTop: 20,
+        fontSize: 24,
+        color: '#000',
+        textAlign: 'center',
+        fontWeight: "700",
+        paddingTop: 20,
+        paddingBottom: 15,
+    },
+    otherHeader: {
+        fontSize: 24,
+        color: '#000',
+        textAlign: 'center',
+        fontWeight: "700",
+        paddingTop: 30,
+        paddingBottom: 15,
     },
     address1:{
         fontSize:22,
@@ -41,8 +50,8 @@ const styles = StyleSheet.create({
         fontWeight: "500"
     },
     lease:{
-      fontSize:20,
-      color: "#555555",
+      fontSize:15,
+      color: "#AAAAAA",
       fontWeight: "500",
       textAlign: 'center',
     },
@@ -76,6 +85,19 @@ const styles = StyleSheet.create({
       borderRadius:30,
       backgroundColor: "#00BFFF",
     },
+    imageScroll:{
+        backgroundColor: '#DDDDDD',
+        paddingTop: 30,
+        paddingBottom: 30,
+    },
+
+    image: {
+        flex: 1,
+        aspectRatio: 1.5,
+        resizeMode: 'contain',
+
+    },
+
   });
 
   export default styles;
