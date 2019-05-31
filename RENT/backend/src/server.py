@@ -426,10 +426,22 @@ def get_documents():
 @app.route('/getinfo', methods=['GET'])
 @login_required
 def get_info():
+    data = {}
     userID = request.args.get('userID')
     user = dq.getUserById(userID)
+    contacts = dq.getContactWithAssocUser(userID)
+    if len(contacts) != 0:
+        for num in range(len(contacts)):
+            contact_str = 'contact' + repr(num)
+            data[contact_str] = {}
+            data[contact_str]['relation'] = contacts[num].relationship
+            name = contacts[num].firstName + contacts[num].lastName
+            data[contact_str]['name'] = name
+            data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
+    else:
+        return jsonify({'reason': "No associated contacts found"}), 404
+
     if user is not None:
-        data = {}
         data['firstName'] = user.firstName
         data['lastName'] = user.lastName
         data['phoneNumber'] = user.phoneNumber
@@ -472,25 +484,6 @@ def get_rental_IDs():
         return jsonify(data), 200
     else:
         return jsonify({'reason': "User not found"}), 404
-
-
-@app.route('/getemergencyinfo', methods=['GET'])
-@login_required
-def get_emergency_info():
-    userID = request.args.get('userID')
-    contacts = dq.getContactWithAssocUser(userID)
-    if len(contacts) != 0:
-        data = {}
-        for num in range(len(contacts)):
-            contact_str = 'contact' + repr(num)
-            data[contact_str] = {}
-            data[contact_str]['relation'] = contacts[num].relationship
-            name = contacts[num].firstName + contacts[num].lastName
-            data[contact_str]['name'] = name
-            data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
-        return jsonify(data), 200
-    else:
-        return jsonify({'reason': "No associated contacts found"}), 404
 
 
 @app.route('/updateuserinfo', methods=['POST'])
