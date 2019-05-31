@@ -333,6 +333,7 @@ def create_rental():
 
 @app.route('/forgotpassword', methods=['POST'])
 def forgot_password():
+    print("we actually called the route!")
     user = dq.getUserByEmail(request.json['email'])
     if user is not None:
         temp = mailer.send_mail(user.email)

@@ -20,7 +20,7 @@ export default class RenatlMain extends Component<Props> {
             itemDimension={130}
             items={this.state.items}
             style={styles.gridView}
-            renderItem={({ item, index }) => (
+            renderItem={({ item }) => (
             //<View style={[styles.itemContainer, { backgroundColor: item.code }]}>
                 <TouchableHighlight onPress={()=> {
                 switch(item.num){
