@@ -1,7 +1,12 @@
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Union
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
 from .models import Roommates, CalendarEvent, Note
+
+ModelTypes = Union[
+                    Rental, Lease, PropertyDocument, Users, ContactInfo,
+                    Roommates, CalendarEvent, Note
+                  ]
 
 
 def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
@@ -66,7 +71,7 @@ def isUser(user: Users) -> bool:
     return u is not None
 
 
-def update(table: Any, attribute: str, obj: Any) -> None:
+def update(table: ModelTypes, attribute: str, obj: Any) -> None:
     setattr(table, attribute, obj)
     db.session.commit()
 
@@ -77,6 +82,6 @@ def updateUserRentals(user: Users, rentalID: db.Integer) -> None:
     db.session.commit()
 
 
-def add(table: Any) -> None:
+def add(table: ModelTypes) -> None:
     db.session.add(table)
     db.session.commit()

@@ -114,8 +114,56 @@ def delete_roommate():
 def deactivate():
     email = request.json['email']
     user = dq.getUserByEmail(email)
-    dq.update(user, 'deactivated', False)
+    dq.update(user, 'deactivated', True)
     logout_user()
+    return jsonify({}), 201
+
+
+@app.route('/changeuserinfo', methods=['POST'])
+@login_required
+def change_user_info():
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+    for att in list(filter(lambda x: not x.startswith("__"), dir(user))):
+        if att != 'id' and request.json[att] is not None:
+            if att != 'email':
+                dq.update(user, att, request.json[att])
+            elif att == 'email':
+                change = request.json['change']
+                ch = dq.getUserByEmail(change)
+                if ch is not None:
+                    return jsonify({'Reason': "Email in use"}), 404
+                dq.update(user, 'email', change)
+
+    return jsonify({}), 201
+
+
+@app.route('/changeleaseinfo', methods=['POST'])
+@login_required
+def change_lease_info():
+    leaseID = request.json['leaseID']
+    lease = dq.getLeaseByLeaseID(leaseID)
+    if lease is None:
+        return jsonify({'Reason': 'Lease does not Exist'}), 404
+
+    for att in list(filter(lambda x: not x.startswith("__"), dir(lease))):
+        if att != 'id' and request.json[att] is not None:
+            dq.update(lease, att, request.json[att])
+
+    return jsonify({}), 201
+
+
+@app.route('/changenoteinfo', methods=['POST'])
+@login_required
+def change_note_info():
+    noteID = request.json['noteID']
+    note = dq.getNoteByNoteID(noteID)
+    if note is None:
+        return jsonify({'Reason': 'Note does not exist'}), 404
+    for att in list(filter(lambda x: not x.startswith("__"), dir(note))):
+        if att != 'id' and request.json[att] is not None:
+            dq.update(note, att, request.json[att])
+
     return jsonify({}), 201
 
 
