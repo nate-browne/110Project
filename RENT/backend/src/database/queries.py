@@ -32,8 +32,12 @@ def getUserById(user_id: db.Integer) -> Optional[Users]:
     return Users.query.filter_by(id=user_id).first()
 
 
-def getContactWithAssocUser(userID: db.Integer) -> List[ContactInfo]:
+def getContactsWithAssocUser(userID: db.Integer) -> List[ContactInfo]:
     return ContactInfo.query.filter_by(associatedUser=userID).all()
+
+
+def getContactWithContactID(contactID: db.Integer) -> Optional[ContactInfo]:
+    return ContactInfo.query.filter_by(id=contactID).first()
 
 
 def getEventsWithRental(rentalID: db.Integer) -> List[CalendarEvent]:
