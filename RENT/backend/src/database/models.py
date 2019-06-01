@@ -20,6 +20,7 @@ class Users(UserMixin, db.Model):
     pastRental = db.Column(db.Integer, db.ForeignKey('Rental.id'),
                            nullable=True)
     deactivated = db.Column(db.Boolean, nullable=False, default=False)
+    profilePhoto = db.Column(db.String(255), nullable=True, default=None)
 
     def __repr__(self) -> str:
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
@@ -55,8 +56,7 @@ class Roommates(db.Model):
 class PropertyDocument(db.Model):
     __tablename__ = 'PropertyDocument'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    document = db.Column(db.LargeBinary(16777215), nullable=False)
-    docName = db.Column(db.String(255), nullable=False)
+    url = db.Column(db.String(255), nullable=False)
 
     def __repr__(self) -> str:
         return '<Property Document>\nID: {}'.format(self.id)
@@ -139,3 +139,11 @@ class CalendarEvent(db.Model):
     eventDescription = db.Column(db.String(255), default=None)
     rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=False)
     isDeleted = db.Column(db.Boolean, nullable=False, default=False)
+
+
+class LeaseImages(db.Model):
+    __tablename__ = 'LeaseImages'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    url = db.Column(db.String(255), nullable=False)
+    associatedLease = db.Column(db.Integer, db.ForeignKey('Lease.id'),
+                                nullable=False)

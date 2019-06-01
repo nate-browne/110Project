@@ -12,6 +12,7 @@ CREATE TABLE `Users` (
 	`currentRental` bigint(20) DEFAULT NULL,
 	`pastRental` bigint(20) DEFAULT NULL,
 	`deactivated` BOOL NOT NULL DEFAULT 0,
+	`profilePhoto` varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -27,8 +28,7 @@ CREATE TABLE `Roommates` (
 
 CREATE TABLE `PropertyDocument` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`document` mediumblob NOT NULL,
-	`docName` varchar(255) NOT NULL,
+	`url` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -92,6 +92,13 @@ CREATE TABLE `CalendarEvent` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `LeaseImages` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`url` varchar(255) NOT NULL,
+	`associatedLease` bigint(20) NOT NULL,
+	PRIMARY KEY (`id`)
+);
+
 ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`currentRental`) REFERENCES `Rental`(`id`);
 
 ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`pastRental`) REFERENCES `Rental`(`id`);
@@ -121,3 +128,5 @@ ALTER TABLE `ContactInfo` ADD CONSTRAINT `ContactInfo_fk0` FOREIGN KEY (`associa
 ALTER TABLE `Note` ADD CONSTRAINT `Note_fk0` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);
 
 ALTER TABLE `CalendarEvent` ADD CONSTRAINT `CalendarEvent_fk0` FOREIGN KEY (`rental`) REFERENCES `Rental`(`id`);
+
+ALTER TABLE `LeaseImages` ADD CONSTRAINT `LeaseImages_fk0` FOREIGN KEY (`associatedLease`) REFERENCES `Lease`(`id`);
