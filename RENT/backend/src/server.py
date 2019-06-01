@@ -227,6 +227,17 @@ def change_calendar_event():
     return jsonify({}), 201
 
 
+@app.route('/getleasephotos', methods=['GET'])
+@login_required
+def get_lease_photos():
+    leaseID = request.args.get('leaseID')
+    photoAlbum = dq.getPhotosByLeaseID(leaseID)
+    photos = list()
+    for photo in photoAlbum:
+        photos.append(photo.url)
+    return jsonify({'Photos': photos}), 200
+
+
 @app.route('/addlease', methods=['POST'])
 @login_required
 def add_lease():
