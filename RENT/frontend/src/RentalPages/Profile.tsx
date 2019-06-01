@@ -119,20 +119,20 @@ export default class Profile extends Component<IAppProps, IAppState> {
       console.log(err)
     });
 
-    /*server.get('/getemergencyinfo',{
-      params: {
-        userID: this.props.navigation.getParam("userID", 0)
-      }
-    }).then(resp => {
-      this.setState({
-        firstName: resp.data['firstName'],
-        lastName: resp.data['lastName'],
-        phoneNumber: resp.data['phoneNumber'],
-        email: resp.data['email'],
-      });
-    }).catch(err => {
-      Alert.alert(err);
-    });*/
+    // server.get('/getemergencyinfo',{
+    //   params: {
+    //     userID: this.props.navigation.getParam("userID", 0)
+    //   }
+    // }).then(resp => {
+    //   this.setState({
+    //     firstName: resp.data['firstName'],
+    //     lastName: resp.data['lastName'],
+    //     phoneNumber: resp.data['phoneNumber'],
+    //     email: resp.data['email'],
+    //   });
+    // }).catch(err => {
+    //   Alert.alert(err);
+    // });
   }
 
 
