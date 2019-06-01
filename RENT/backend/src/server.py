@@ -415,9 +415,11 @@ def create_rental():
                     board=board.id)
     dq.add(rental)
     dq.updateUserRentals(user, rental.id)
-    data = rental.id
+    data = {}
+    data['currentRental'] = user.currentRental
+    data['pastRental'] = user.pastRental
 
-    return jsonify({'rentalID': data}), 201
+    return jsonify(data), 201
 
 
 @app.route('/forgotpassword', methods=['POST'])
