@@ -12,6 +12,7 @@ const server = axios.create({
   baseURL: serverURL
 });
 
+
 // Interfaces needed for navigation
 interface IAppProps {
   navigation?: any;
