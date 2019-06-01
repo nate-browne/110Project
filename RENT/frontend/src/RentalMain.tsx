@@ -10,6 +10,7 @@ interface IAppProps {
 
 interface IAppState {
 }
+
 export default class RentalMain extends Component<IAppProps, IAppState> {
   static navigationOptions = ({ navigation }) => {
       return {
