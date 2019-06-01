@@ -1,7 +1,7 @@
 from typing import Optional, List, Any, Union
 
 from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
-from .models import Roommates, CalendarEvent, Note
+from .models import Roommates, CalendarEvent, Note, LeaseImages
 
 ModelTypes = Union[
                     Rental, Lease, PropertyDocument, Users, ContactInfo,
@@ -67,6 +67,10 @@ def getNoteByNoteID(noteID: db.Integer) -> Optional[Note]:
 
 def getEventByEventID(eventID: db.Integer) -> Optional[CalendarEvent]:
     return CalendarEvent.query.filter_by(id=eventID).first()
+
+
+def getPhotosByLeaseID(leaseID: db.Integer) -> List[LeaseImages]:
+    return LeaseImages.query.filter_by(associatedLease=leaseID).all()
 
 
 def isUser(user: Users) -> bool:
