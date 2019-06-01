@@ -46,9 +46,9 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
       { name: 'Leasing Info', code: '#919f98', icon:'info' },
       { name: 'Board', code: '#4d5057', icon:'assignment' },
       { name: 'Roommates', code: '#34495e', icon:'group' },
-      { name: 'Group Chat', code: '#aac4d2', icon:'chat' },
+      //{ name: 'Group Chat', code: '#aac4d2', icon:'chat' },
       { name: 'Calendar', code: '#a2d0d4', icon:'insert-invitation' },
-      { name: 'Expenses', code: '#175676', icon:'attach-money' },
+      //{ name: 'Expenses', code: '#175676', icon:'attach-money' },
     ];
 
     return (
@@ -76,12 +76,12 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                 case 'Calendar':
                   this.props.navigation.push('Calendar');
                   break;
-                case 'Expenses':
-                  this.props.navigation.push('ExpensesHome');
-                  break;
-                case 'Group Chat':
-                  this.props.navigation.push('Chat');
-                  break;
+                //case 'Expenses':
+                  //this.props.navigation.push('ExpensesHome');
+                  //break;
+                //case 'Group Chat':
+                  //this.props.navigation.push('Chat');
+                  //break;
                 default:
                   Alert.alert("This should not happen");
               }

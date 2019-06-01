@@ -412,18 +412,17 @@ export default class Login extends Component<IAppProps, IAppState> {
               title="Sign Up"
 
               onPress={() => {
-                if(EmailValidator.validate(this.state.email) &&
-                  this.state.password === this.state.confirmPassword) {
-                  this.createUser();
-                }
                 if( !EmailValidator.validate(this.state.email) ) {
                   this.setState({emailError: true})
                 }
-                if( this.state.password !== this.state.confirmPassword) {
+                else if( this.state.password !== this.state.confirmPassword) {
                   this.setState({passwordError:true})
                 }
-                if( this.state.password.length <= 4 ) {
+                else if( this.state.password.length <= 4 ) {
                   this.setState({passwordLengthError:true})
+                }
+                else {
+                  this.createUser();
                 }
               }}
             />
