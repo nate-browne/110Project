@@ -63,14 +63,14 @@ def add_roommate():
     email = request.json['email']
     user = dq.getUserByEmail(email)
     if user is None:
-        return jsonify({'Reason': "User doesn't exist"}), 404
+        return jsonify({'reason': "User doesn't exist"}), 404
 
     if user.deactivated:
-        return jsonify({'Reason': "User is deactivated"}), 400
+        return jsonify({'reason': "User is deactivated"}), 400
 
     rental = dq.getRentalByRentalID(rentalID)
     if rental is None:
-        return jsonify({'Reason': "Rental does not exist"}), 404
+        return jsonify({'reason': "Rental does not exist"}), 404
 
     roommates = dq.getRentalRoommates(rental.roommates)
 
@@ -83,11 +83,11 @@ def add_roommate():
                 dq.updateUserRentals(user, rentalID)
                 return jsonify({}), 201
             elif getattr(roommates, ent) == user.id:
-                return jsonify({'Reason': "Roommate already entered"}), 400
-        return jsonify({'Reason': "Adding 6th Roommate is not allowed"}), 400
+                return jsonify({'reason': "Roommate already entered"}), 400
+        return jsonify({'reason': "Adding 6th Roommate is not allowed"}), 400
     else:
         err = "Roommates table somehow doesn't exist???"
-        return jsonify({'Reason': err}), 404
+        return jsonify({'reason': err}), 404
 
 
 @app.route('/deleteroommate', methods=['POST'])
@@ -97,7 +97,7 @@ def delete_roommate():
     email = request.json['email']
     user = dq.getUserByEmail(email)
     if user.deactivated:
-        return jsonify({'Reason': "User is deactivated"}), 400
+        return jsonify({'reason': "User is deactivated"}), 400
 
     roommatesID = dq.getRentalByRentalID(rentalID).roommates
     roommates = dq.getRentalRoommates(roommatesID)
@@ -107,7 +107,7 @@ def delete_roommate():
             dq.updateUserRentals(user, None)
             dq.update(roommates, ent, None)
             return jsonify({}), 201
-    return jsonify({'Reason': "Roommate isn't a roommate"}), 404
+    return jsonify({'reason': "Roommate isn't a roommate"}), 404
 
 
 @app.route('/deactivate', methods=['POST'])
@@ -127,7 +127,7 @@ def change_user_info():
     user = dq.getUserByEmail(email)
 
     if request.files['profilePhoto']:
-        path = upload_file(request.files['profilePhoto'])
+        path = upload_file(request.files['profilePhoto'], "users")
         dq.update(user, 'profilePhoto', path)
 
     for att in list(filter(lambda x: not x.startswith("__"), dir(user))):
@@ -138,7 +138,7 @@ def change_user_info():
                 change = request.json['change']
                 ch = dq.getUserByEmail(change)
                 if ch is not None:
-                    return jsonify({'Reason': "Email in use"}), 404
+                    return jsonify({'reason': "Email in use"}), 404
                 dq.update(user, 'email', change)
 
     return jsonify({}), 201
@@ -150,7 +150,7 @@ def change_lease_info():
     leaseID = request.json['leaseID']
     lease = dq.getLeaseByLeaseID(leaseID)
     if lease is None:
-        return jsonify({'Reason': 'Lease does not Exist'}), 404
+        return jsonify({'reason': 'Lease does not Exist'}), 404
 
     for att in list(filter(lambda x: not x.startswith("__"), dir(lease))):
         if att != 'id' and request.json[att] is not None:
@@ -165,7 +165,7 @@ def change_note_info():
     noteID = request.json['noteID']
     note = dq.getNoteByNoteID(noteID)
     if note is None:
-        return jsonify({'Reason': 'Note does not exist'}), 404
+        return jsonify({'reason': 'Note does not exist'}), 404
     for att in list(filter(lambda x: not x.startswith("__"), dir(note))):
         if att != 'id' and request.json[att] is not None:
             dq.update(note, att, request.json[att])
@@ -188,7 +188,7 @@ def add_contact_info():
                           relationship=relationship,
                           associatedUser=userID)
     dq.add(contact)
-    return jsonify({'Contact added': contact.id}), 201
+    return jsonify({'contactID': contact.id}), 201
 
 
 @app.route('/deletecontactinfo', methods=['POST'])
@@ -197,10 +197,11 @@ def delete_contact_info():
     contactID = request.json['contactID']
     contact = dq.getContactWithContactID(contactID)
     if contact is None:
-        return jsonify({'Reason': 'Contact info does not exist'}), 404
+        return jsonify({'reason': 'Contact info does not exist'}), 404
+
     contact.associatedUser = None
     dq.update(ContactInfo, 'associatedUser', contact)
-    return jsonify({'Reason': 'Contact info updated!'}), 200
+    return jsonify({'reason': 'Contact info updated!'}), 200
 
 
 @app.route('/changecontactinfo', methods=['POST'])
@@ -209,7 +210,7 @@ def change_contact_info():
     contactID = request.json['contactID']
     contact = dq.getContactWithContactID(contactID)
     if contact is None:
-        return jsonify({'Reason': 'Contact info does not exist'}), 404
+        return jsonify({'reason': 'Contact info does not exist'}), 404
     for att in list(filter(lambda x: not x.startswith("__"), dir(contact))):
         if (att != 'id' and att != 'associatedUser' and
            request.json[att] is not None):
@@ -224,7 +225,7 @@ def change_calendar_event():
     eventID = request.json['eventID']
     event = dq.getEventByEventID(eventID)
     if event is None:
-        return jsonify({'Reason': 'Calendar event does not exist'}), 404
+        return jsonify({'reason': 'Calendar event does not exist'}), 404
     for att in list(filter(lambda x: not x.startswith("__"), dir(event))):
         if (att != 'id' and att != 'rental' and att != 'isDeleted' and
                 request.json[att] is not None):
@@ -237,7 +238,7 @@ def change_calendar_event():
 @login_required
 def add_lease_photos():
     leaseID = request.json['leaseID']
-    path = upload_file(request.files['photo'])
+    path = upload_file(request.files['photo'], "lease")
     img = LeaseImages(url=path, associatedLease=leaseID)
     dq.add(img)
     return jsonify({}), 201
@@ -251,7 +252,7 @@ def get_lease_photos():
     photos = list()
     for photo in photoAlbum:
         photos.append(photo.url)
-    return jsonify({'Photos': photos}), 200
+    return jsonify({'photos': photos}), 200
 
 
 @app.route('/addlease', methods=['POST'])
@@ -269,7 +270,7 @@ def add_lease():
     startDate = request.json['startDate']
     endDate = request.json['endDate']
     rentDueDate = request.json['rentDueDate']
-    path = upload_file(request.files['document'])
+    path = upload_file(request.files['document'], "doc")
     leaseDoc = PropertyDocument(url=path)
     dq.add(leaseDoc)
 
@@ -290,7 +291,7 @@ def add_lease():
 def add_insurance_document():
     rentalID = request.json['rentalID']
     rental = dq.getRentalByRentalID(rentalID)
-    path = upload_file(request.files['document'])
+    path = upload_file(request.files['document'], "doc")
     insuranceDoc = PropertyDocument(url=path)
     dq.add(insuranceDoc)
     dq.update(rental, 'insurance', insuranceDoc.id)
@@ -314,7 +315,7 @@ def get_notes():
             data[note.category].append({'title': note.title,
                                         'noteID': note.id,
                                         'description': note.description})
-    return jsonify(data), 200
+    return jsonify({'notes': data}), 200
 
 
 @app.route('/getcalendarevents', methods=['GET'])
@@ -322,7 +323,7 @@ def get_notes():
 def get_calendar_events():
     rentalID = request.args.get('rentalID')
     events = dq.getEventsWithRental(rentalID)
-    return jsonify(events), 200
+    return jsonify({'events': events}), 200
 
 
 @app.route('/addcalendarevent', methods=['POST'])
@@ -346,7 +347,7 @@ def delete_calendar_event():
     if event is not None:
         dq.update(event, 'isDeleted', True)
         return jsonify({}), 201
-    return jsonify({'Reason': "Event does not exist"}), 404
+    return jsonify({'reason': "Event does not exist"}), 404
 
 
 @app.route('/addnote', methods=['POST'])
@@ -372,7 +373,7 @@ def delete_note():
     if note is not None:
         dq.update(note, 'isDeleted', True)
         return jsonify({}), 201
-    return jsonify({'Reason': "Note does not exist"}), 404
+    return jsonify({'reason': "Note does not exist"}), 404
 
 
 @app.route('/clearnotes', methods=['POST'])
@@ -416,7 +417,7 @@ def create_rental():
     dq.updateUserRentals(user, rental.id)
     data = rental.id
 
-    return jsonify(data), 201
+    return jsonify({'rentalID': data}), 201
 
 
 @app.route('/forgotpassword', methods=['POST'])
