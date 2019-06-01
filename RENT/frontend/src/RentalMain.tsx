@@ -44,7 +44,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
   render() {
     const items = [
       { name: 'Leasing Info', code: '#919f98', icon:'info' },
-      { name: 'Things to do', code: '#4d5057', icon:'assignment' },
+      { name: 'Board', code: '#4d5057', icon:'assignment' },
       { name: 'Roommates', code: '#34495e', icon:'group' },
       { name: 'Group Chat', code: '#aac4d2', icon:'chat' },
       { name: 'Calendar', code: '#a2d0d4', icon:'insert-invitation' },
@@ -64,11 +64,14 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                 case 'Leasing Info':
                   this.props.navigation.push('LeasingInfo');
                   break;
-                case 'Things to do':
+                case 'Board':
                   this.props.navigation.push('NotesMain');
                   break;
                 case 'Roommates':
-                  this.props.navigation.push('Roommates');
+                  this.props.navigation.push('Roommates',{
+                        userID: this.props.navigation.getParam("userID",""), //trying to get parameters from navigation
+                        rentalID: this.props.navigation.getParam("rentalID",""), //trying to get parameters from navigation
+                    });
                   break;
                 case 'Calendar':
                   this.props.navigation.push('Calendar');

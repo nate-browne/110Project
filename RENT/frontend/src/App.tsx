@@ -48,6 +48,6 @@ const AppContainer = createAppContainer(RootStack);
 
 export default class App extends Component {
   render() {
-      return <AppContainer />;
+      return <AppContainer/>;
     }
 }

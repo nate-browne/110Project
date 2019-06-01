@@ -113,8 +113,9 @@ export default class Home extends Component<IAppProps, IAppState> {
     if( this.state.userRentals !== 0) {
       if( this.state.currentID !== 0 ) {
         display = <Button raised={true} title="View Current Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
-          userName: this.props.navigation.getParam("userName",""),
+          userName: this.props.navigation.getParam("userName",""), //trying to get parameters from navigation
           userID: userID,
+
           rentalID: this.state.currentID
         })}} />
       }
