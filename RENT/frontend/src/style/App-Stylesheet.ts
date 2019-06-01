@@ -13,6 +13,15 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
 
+  clearCheckbox : {
+    backgroundColor: '#f6f7f8',
+    borderWidth: 0,
+  },
+
+  checkboxText: {
+    fontWeight: '100',
+  },
+
   loginContainer: {
     flexDirection: "column",
     justifyContent: "center",
@@ -22,7 +31,7 @@ const styles = StyleSheet.create({
   },
 
   formFields: {
-    marginBottom: 40,
+    marginBottom: 30,
   },
 
   mainButton: {
@@ -35,7 +44,6 @@ const styles = StyleSheet.create({
   loginButton: {
     width: '50%',
     margin: 10,
-    marginBottom: 50,
   },
 
   serviceBar: {
@@ -82,7 +90,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     alignItems: 'stretch',
-    marginTop: 130,
+    marginTop: 100,
     marginBottom: 35,
   },
 

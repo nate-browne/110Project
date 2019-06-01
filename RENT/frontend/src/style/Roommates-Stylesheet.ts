@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textDecorationLine: 'line-through'
     },
+
   });
 
   export default styles;

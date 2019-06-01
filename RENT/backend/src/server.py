@@ -1,3 +1,4 @@
+from datetime import datetime as d
 from flask import request, jsonify
 from passlib.hash import pbkdf2_sha256
 from flask_login import login_user, login_required, logout_user
@@ -6,11 +7,12 @@ from utils import mailer
 from config import app, _login
 
 import database.queries as dq
-from database.models import Users, Rental
+from database.models import Users, Rental, Roommates, Board, Lease
+from database.models import PropertyDocument, Note, CalendarEvent, ContactInfo
 
 
 @app.route('/createuser', methods=['POST'])
-def createuser():
+def create_user():
     '''This route is used to create a new user in the database.\n
     It can only be reached via POST. To update a user's data, use
     the route '/updateuser'.\n
@@ -41,8 +43,321 @@ def createuser():
         return jsonify({}), 301
     else:
         # create user in the DB and return success
-        dq.addUser(user)
+        dq.add(user)
         return jsonify({}), 201
+
+
+@app.route('/addroommate', methods=['POST'])
+@login_required
+def add_roommate():
+    '''This route is used to add a roommate to a given rental\n
+    It can only be reached via POST request.\n
+    The route expects that the data comes in with the following fields:\n
+    item - JSON tag - description\n
+    rentalID - 'rentalID' - ID of the rental to add the roommate to\n
+    email - 'email' - email of the roommmate to add
+    '''
+
+    rentalID = request.json['rentalID']
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+    if user is None:
+        return jsonify({'Reason': "User doesn't exist"}), 404
+
+    if user.deactivated:
+        return jsonify({'Reason': "User is deactivated"}), 400
+
+    rental = dq.getRentalByRentalID(rentalID)
+    if rental is None:
+        return jsonify({'Reason': "Rental does not exist"}), 404
+
+    roommates = dq.getRentalRoommates(rental.roommates)
+
+    if roommates is not None:
+        # Filter out the roommate attributes from the field
+        mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
+        for ent in mates:
+            if getattr(roommates, ent) is None:
+                dq.update(roommates, ent, user.id)
+                dq.updateUserRentals(user, rentalID)
+                return jsonify({}), 201
+            elif getattr(roommates, ent) == user.id:
+                return jsonify({'Reason': "Roommate already entered"}), 400
+        return jsonify({'Reason': "Adding 6th Roommate is not allowed"}), 400
+    else:
+        err = "Roommates table somehow doesn't exist???"
+        return jsonify({'Reason': err}), 404
+
+
+@app.route('/deleteroommate', methods=['POST'])
+@login_required
+def delete_roommate():
+    rentalID = request.json['rentalID']
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+    if user.deactivated:
+        return jsonify({'Reason': "User is deactivated"}), 400
+
+    roommatesID = dq.getRentalByRentalID(rentalID).roommates
+    roommates = dq.getRentalRoommates(roommatesID)
+    mates = list(filter(lambda x: x.startswith('room'), dir(roommates)))
+    for ent in mates:
+        if user.id == getattr(roommates, ent):
+            dq.updateUserRentals(user, None)
+            dq.update(roommates, ent, None)
+            return jsonify({}), 201
+    return jsonify({'Reason': "Roommate isn't a roommate"}), 404
+
+
+@app.route('/deactivate', methods=['POST'])
+@login_required
+def deactivate():
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+    dq.update(user, 'deactivated', True)
+    logout_user()
+    return jsonify({}), 201
+
+
+@app.route('/changeuserinfo', methods=['POST'])
+@login_required
+def change_user_info():
+    email = request.json['email']
+    user = dq.getUserByEmail(email)
+    for att in list(filter(lambda x: not x.startswith("__"), dir(user))):
+        if att != 'id' and request.json[att] is not None:
+            if att != 'email':
+                dq.update(user, att, request.json[att])
+            elif att == 'email':
+                change = request.json['change']
+                ch = dq.getUserByEmail(change)
+                if ch is not None:
+                    return jsonify({'Reason': "Email in use"}), 404
+                dq.update(user, 'email', change)
+
+    return jsonify({}), 201
+
+
+@app.route('/changeleaseinfo', methods=['POST'])
+@login_required
+def change_lease_info():
+    leaseID = request.json['leaseID']
+    lease = dq.getLeaseByLeaseID(leaseID)
+    if lease is None:
+        return jsonify({'Reason': 'Lease does not Exist'}), 404
+
+    for att in list(filter(lambda x: not x.startswith("__"), dir(lease))):
+        if att != 'id' and request.json[att] is not None:
+            dq.update(lease, att, request.json[att])
+
+    return jsonify({}), 201
+
+
+@app.route('/changenoteinfo', methods=['POST'])
+@login_required
+def change_note_info():
+    noteID = request.json['noteID']
+    note = dq.getNoteByNoteID(noteID)
+    if note is None:
+        return jsonify({'Reason': 'Note does not exist'}), 404
+    for att in list(filter(lambda x: not x.startswith("__"), dir(note))):
+        if att != 'id' and request.json[att] is not None:
+            dq.update(note, att, request.json[att])
+
+    return jsonify({}), 201
+
+
+@app.route('/addcontactinfo', methods=['POST'])
+@login_required
+def add_contact_info():
+    userID = request.json['userID']
+    # of contact we're adding for user
+    firstName = request.json['firstName']
+    lastName = request.json['lastName']
+    phoneNumber = request.json['phoneNumber']
+    email = request.json['email']  # can be empty, but must be in the request
+    relationship = request.json['relationship']
+    contact = ContactInfo(firstName=firstName, lastName=lastName,
+                          phoneNumber=phoneNumber, email=email,
+                          relationship=relationship,
+                          associatedUser=userID)
+    dq.add(contact)
+    return jsonify({'Contact added': contact.id}), 201
+
+
+@app.route('/deletecontactinfo', methods=['POST'])
+@login_required
+def delete_contact_info():
+    contactID = request.json['contactID']
+    contact = dq.getContactWithContactID(contactID)
+    if contact is None:
+        return jsonify({'Reason': 'Contact info does not exist'}), 404
+    contact.associatedUser = None
+    dq.update(ContactInfo, 'associatedUser', contact)
+    return jsonify({'Reason': 'Contact info updated!'}), 200
+
+
+@app.route('/changecontactinfo', methods=['POST'])
+@login_required
+def change_contact_info():
+    contactID = request.json['contactID']
+    contact = dq.getContactWithContactID(contactID)
+    if contact is None:
+        return jsonify({'Reason': 'Contact info does not exist'}), 404
+    for att in list(filter(lambda x: not x.startswith("__"), dir(contact))):
+        if (att != 'id' and att != 'associatedUser' and
+           request.json[att] is not None):
+            dq.update(contact, att, request.json[att])
+
+    return jsonify({}), 201
+
+
+@app.route('/changecalendarevent', methods=['POST'])
+@login_required
+def change_calendar_event():
+    eventID = request.json['eventID']
+    event = dq.getEventByEventID(eventID)
+    if event is None:
+        return jsonify({'Reason': 'Calendar event does not exist'}), 404
+    for att in list(filter(lambda x: not x.startswith("__"), dir(event))):
+        if (att != 'id' and att != 'rental' and att != 'isDeleted' and
+                request.json[att] is not None):
+            dq.update(event, att, request.json[att])
+
+    return jsonify({}), 201
+
+
+@app.route('/addlease', methods=['POST'])
+@login_required
+def add_lease():
+    rentalID = request.json['rentalID']
+    rental = dq.getRentalByRentalID(rentalID)
+    landlordFirstName = request.json['landlordFirstName']
+    landlordLastName = request.json['landlordLastName']
+    landlordPhoneNumber = request.json['landlordPhoneNumber']
+    landlordEmail = request.json['landlordEmail']
+    rentCost = request.json['rentCost']
+    if rentCost == "":
+        rentCost = 0
+    startDate = request.json['startDate']
+    endDate = request.json['endDate']
+    rentDueDate = request.json['rentDueDate']
+    docName = request.json['docName']
+    document = request.json['document']
+    leaseDoc = PropertyDocument(document=document, docName=docName)
+    dq.add(leaseDoc)
+
+    lease = Lease(landlordFirstName=landlordFirstName,
+                  landlordLastName=landlordLastName,
+                  landlordPhoneNumber=landlordPhoneNumber,
+                  landlordEmail=landlordEmail,
+                  rentCost=rentCost, startDate=startDate, endDate=endDate,
+                  rentDueDate=rentDueDate, docName=docName,
+                  document=leaseDoc.id)
+    dq.add(lease)
+    dq.update(rental, 'lease', lease.id)
+    return jsonify({}), 201
+
+
+@app.route('/addinsurancedocument', methods=['POST'])
+@login_required
+def add_insurance_document():
+    rentalID = request.json['rentalID']
+    rental = dq.getRentalByRentalID(rentalID)
+    docName = request.json['docName']
+    document = request.json['document']
+    insuranceDoc = PropertyDocument(document=document, docName=docName)
+    dq.add(insuranceDoc)
+    dq.update(rental, 'insurance', insuranceDoc.id)
+    return jsonify({}), 201
+
+
+@app.route('/getnotes', methods=['GET'])
+@login_required
+def get_notes():
+    rentalID = request.args.get('rentalID')
+    rental = dq.getRentalByRentalID(rentalID)
+    notes = dq.getNotesByBoardID(rental.board)
+    data = {}
+    for note in notes:
+        if note.category in data:
+            data[note.category].append({'title': note.title,
+                                        'noteID': note.id,
+                                        'description': note.description})
+        else:
+            data[note.category] = list()
+            data[note.category].append({'title': note.title,
+                                        'noteID': note.id,
+                                        'description': note.description})
+    return jsonify(data), 200
+
+
+@app.route('/getcalendarevents', methods=['GET'])
+@login_required
+def get_calendar_events():
+    rentalID = request.args.get('rentalID')
+    events = dq.getEventsWithRental(rentalID)
+    return jsonify(events), 200
+
+
+@app.route('/addcalendarevent', methods=['POST'])
+@login_required
+def add_calendar_event():
+    rentalID = request.json['rentalID']
+    eventName = request.json['eventName']
+    eventDate = request.json['eventDate']
+    eventDescription = request.json['eventDescription']
+    event = CalendarEvent(eventName=eventName, eventDate=eventDate,
+                          eventDescription=eventDescription, rental=rentalID)
+    dq.add(event)
+    return jsonify({}), 201
+
+
+@app.route('/deletecalendarevent', methods=['POST'])
+@login_required
+def delete_calendar_event():
+    eventID = request.json['eventID']
+    event = dq.getEventByEventID(eventID)
+    if event is not None:
+        dq.update(event, 'isDeleted', True)
+        return jsonify({}), 201
+    return jsonify({'Reason': "Event does not exist"}), 404
+
+
+@app.route('/addnote', methods=['POST'])
+@login_required
+def add_note():
+    description = request.json['description']
+    title = request.json['title']
+    rentalID = request.json['rentalID']
+    rental = dq.getRentalByRentalID(rentalID)
+    board = rental.board
+    category = request.json['category']
+    note = Note(description=description, title=title, board=board,
+                category=category)
+    dq.add(note)
+    return jsonify({}), 201
+
+
+@app.route('/deletenote', methods=['POST'])
+@login_required
+def delete_note():
+    noteID = request.json['noteID']
+    note = dq.getNoteByNoteID(noteID)
+    if note is not None:
+        dq.update(note, 'isDeleted', True)
+        return jsonify({}), 201
+    return jsonify({'Reason': "Note does not exist"}), 404
+
+
+@app.route('/clearnotes', methods=['POST'])
+@login_required
+def clear_notes():
+    notes = request.json['notes']
+    for note in notes:
+        n = dq.getNoteByNoteID(note)
+        dq.update(n, 'isDeleted', True)
+    return jsonify({}), 200
 
 
 @app.route('/createrental', methods=['POST'])
@@ -66,30 +381,36 @@ def create_rental():
     user = dq.getUserById(userID)
 
     # Create a rental and update the user's current rental
-    rental = Rental(address=address)
-    dq.addRental(rental)
+    roommates = Roommates(roommate1=userID)
+    dq.add(roommates)
+    board = Board()
+    dq.add(board)
+    rental = Rental(address=address, roommates=roommates.id,
+                    board=board.id)
+    dq.add(rental)
     dq.updateUserRentals(user, rental.id)
+    data = rental.id
 
-    return jsonify({}), 201
+    return jsonify(data), 201
 
 
 @app.route('/forgotpassword', methods=['POST'])
 def forgot_password():
+    print("we actually called the route!")
     user = dq.getUserByEmail(request.json['email'])
     if user is not None:
         temp = mailer.send_mail(user.email)
         _change_password(user, temp)
+        return jsonify({}), 200
     else:
         return jsonify({'reason': "User not found"}), 404
 
 
-def _change_password(user: Users, password: str):
-    dq.updatePassword(user, pbkdf2_sha256.hash(password))
-
-
 @app.route('/resetpassword', methods=['POST'])
 @login_required
-def reset_password(email: str, password: str):
+def reset_password():
+    email = request.json['email']
+    password = request.json['password']
     user = dq.getUserByEmail(email)
     _change_password(user, password)
     return jsonify({}), 201
@@ -111,6 +432,7 @@ def login():
     user = dq.getUserByEmail(email)
 
     if _validate(user, password):
+        dq.update(user, 'deactivated', False)
         login_user(user, remember=remember)
         return jsonify({'userID': user.id, 'firstName': user.firstName}), 200
     else:
@@ -123,7 +445,7 @@ def get_address():
     rentalID = request.args.get('rentalID')
     rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
-        return jsonify(rental.address), 200
+        return jsonify({'address': rental.address}), 200
     else:
         return jsonify({'reason': "Rental not found"}), 404
 
@@ -136,7 +458,12 @@ def get_lease_end_date():
     if rental is not None:
         lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
-            return jsonify(lease.endDate), 200
+            dt = lease.endDate
+            daysTill = (d.today() - d.fromisoformat(dt)).days
+            data = {}
+            data['endDate'] = dt
+            data['daysTill'] = daysTill
+            return jsonify(data), 200
         else:
             return jsonify({'reason': "Lease not found"}), 404
     else:
@@ -153,7 +480,7 @@ def get_documents():
         if lease is not None:
             doc = dq.getDocByDocID(lease.document)
             if doc is not None:
-                return jsonify(doc.document), 200
+                return jsonify({'doc': doc.document}), 200
         else:
             return jsonify({'reason': "Lease not found"}), 404
     else:
@@ -163,10 +490,24 @@ def get_documents():
 @app.route('/getinfo', methods=['GET'])
 @login_required
 def get_info():
+    ''' emergency contact info and the user info
+    '''
+    data = {}
     userID = request.args.get('userID')
     user = dq.getUserById(userID)
+    contacts = dq.getContactsWithAssocUser(userID)
+    if len(contacts) != 0:
+        for num in range(len(contacts)):
+            contact_str = 'contact' + repr(num)
+            data[contact_str] = {}
+            data[contact_str]['relation'] = contacts[num].relationship
+            name = contacts[num].firstName + contacts[num].lastName
+            data[contact_str]['name'] = name
+            data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
+    else:
+        return jsonify({'reason': "No associated contacts found"}), 404
+
     if user is not None:
-        data = {}
         data['firstName'] = user.firstName
         data['lastName'] = user.lastName
         data['phoneNumber'] = user.phoneNumber
@@ -211,23 +552,30 @@ def get_rental_IDs():
         return jsonify({'reason': "User not found"}), 404
 
 
-@app.route('/getemergencyinfo', methods=['GET'])
+@app.route('/updateuserinfo', methods=['POST'])
 @login_required
-def get_emergency_info():
-    userID = request.args.get('userID')
-    contacts = dq.getContactWithAssocUser(userID)
-    if len(contacts) != 0:
-        data = {}
-        for num in range(len(contacts)):
-            contact_str = 'contact' + repr(num)
-            data[contact_str] = {}
-            data[contact_str]['relation'] = contacts[num].relationship
-            name = contacts[num].firstName + contacts[num].lastName
-            data[contact_str]['name'] = name
-            data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
-        return jsonify(data), 200
-    else:
-        return jsonify({'reason': "No associated contacts found"}), 404
+def update_user_info():
+    firstName = request.json['firstName']
+    lastName = request.json['lastName']
+    phoneNumber = request.json['phoneNumber']
+    email = request.json['email']
+    userID = request.json['userID']
+    user = dq.getUserById(userID)
+    check = dq.getUserByEmail(email)
+
+    if check is not None:
+        return jsonify({'Reason': "Email already in use"}), 400
+
+    dq.update(user, 'firstName', firstName)
+    dq.update(user, 'lastName', lastName)
+    dq.update(user, 'phoneNumber', phoneNumber)
+    dq.update(user, 'email', email)
+
+    return jsonify({}), 200
+
+
+def _change_password(user: Users, password: str):
+    dq.update(user, 'password', pbkdf2_sha256.hash(password))
 
 
 def _validate(user: Users, password: str) -> bool:

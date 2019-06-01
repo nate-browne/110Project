@@ -7,77 +7,45 @@ export default class Grocery extends Component {
   [x: string]: any;
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
+    currentName:"",
+    currentSubtitle:"",
     editVisible: false,
     addVisible: false,
-    currentID: 0,
-    tmp: {
-      name: '',
-      subtitle: '',
-      done: '',
-    },
     list: [
       {
-        name: 'Toilet Paper',
-        subtitle: 'Only 1 roll left!!!',
+        name: 'SOme weird stuff',
+        subtitle: 'This is a really long paragraph of things to include for this page. I am sure you are all going to read this',
         done: false
       },
       {
-        name: 'Apples',
-        subtitle: 'Need 7 for pie recipe',
+        name: 'Oh look a longer note!',
+        subtitle: 'BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH ',
         done: false
       },
       {
-        name: 'White sugar',
-        subtitle: 'For apple pie :P',
-        done: true
-      },
-      {
-        name: 'Cinnamon',
-        subtitle: 'For apple pie recipe',
-        done: false
-      },
-      {
-        name: 'Flour',
-        subtitle: 'For apple pie - yummmmm',
-        done: true
-      },
-      {
-        name: 'Butter',
-        subtitle: 'For apple pie!!!',
-        done: true
-      },
-      {
-        name: 'Soy milk',
-        subtitle: 'I think Ralph\'s is having a promotion',
-        done: false
-      },
-      {
-        name: 'Whipped cream',
-        subtitle: 'This is happiness',
-        done: false
-      },
-      {
-        name: 'Ice cream',
-        subtitle: 'Topping for apple pie',
-        done: true
-      },
-      {
-        name: 'Balloons',
+        name: 'Notes notes notes',
         subtitle: 'For Surprise Party',
-        done: true
+        done: false
       },
       {
-        name: 'Cups',
+        name: 'I like to write',
         subtitle: 'Also for party',
         done: false
       },
       {
-        name: 'Eggs',
+        name: 'Happy Happy Happy :)))))',
         subtitle: '2 dozen please',
         done: false
       },
     ]
   };
+
+  setEditVisible(visible: boolean) {
+    this.setState({editVisible: visible});
+  }
+  setAddVisible(visible: boolean) {
+    this.setState({addVisible: visible});
+  }
 
     render() {
           return (
@@ -89,11 +57,9 @@ export default class Grocery extends Component {
                     key={i}
                     onLongPress={() => {
                       //edit item
-                      this.state.currentID = i;
-                      this.state.tmp.name = this.state.list[i].name;
-                      this.state.tmp.subtitle = this.state.list[i].subtitle;
-                      this.state.tmp.done = this.state.list[i].done;
-                      this.setState({editVisible: true});
+                      this.state.currentName=l.name;
+                      this.state.currentSubtitle=l.subtitle;
+                      this.setEditVisible(true);
                     }}
                     onPress={() => {
                       let list = [ ...this.state.list];
@@ -115,10 +81,9 @@ export default class Grocery extends Component {
               title="+"
               buttonStyle={{height: 65, width: 65, borderRadius: 50}}
               // TODO add item to data base onPress
-              onPress={() => {this.setState({addVisible: true})}}
+              onPress={() => { this.setAddVisible(true); }}
             />
           </View>
-
           <Overlay
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.editVisible}
@@ -133,7 +98,7 @@ export default class Grocery extends Component {
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Name"
-                    defaultValue={this.state.list[this.state.currentID].name}
+                    defaultValue={this.state.currentName}
                     autoCorrect={false}
                     keyboardAppearance="light"
                     leftIcon={
@@ -142,14 +107,14 @@ export default class Grocery extends Component {
                     blurOnSubmit = {false}
                     onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
-                    onChangeText={(text: string) => {this.state.tmp.name = text}}
+                    onChangeText={(text: string) => this.setState({firstName: text})}
                 />
 
                 <Input
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Description"
-                    defaultValue={this.state.list[this.state.currentID].subtitle}
+                    defaultValue={this.state.currentSubtitle}
                     autoCorrect={false}
                     multiline={true}
                     keyboardAppearance="light"
@@ -159,30 +124,19 @@ export default class Grocery extends Component {
                     ref = {(input) => {this.input1 = input}}
                     blurOnSubmit = {false}
                     returnKeyType="next"
-                    onChangeText={(text: string) => {this.state.tmp.subtitle = text}}
+                    onChangeText={(text: string) => this.setState({firstName: text})}
                 />
 
                 <Button
                   title="Save"
                   buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {
-                    this.state.list[this.state.currentID] = this.state.tmp;
-                    this.setState({ editVisible: false });
-                  }}
-                />
-
-                <Button
-                  title="Delete"
-                  buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {
-                    this.state.list.splice(this.state.currentID, 1);
-                    this.setState({ editVisible: false });
-                  }}
+                  onPress={() => {this.setState({ editVisible: false }); Alert.alert("contact backend");}}
                 />
 
               </ScrollView>
 
           </Overlay>
+
 
           <Overlay
             windowBackgroundColor="rgba(255, 255, 255, .5)"
@@ -206,7 +160,7 @@ export default class Grocery extends Component {
                     blurOnSubmit = {false}
                     onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
-                    onChangeText={(text: string) => {this.state.tmp.name = text}}
+                    onChangeText={(text: string) => this.setState({firstName: text})}
                 />
 
                 <Input
@@ -215,24 +169,19 @@ export default class Grocery extends Component {
                     placeholder="Item Description"
                     autoCorrect={false}
                     keyboardAppearance="light"
-                    multiline = {true}
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
                     ref = {(input) => {this.input1 = input}}
                     blurOnSubmit = {false}
                     returnKeyType="next"
-                    onChangeText={(text: string) => {this.state.tmp.subtitle = text}}
+                    onChangeText={(text: string) => this.setState({firstName: text})}
                 />
 
                 <Button
                   title="Save"
                   buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {
-                    this.setState({list: [...this.state.list, this.state.tmp]});
-                    this.setState({tmp: {name: '', subtitle: ''}})
-                    this.setState({ addVisible: false });
-                  }}
+                  onPress={() => {this.setState({ addVisible: false }); Alert.alert("contact backend");}}
                 />
 
               </ScrollView>
