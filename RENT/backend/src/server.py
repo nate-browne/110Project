@@ -127,7 +127,7 @@ def change_user_info():
     user = dq.getUserByEmail(email)
 
     if request.files['profilePhoto']:
-        path = upload_file(request.files['profilePhoto'])
+        path = upload_file(request.files['profilePhoto'], "users")
         dq.update(user, 'profilePhoto', path)
 
     for att in list(filter(lambda x: not x.startswith("__"), dir(user))):
@@ -238,7 +238,7 @@ def change_calendar_event():
 @login_required
 def add_lease_photos():
     leaseID = request.json['leaseID']
-    path = upload_file(request.files['photo'])
+    path = upload_file(request.files['photo'], "lease")
     img = LeaseImages(url=path, associatedLease=leaseID)
     dq.add(img)
     return jsonify({}), 201
@@ -270,7 +270,7 @@ def add_lease():
     startDate = request.json['startDate']
     endDate = request.json['endDate']
     rentDueDate = request.json['rentDueDate']
-    path = upload_file(request.files['document'])
+    path = upload_file(request.files['document'], "doc")
     leaseDoc = PropertyDocument(url=path)
     dq.add(leaseDoc)
 
@@ -291,7 +291,7 @@ def add_lease():
 def add_insurance_document():
     rentalID = request.json['rentalID']
     rental = dq.getRentalByRentalID(rentalID)
-    path = upload_file(request.files['document'])
+    path = upload_file(request.files['document'], "doc")
     insuranceDoc = PropertyDocument(url=path)
     dq.add(insuranceDoc)
     dq.update(rental, 'insurance', insuranceDoc.id)
