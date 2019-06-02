@@ -6,6 +6,7 @@ import axios from 'axios';
 
 // @ts-ignore
 import configInfo from '../url';
+import {string} from "prop-types";
 
 const serverURL = configInfo['serverURL'];
 const server = axios.create({
@@ -17,10 +18,12 @@ export default class NotesMain extends Component {
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
     currentName:"",
+    tmp: [] as string [],
     currentSubtitle:"",
     editVisible: false,
     addVisible: false,
     list: [],
+    keys:[] as string [],
     rentalID: "",
     tmpDescription: "",
     tmpTitle: "",
@@ -29,18 +32,29 @@ export default class NotesMain extends Component {
   };
 
   componentDidMount() {
+
         this.state.rentalID = this.props.navigation.getParam("rentalID","");
         server.get('/getnotes', {
             params: {
                 rentalID: this.state.rentalID,
             }
         }).then(resp => {
-            this.state.list = resp.data["notes"]["Nop"];
+            this.state.list = resp.data["notes"];
             if(this.state.list === undefined || this.state.list === null){
                 this.state.list = [];
             }
-            console.log("list ", this.state.list);
-            console.log("data ", resp.data);
+
+            for (const key in Object.keys(this.state.list)){
+                console.log("1 the key is "+key);
+                if (this.state.keys.findIndex(x => x === Object.keys(this.state.list)[key]) == -1) {
+                    this.state.tmp = [...this.state.keys, Object.keys(this.state.list)[key]];
+                    this.state.keys = this.state.tmp;
+                    console.log("1 Just added "+Object.keys(this.state.list)[key]);
+                }
+                console.log("1 keys: "+this.state.keys);
+            }
+            //console.log("list ", this.state.list);
+            //console.log("data ", resp.data);
             console.log('mount notes')
             console.log('notes rental ID: ', this.state.rentalID);
         }).catch(err => {
@@ -73,12 +87,23 @@ export default class NotesMain extends Component {
                 rentalID: this.state.rentalID,
             }
         }).then(resp => {
-            this.state.list = resp.data["notes"]["Nop"];
+
+            this.state.list = resp.data["notes"];
             if(this.state.list === undefined || this.state.list === null){
                 this.state.list = [];
             }
-            console.log("list ", this.state.list);
-            console.log("data ", resp.data);
+
+            for (const key in Object.keys(this.state.list)) {
+                console.log("the key is " + key); //TODO need to account for empty string categories later
+                if (this.state.keys.findIndex(x => x === Object.keys(this.state.list)[key]) == -1) {
+                    this.state.tmp = [...this.state.keys, Object.keys(this.state.list)[key]];
+                    this.state.keys = this.state.tmp;
+                    console.log("Just added "+Object.keys(this.state.list)[key]);
+                }
+                console.log("keys: "+ this.state.keys);
+            }
+            //console.log("list ", this.state.list);
+            //console.log("data ", resp.data);
             console.log('get notes')
             console.log('notes rental ID: ', this.state.rentalID);
         }).catch(err => {
@@ -88,11 +113,55 @@ export default class NotesMain extends Component {
 
     render() {
         this.getNotes();
+
           return (
               <View style= {{width:'100%', height:'100%'}}>
               <ScrollView style={styles.itemContainer}>
               {
-                this.state.list.map((l, i) => (
+                this.state.keys.map((l,i) => (
+                    <ListItem
+                        key={i}
+                        onLongPress={() => {
+                            //edit item
+                            this.state.currentName="the";
+                            this.state.currentSubtitle="tlek";
+                            this.setEditVisible(true);
+                        }}
+                        onPress={() => {
+                            this.props.navigation.push('Notes',{
+                                rentalID: this.props.navigation.getParam("rentalID",""), //trying to get parameters from navigation
+                                category: l,
+                            });
+                        }}
+                        title={
+                            <Text >
+                                {l}
+                            </Text>
+                        }
+                        subtitle="random subtitle"
+                    />/*
+                    this.state.list[l].map((l1,i1)=>(
+                        <ListItem
+                            key={i1}
+                            onLongPress={() => {
+                                //edit item
+                                this.state.currentName="the";
+                                this.state.currentSubtitle="tlek";
+                                this.setEditVisible(true);
+                            }}
+                            onPress={() => {
+                                this.props.navigation.push(l1.name);
+                            }}
+                            title={
+                                <Text style={[styles.text, l1.done ? styles.text_crossed : styles.text]}>
+                                    {l1.title}
+                                </Text>
+                            }
+                            subtitle={l1.description}
+                        />
+                    ))*/
+                ))
+                /*this.state.list.map((l, i) => (
                   <ListItem
                     key={i}
                     onLongPress={() => {
@@ -111,7 +180,7 @@ export default class NotesMain extends Component {
                     }
                     subtitle={l.description}
                   />
-                ))
+                ))*/
               }
             </ScrollView>
             <View style={styles.button}>

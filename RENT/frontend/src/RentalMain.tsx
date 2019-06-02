@@ -67,7 +67,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                   this.props.navigation.push('LeasingInfo');
                   break;
                 case 'Notes':
-                  this.props.navigation.push('Notes',{
+                  this.props.navigation.push('NotesMain',{
                       userID: this.props.navigation.getParam("userID",""), //trying to get parameters from navigation
                       rentalID: this.props.navigation.getParam("rentalID",""), //trying to get parameters from navigation
                   });

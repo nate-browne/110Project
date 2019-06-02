@@ -2,52 +2,101 @@ import React, { Component } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { Overlay, Input, Icon, Button, ListItem, Text } from 'react-native-elements'
 import styles from '../style/Grocery-Stylesheet';
+import axios from 'axios';
 
-export default class Grocery extends Component {
+// @ts-ignore
+import configInfo from '../url';
+
+const serverURL = configInfo['serverURL'];
+const server = axios.create({
+    baseURL: serverURL
+});
+
+export default class Notes extends Component {
   [x: string]: any;
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
     currentName:"",
+    category: "",
     currentSubtitle:"",
     editVisible: false,
     addVisible: false,
-    list: [
-      {
-        name: 'SOme weird stuff',
-        subtitle: 'This is a really long paragraph of things to include for this page. I am sure you are all going to read this',
-        done: false
-      },
-      {
-        name: 'Oh look a longer note!',
-        subtitle: 'BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH ',
-        done: false
-      },
-      {
-        name: 'Notes notes notes',
-        subtitle: 'For Surprise Party',
-        done: false
-      },
-      {
-        name: 'I like to write',
-        subtitle: 'Also for party',
-        done: false
-      },
-      {
-        name: 'Happy Happy Happy :)))))',
-        subtitle: '2 dozen please',
-        done: false
-      },
-    ]
+    rentalID: "",
+    list: []
   };
+
+  constructor(props:any){
+      super(props);
+      this.getNotes();
+  }
 
   setEditVisible(visible: boolean) {
     this.setState({editVisible: visible});
   }
+
   setAddVisible(visible: boolean) {
     this.setState({addVisible: visible});
   }
+    componentDidMount() {
+
+        this.state.rentalID = this.props.navigation.getParam("rentalID","");
+        this.state.category = this.props.navigation.getParam("category","");
+        console.log("first "+ this.props.navigation.getParam("category",""));
+        server.get('/getnotes', {
+            params: {
+                rentalID: this.state.rentalID,
+            }
+        }).then(resp => {
+            this.state.list = resp.data["notes"];
+            if(this.state.list === undefined || this.state.list === null){
+                this.state.list = [];
+            }else{
+                this.state.list = resp.data["notes"][this.state.category];
+                if(this.state.list === undefined || this.state.list === null){
+                    this.state.list = [];
+                }
+            }
+
+            console.log(" 1 category is "+this.state.category);
+            console.log('mount notes')
+            console.log('notes rental ID: ', this.state.rentalID);
+        }).catch(err => {
+            console.log('Error occurred in mount item notes',err);
+        })
+    }
+
+    getNotes(): any{
+
+        this.state.rentalID = this.props.navigation.getParam("rentalID","");
+        this.state.category = this.props.navigation.getParam("category","");
+        console.log("second  "+ this.props.navigation.getParam("category",""));
+        console.log("rentalid  "+ this.props.navigation.getParam("rentalID",""));
+        server.get('/getnotes', {
+            params: {
+                rentalID: this.state.rentalID,
+            }
+        }).then(resp => {
+            this.state.list = resp.data["notes"];
+            if(this.state.list === undefined || this.state.list === null){
+                this.state.list = [];
+            }else{
+                console.log("original list "+resp.data);
+                this.state.list = resp.data["notes"][this.state.category];
+                if(this.state.list === undefined || this.state.list === null){
+                    this.state.list = [];
+                }
+            }
+            console.log("category is "+this.state.category);
+            console.log("items include " + this.state.list);
+            console.log("a title is "+this.state.list[0]['title']);
+            console.log('notes rental ID: ', this.state.rentalID);
+        }).catch(err => {
+            console.log('Error occurred in mount item notes',err);
+        })
+    }
 
     render() {
+        this.getNotes();
           return (
             <View style= {{width:'100%', height:'100%'}}>
               <ScrollView style={styles.itemContainer}>
@@ -57,8 +106,8 @@ export default class Grocery extends Component {
                     key={i}
                     onLongPress={() => {
                       //edit item
-                      this.state.currentName=l.name;
-                      this.state.currentSubtitle=l.subtitle;
+                      this.state.currentName=l['title'];
+                      this.state.currentSubtitle=l['description'];
                       this.setEditVisible(true);
                     }}
                     onPress={() => {
@@ -68,10 +117,10 @@ export default class Grocery extends Component {
                     }}
                     title={
                       <Text style={[styles.text, l.done ? styles.text_crossed : styles.text]}>
-                        {l.name}
+                        {l['title']}
                       </Text>
                     }
-                    subtitle={l.subtitle}
+                    subtitle={l['description']}
                   />
                 ))
               }
