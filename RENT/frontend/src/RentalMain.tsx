@@ -44,12 +44,12 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
   render() {
     const items = [
       { name: 'Leasing Info', code: '#919f98', icon:'info' },
-        { name: 'Notes', code: '#4d5057', icon:'assignment' },
+      { name: 'Notes', code: '#4d5057', icon:'assignment' },
       { name: 'Roommates', code: '#34495e', icon:'group' },
-        { name: 'GroceryList', code: '#aac4d2', icon:'assignment' },
+      { name: 'GroceryList', code: '#aac4d2', icon:'assignment' },
       //{ name: 'Group Chat', code: '#aac4d2', icon:'chat' },
       { name: 'Calendar', code: '#a2d0d4', icon:'insert-invitation' },
-        { name: 'Chores', code: '#175676', icon:'assignment' },
+      { name: 'Chores', code: '#175676', icon:'assignment' },
       //{ name: 'Expenses', code: '#175676', icon:'attach-money' },
     ];
 
