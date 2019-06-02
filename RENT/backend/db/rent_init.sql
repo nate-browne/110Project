@@ -25,13 +25,6 @@ CREATE TABLE `Roommates` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `PropertyDocument` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`document` mediumblob NOT NULL,
-	`docName` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
-
 CREATE TABLE `Lease` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`landlordFirstName` varchar(255) NOT NULL,
@@ -42,7 +35,6 @@ CREATE TABLE `Lease` (
 	`startDate` DATE NOT NULL,
 	`endDate` DATE NOT NULL,
 	`rentDueDate` varchar(50) NOT NULL,
-	`document` bigint(20) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -50,7 +42,6 @@ CREATE TABLE `Rental` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`roommates` bigint(20) NOT NULL,
 	`lease` bigint(20) DEFAULT NULL,
-	`insurance` bigint(20) DEFAULT NULL,
 	`board` bigint(20) DEFAULT NULL,
 	`address` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
@@ -110,11 +101,7 @@ ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk0` FOREIGN KEY (`roommates`) REFER
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk2` FOREIGN KEY (`lease`) REFERENCES `Lease`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk3` FOREIGN KEY (`insurance`) REFERENCES `PropertyDocument`(`id`);
-
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk4` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);
-
-ALTER TABLE `Lease` ADD CONSTRAINT `Lease_fk0` FOREIGN KEY (`document`) REFERENCES `PropertyDocument`(`id`);
 
 ALTER TABLE `ContactInfo` ADD CONSTRAINT `ContactInfo_fk0` FOREIGN KEY (`associatedUser`) REFERENCES `Users`(`id`);
 

@@ -44,11 +44,13 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
   render() {
     const items = [
       { name: 'Leasing Info', code: '#919f98', icon:'info' },
-      { name: 'Things to do', code: '#4d5057', icon:'assignment' },
+        { name: 'Notes', code: '#4d5057', icon:'assignment' },
       { name: 'Roommates', code: '#34495e', icon:'group' },
-      { name: 'Group Chat', code: '#aac4d2', icon:'chat' },
+        { name: 'GroceryList', code: '#aac4d2', icon:'assignment' },
+      //{ name: 'Group Chat', code: '#aac4d2', icon:'chat' },
       { name: 'Calendar', code: '#a2d0d4', icon:'insert-invitation' },
-      { name: 'Expenses', code: '#175676', icon:'attach-money' },
+        { name: 'Chores', code: '#175676', icon:'assignment' },
+      //{ name: 'Expenses', code: '#175676', icon:'attach-money' },
     ];
 
     return (
@@ -64,21 +66,32 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                 case 'Leasing Info':
                   this.props.navigation.push('LeasingInfo');
                   break;
-                case 'Things to do':
-                  this.props.navigation.push('NotesMain');
+                case 'Notes':
+                  this.props.navigation.push('Notes',{
+                      userID: this.props.navigation.getParam("userID",""), //trying to get parameters from navigation
+                      rentalID: this.props.navigation.getParam("rentalID",""), //trying to get parameters from navigation
+                  });
                   break;
                 case 'Roommates':
-                  this.props.navigation.push('Roommates');
+                  this.props.navigation.push('Roommates',{
+                        userID: this.props.navigation.getParam("userID",""), //trying to get parameters from navigation
+                        rentalID: this.props.navigation.getParam("rentalID",""), //trying to get parameters from navigation
+                    });
                   break;
                 case 'Calendar':
                   this.props.navigation.push('Calendar');
                   break;
-                case 'Expenses':
-                  this.props.navigation.push('ExpensesHome');
-                  break;
-                case 'Group Chat':
-                  this.props.navigation.push('Chat');
-                  break;
+                  case 'GroceryList':
+                      this.props.navigation.push('GroceryList');
+                      break;
+
+
+                  //case 'Expenses':
+                  //this.props.navigation.push('ExpensesHome');
+                  //break;
+                //case 'Group Chat':
+                  //this.props.navigation.push('Chat');
+                  //break;
                 default:
                   Alert.alert("This should not happen");
               }

@@ -1,7 +1,7 @@
 /*
   Name: Login.tsx
   Description: This file renders the login page and handles sign up and logging in
-  of user.
+  of user..
 */
 // Library Imports
 import React, {Component} from 'react';

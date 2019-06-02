@@ -13,14 +13,15 @@ const server = axios.create({
 });
 
 
-// Interfaces needed for navigation
+// Interfaces needed for navigation.
 interface IAppProps {
   navigation?: any;
 }
 
 interface IAppState {
   isLoading: boolean,
-  
+  otherName: boolean,
+
   editVisible: boolean,
   firstName: string,
   lastName: string,
@@ -60,6 +61,8 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
     this.state = {
       isLoading: true,
+      addVisible: false,
+      otherName: false,
 
       editVisible: false,
       firstName: "",
@@ -107,12 +110,11 @@ export default class Profile extends Component<IAppProps, IAppState> {
       }
     }).then(resp => {
       if(resp.status === 200) {
-
         this.setState({
-          firstName: resp.data.firstName,
-          lastName: resp.data.lastName,
-          email: resp.data.email,
-          phoneNumber: resp.data.phoneNumber,
+          firstName: resp.data['firstName'],
+          lastName: resp.data['lastName'],
+          email: resp.data['email'],
+          phoneNumber: resp.data['phoneNumber'],
           isLoading: false,
         });
       }
@@ -136,43 +138,99 @@ export default class Profile extends Component<IAppProps, IAppState> {
     // });
   }
 
+  getInfo(){
+      server.get('/getinfo',{
+          params: {
+              userID: this.props.navigation.getParam("userID", "")
+          }
+      }).then(resp => {
+          if(resp.status === 200) {
+              this.state.firstName = resp.data['firstName'];
+              this.state.lastName = resp.data['lastName'];
+              this.state.email = resp.data['email'];
+              this.state.phoneNumber = resp.data['phoneNumber'];
+              this.state.isLoading = false;
+
+              this.state.e1Relation = resp.data['contact1']['relation'];
+              this.state.e1FirstName = resp.data['contact1']['name'];
+              this.state.e1Phone = resp.data['contact1']['phoneNumber'];
+
+              this.state.e2Relation = resp.data['contact0']['relation'];
+              this.state.e2FirstName = resp.data['contact0']['name'];
+              this.state.e2Phone = resp.data['contact0']['phoneNumber'];
+          }
+      }).catch(err => {
+          console.log(err.response.data['reason'])
+      });
+  }
+
 
   render() {
-
-    // When the component is constructed, the fields in the state are
-    // initially empty. We display a loader while the async GET
-    // request is being performed.
-    if (this.state.isLoading == true) {
-
-      return(
-        <View style = {{backgroundColor:"#666666", flex: 1}}>
-              <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
-                  backgroundColor: "#FFFFFF", flex:1}}>
-                <ActivityIndicator size="large" color="#0000ff" />
-              </ScrollView>
-          </View>
-      );
-    } 
-    
-    // Otherwise, all the information from the GET request should be
-    // populated in the fields via componentDidMount, so we return
-    // the page as should be formatted normally.
-    else {
-
+    this.getInfo();
       return (
+
+
+
           <View style = {{backgroundColor:"#666666", flex: 1}}>
+              <Overlay
+                  windowBackgroundColor="rgba(255, 255, 255, .5)"
+                  isVisible={this.state.otherName}
+                  onBackdropPress={() => this.setState({ otherName: false })}
+                  height={'50%'}
+              >
+
+                  <ScrollView>
+                      <Text style={{fontSize: 48}}>Edit Name</Text>
+
+                      <Input
+                          //inputContainerStyle={styles.textinput}
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="John Smith"
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          onSubmitEditing = {() => {this.input1.focus()}}
+                          returnKeyType="done"
+                          onChangeText={(text: string) => {this.setState({tmpFirstName : text})}}
+                      />
+
+
+                      <Button
+                          title="Save"
+                          buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                          onPress={() => {
+                              this.setState({otherName: false});
+                              this.state.firstName= this.state.tmpFirstName;
+                          }}
+                      />
+
+                  </ScrollView>
+
+              </Overlay>
+
               <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
                   backgroundColor: "#FFFFFF", flex:1}}>
                   <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
+
+
+                  <TouchableOpacity onPress={ () => {this.setState({otherName: true})}} >
                   <Text style={{textAlign: 'center', marginTop:20,marginBottom:25,
                                 color: '#333333', fontWeight:"500", fontSize:35}}>
                       {this.state.firstName} {this.state.lastName}
                   </Text>
+                  </TouchableOpacity>
+
+
                   <Divider style={styles.divider} />
+                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")} >
                   <Text style={{textAlign: 'center', marginVertical:5, marginTop:10,
                       color: '#777777', fontWeight:"300", fontSize:14}}>
                     ({this.state.phoneNumber})
                   </Text>
+                  </TouchableOpacity>
                   <Text style={{textAlign: 'center', marginBottom:10,
                   color: '#777777', fontWeight:"300", fontSize:14}}>
                   {this.state.email}
@@ -210,6 +268,5 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
           </View>
       );
-    }
   }
 }

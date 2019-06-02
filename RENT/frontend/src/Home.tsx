@@ -26,7 +26,7 @@ export default class Home extends Component<IAppProps, IAppState> {
   };
   state = {
     visible: false,
-    userRentals: 0,
+    numRentals: 0,
     currentID: 0,
     pastID: 0,
     name: "",
@@ -49,14 +49,21 @@ export default class Home extends Component<IAppProps, IAppState> {
         userID: userID
       }
     }).then(resp => {
-        if (resp.data.currentRental !== null ) {
-          this.setState({userRentals: this.state.userRentals + 1})
-          this.setState({currentID: resp.data.currentRental})
+        if (resp.data['currentRental'] !== undefined || resp.data['currentRental'] !== null) {
+          this.setState({currentID: resp.data['currentRental']})
         }
-        if (resp.data.pastRental !== null) {
-          this.setState({userRentals: this.state.userRentals + 1})
-          this.setState({past: resp.data.pastRental})
+        else{
+            this.setState({currentID: 0})
         }
+        if (resp.data['pastRental'] !== undefined || resp.data['pastRental'] !== null) {
+          this.setState({pastID: resp.data['pastRental']})
+        }
+        else{
+            this.setState({pastID: 0})
+        }
+        console.log('mount')
+        console.log('currentID: ', this.state.currentID);
+        console.log('pastID: ', this.state.pastID);
     }).catch(err => {
         console.log('Error occurred',err);
     })
@@ -67,22 +74,15 @@ export default class Home extends Component<IAppProps, IAppState> {
       address: this.state.address,
       userID: userID
     }).then(resp => {
-      server.get('/getrentalIDs', {
-        params: {
-          userID: userID
+        if(resp.status == 201) {
+            this.setState({currentID: resp.data['currentRental']});
+            this.setState({pastID: resp.data['pastRental']});
+            console.log('create')
+            console.log('currentID: ', this.state.currentID);
+            console.log('pastID: ', this.state.pastID);
         }
-      }).then(resp => {
-          if (resp.data.currentRental !== null ) {
-            this.setState({userRentals: this.state.userRentals + 1})
-            this.setState({currentID: resp.data.currentRental})
-          }
-          if (resp.data.pastRental !== null) {
-            this.setState({userRentals: this.state.userRentals + 1})
-            this.setState({past: resp.data.pastRental})
-          }
-      }).catch(err => {
-          console.log('Error occurred',err);
-      })
+    }).catch (err => {
+        console.log('Error', err);
     })
   }
 
@@ -108,29 +108,34 @@ export default class Home extends Component<IAppProps, IAppState> {
 
   render() {
     const userID = this.props.navigation.getParam("userID","NO-ID");
-    let display;
+    let displayErr;
+    let displayCurr;
+    let displayPast;
     let button;
-    if( this.state.userRentals !== 0) {
-      if( this.state.currentID !== 0 ) {
-        display = <Button raised={true} title="View Current Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
-          userName: this.props.navigation.getParam("userName",""),
+    if( this.state.currentID === 0) {
+        displayErr = <Text> First time using RENT? Add a rental below and start managing your properties right away </Text>
+    }
+    else{
+      if( this.state.currentID !== 0 && this.state.currentID !== null && this.state.currentID !== undefined ) {
+        displayCurr = <Button raised={true} title="View Current Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
+          userName: this.props.navigation.getParam("userName",""), //trying to get parameters from navigation
           userID: userID,
           rentalID: this.state.currentID
         })}} />
       }
-      if( this.state.pastID !== 0) {
-        display = <Button raised={true} title="View Past Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
+      if( this.state.pastID !== 0 && this.state.pastID !== null && this.state.pastID !== undefined  ) {
+        displayPast = <Button raised={true} title="View Past Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
           userName: this.props.navigation.getParam("userName",""),
           userID: userID,
           rentalID: this.state.pastID
         })}} />
       }
-    } else {
-      display = <Text> First time using RENT? Add a rental below and start managing your properties right away </Text>
     }
     return(
       <View>
-        {display}
+        {displayErr}
+        {displayCurr}
+        {displayPast}
         {button}
         <View>
           <Button
