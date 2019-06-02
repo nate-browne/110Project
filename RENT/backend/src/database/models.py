@@ -20,7 +20,6 @@ class Users(UserMixin, db.Model):
     pastRental = db.Column(db.Integer, db.ForeignKey('Rental.id'),
                            nullable=True)
     deactivated = db.Column(db.Boolean, nullable=False, default=False)
-    profilePhoto = db.Column(db.String(255), nullable=True, default=None)
 
     def __repr__(self) -> str:
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
@@ -53,15 +52,6 @@ class Roommates(db.Model):
         return ''.join(val)
 
 
-class PropertyDocument(db.Model):
-    __tablename__ = 'PropertyDocument'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    url = db.Column(db.String(255), nullable=False)
-
-    def __repr__(self) -> str:
-        return '<Property Document>\nID: {}'.format(self.id)
-
-
 class Lease(db.Model):
     __tablename__ = 'Lease'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -74,8 +64,6 @@ class Lease(db.Model):
     startDate = db.Column(db.Date, nullable=False)
     endDate = db.Column(db.Date, nullable=False)
     rentDueDate = db.Column(db.String(50), nullable=False)
-    document = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
-                         nullable=False)
 
 
 class Rental(db.Model):
@@ -85,14 +73,12 @@ class Rental(db.Model):
                           nullable=False)
     lease = db.Column(db.Integer, db.ForeignKey('Lease.id'),
                       nullable=True, default=None)
-    insurance = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
-                          nullable=True, default=None)
     board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=True,
                       default=None)
     address = db.Column(db.String(255), nullable=False)
 
     def __repr__(self) -> str:
-        print_str = "<Rental>\nrentalID: {}\ndocumentID: {}\nroommatesListID:\
+        print_str = "<Rental>\nrentalID: {}\nroommatesListID:\
             {}\nexpensesID: {}\nshoppingListID: {}"
         return print_str.format(self.id, self.roommates, self.expenses,
                                 self.shopping_list)
@@ -139,11 +125,3 @@ class CalendarEvent(db.Model):
     eventDescription = db.Column(db.String(255), default=None)
     rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=False)
     isDeleted = db.Column(db.Boolean, nullable=False, default=False)
-
-
-class LeaseImages(db.Model):
-    __tablename__ = 'LeaseImages'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    url = db.Column(db.String(255), nullable=False)
-    associatedLease = db.Column(db.Integer, db.ForeignKey('Lease.id'),
-                                nullable=False)
