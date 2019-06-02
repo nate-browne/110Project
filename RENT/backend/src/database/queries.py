@@ -42,9 +42,16 @@ def getEventsWithRental(rentalID: db.Integer) -> List[CalendarEvent]:
 
 def getRoommatesByID(matesID: db.Integer, userID: db.Integer) -> List[Users]:
     u_org = Roommates.query.filter_by(id=matesID).first()
-    u = list(filter(lambda x: x.startswith('room'), dir(u_org)))
-    u = list(filter(lambda i: int(getattr(u_org, i)) != userID, u))
-    return list(map(lambda i: getUserById(int(i)), u))
+    att = list(filter(lambda x: x.startswith('room'), dir(u_org)))
+    new_u = {}
+    ret = list()
+    for a in att:
+        attr = getattr(u_org, a)
+        if attr is not None:
+            new_u[a] = attr
+    for val in new_u.values():
+        ret.append(getUserById(int(val)))
+    return ret
 
 
 def getNotesByBoardID(boardID: db.Integer) -> List[Note]:

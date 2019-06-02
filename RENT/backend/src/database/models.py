@@ -30,15 +30,15 @@ class Roommates(db.Model):
     __tablename__ = 'Roommates'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommate1 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=-1)
+                          default=None)
     roommate2 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=-1)
+                          default=None)
     roommate3 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=-1)
+                          default=None)
     roommate4 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=-1)
+                          default=None)
     roommate5 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=-1)
+                          default=None)
 
     def __repr__(self) -> str:
         to_print = []
@@ -121,7 +121,8 @@ class CalendarEvent(db.Model):
     __tablename__ = 'CalendarEvent'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     eventName = db.Column(db.String(255), nullable=False)
-    eventDate = db.Column(db.Date, nullable=False)
+    eventStartDate = db.Column(db.Date, nullable=False)
+    eventEndDate = db.Column(db.Date, nullable=False)
     eventDescription = db.Column(db.String(255), default=None)
     rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=False)
     isDeleted = db.Column(db.Boolean, nullable=False, default=False)

@@ -94,7 +94,7 @@ def add_roommate():
 def delete_roommate():
     rentalID = request.json['rentalID']
     email = request.json['email']
-    user = dq.getUserByEmail(email)
+    user = dq.getUserByEmail(email)  # that is trying to get deleted
     if user.deactivated:
         return jsonify({'reason': "User is deactivated"}), 400
 
@@ -289,9 +289,11 @@ def get_calendar_events():
 def add_calendar_event():
     rentalID = request.json['rentalID']
     eventName = request.json['eventName']
-    eventDate = request.json['eventDate']
+    eventStartDate = request.json['eventStartDate']
+    eventEndDate = request.json['evenEndDate']
     eventDescription = request.json['eventDescription']
-    event = CalendarEvent(eventName=eventName, eventDate=eventDate,
+    event = CalendarEvent(eventName=eventName, eventStartDate=eventStartDate,
+                          eventEndDate=eventEndDate,
                           eventDescription=eventDescription, rental=rentalID)
     dq.add(event)
     return jsonify({}), 201
@@ -382,7 +384,6 @@ def create_rental():
 
 @app.route('/forgotpassword', methods=['POST'])
 def forgot_password():
-    print("we actually called the route!")
     user = dq.getUserByEmail(request.json['email'])
     if user is not None:
         temp = mailer.send_mail(user.email)
@@ -429,7 +430,6 @@ def login():
 @login_required
 def get_address():
     rentalID = request.args.get('rentalID')
-    print(type(rentalID))
     rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
         return jsonify({'address': rental.address}), 200
@@ -485,8 +485,6 @@ def get_info():
         return jsonify(data), 200
     else:
         for num in range(2):
-            print("HI")
-            print(num)
             contact_str = 'contact' + repr(num)
             data[contact_str] = {}
             data[contact_str]['relation'] = 'Relative ' + repr(num)
@@ -515,8 +513,6 @@ def get_roommates():
                 data[val]['email'] = roommates[num].email
         return jsonify(data), 200
     else:
-        print("asdasda")
-        data = {}
         return jsonify({'reason': "Rental not found"}), 404
 
 
