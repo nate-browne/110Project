@@ -508,10 +508,11 @@ def get_roommates():
         for num in range(len(roommates)):
             val = 'roommate' + repr(num)
             data[val] = {}
-            name = roommates[num].firstName + roommates[num].lastName
-            data[val]['name'] = name
-            data[val]['phoneNumber'] = roommates[num].phoneNumber
-            data[val]['email'] = roommates[num].email
+            if roommates[num] is not None:
+                name = roommates[num].firstName + roommates[num].lastName
+                data[val]['name'] = name
+                data[val]['phoneNumber'] = roommates[num].phoneNumber
+                data[val]['email'] = roommates[num].email
         return jsonify(data), 200
     else:
         print("asdasda")
