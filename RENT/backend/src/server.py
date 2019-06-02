@@ -94,7 +94,7 @@ def add_roommate():
 def delete_roommate():
     rentalID = request.json['rentalID']
     email = request.json['email']
-    user = dq.getUserByEmail(email)
+    user = dq.getUserByEmail(email)  # that is trying to get deleted
     if user.deactivated:
         return jsonify({'reason': "User is deactivated"}), 400
 
@@ -241,15 +241,15 @@ def add_lease():
     rentCost = request.json['rentCost']
     if rentCost == "":
         rentCost = 0
-    startDate = request.json['startDate']
-    endDate = request.json['endDate']
+    startDT = request.json['startDT']
+    endDT = request.json['endDT']
     rentDueDate = request.json['rentDueDate']
 
     lease = Lease(landlordFirstName=landlordFirstName,
                   landlordLastName=landlordLastName,
                   landlordPhoneNumber=landlordPhoneNumber,
                   landlordEmail=landlordEmail,
-                  rentCost=rentCost, startDate=startDate, endDate=endDate,
+                  rentCost=rentCost, startDT=startDT, endDT=endDT,
                   rentDueDate=rentDueDate)
     dq.add(lease)
     dq.update(rental, 'lease', lease.id)
@@ -281,7 +281,16 @@ def get_notes():
 def get_calendar_events():
     rentalID = request.args.get('rentalID')
     events = dq.getEventsWithRental(rentalID)
-    return jsonify({'events': events}), 200
+    ret = list()
+    for eve in events:
+        currEve = {}
+        currEve['eventName'] = eve.eventName
+        currEve['eventStartDT'] = eve.eventStartDT
+        currEve['eventEndDT'] = eve.eventEndDT
+        currEve['eventDescription'] = eve.eventDescription
+        currEve['eventID'] = eve.id
+        ret.append(currEve)
+    return jsonify({'events': ret}), 200
 
 
 @app.route('/addcalendarevent', methods=['POST'])
@@ -289,9 +298,11 @@ def get_calendar_events():
 def add_calendar_event():
     rentalID = request.json['rentalID']
     eventName = request.json['eventName']
-    eventDate = request.json['eventDate']
+    eventStartDT = request.json['eventStartDT']
+    eventEndDT = request.json['evenEndDT']
     eventDescription = request.json['eventDescription']
-    event = CalendarEvent(eventName=eventName, eventDate=eventDate,
+    event = CalendarEvent(eventName=eventName, eventStartDT=eventStartDT,
+                          eventEndDT=eventEndDT,
                           eventDescription=eventDescription, rental=rentalID)
     dq.add(event)
     return jsonify({}), 201
@@ -382,7 +393,6 @@ def create_rental():
 
 @app.route('/forgotpassword', methods=['POST'])
 def forgot_password():
-    print("we actually called the route!")
     user = dq.getUserByEmail(request.json['email'])
     if user is not None:
         temp = mailer.send_mail(user.email)
@@ -397,9 +407,13 @@ def forgot_password():
 def reset_password():
     email = request.json['email']
     password = request.json['password']
+    old = request.json['old']
     user = dq.getUserByEmail(email)
-    _change_password(user, password)
-    return jsonify({}), 201
+    if _validate(user, old):
+        _change_password(user, password)
+        return jsonify({}), 201
+    else:
+        return jsonify({'reason': 'Old password doesn\'t match'}), 400
 
 
 @app.route('/logout', methods=['POST'])
@@ -429,7 +443,6 @@ def login():
 @login_required
 def get_address():
     rentalID = request.args.get('rentalID')
-    print(type(rentalID))
     rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
         return jsonify({'address': rental.address}), 200
@@ -445,10 +458,10 @@ def get_lease_end_date():
     if rental is not None:
         lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
-            dt = lease.endDate
-            daysTill = (d.today() - d.fromisoformat(dt)).days
+            dt = lease.endDT
+            daysTill = (d.today() - d.strptime(dt, '%Y-%m-%d %H:%M:%S')).days
             data = {}
-            data['endDate'] = dt
+            data['endDT'] = dt
             data['daysTill'] = daysTill
             return jsonify(data), 200
         else:
@@ -485,8 +498,6 @@ def get_info():
         return jsonify(data), 200
     else:
         for num in range(2):
-            print("HI")
-            print(num)
             contact_str = 'contact' + repr(num)
             data[contact_str] = {}
             data[contact_str]['relation'] = 'Relative ' + repr(num)
@@ -508,14 +519,13 @@ def get_roommates():
         for num in range(len(roommates)):
             val = 'roommate' + repr(num)
             data[val] = {}
-            name = roommates[num].firstName + roommates[num].lastName
-            data[val]['name'] = name
-            data[val]['phoneNumber'] = roommates[num].phoneNumber
-            data[val]['email'] = roommates[num].email
+            if roommates[num] is not None:
+                name = roommates[num].firstName + roommates[num].lastName
+                data[val]['name'] = name
+                data[val]['phoneNumber'] = roommates[num].phoneNumber
+                data[val]['email'] = roommates[num].email
         return jsonify(data), 200
     else:
-        print("asdasda")
-        data = {}
         return jsonify({'reason': "Rental not found"}), 404
 
 
