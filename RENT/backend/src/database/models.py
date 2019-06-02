@@ -61,8 +61,8 @@ class Lease(db.Model):
                                     default=None)
     landlordEmail = db.Column(db.String(255), nullable=False, default=None)
     rentCost = db.Column(db.DECIMAL(13, 2), nullable=False, default=0)
-    startDate = db.Column(db.Date, nullable=False)
-    endDate = db.Column(db.Date, nullable=False)
+    startDT = db.Column(db.DateTime, nullable=False)
+    endDT = db.Column(db.DateTime, nullable=False)
     rentDueDate = db.Column(db.String(50), nullable=False)
 
 
@@ -121,8 +121,8 @@ class CalendarEvent(db.Model):
     __tablename__ = 'CalendarEvent'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     eventName = db.Column(db.String(255), nullable=False)
-    eventStartDate = db.Column(db.Date, nullable=False)
-    eventEndDate = db.Column(db.Date, nullable=False)
+    eventStartDT = db.Column(db.DateTime, nullable=False)
+    eventEndDT = db.Column(db.DateTime, nullable=False)
     eventDescription = db.Column(db.String(255), default=None)
     rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=False)
     isDeleted = db.Column(db.Boolean, nullable=False, default=False)
