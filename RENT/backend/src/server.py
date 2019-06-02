@@ -471,6 +471,7 @@ def login():
 @login_required
 def get_address():
     rentalID = request.args.get('rentalID')
+    print(type(rentalID))
     rental = dq.getRentalByRentalID(rentalID)
     if rental is not None:
         return jsonify({'address': rental.address}), 200

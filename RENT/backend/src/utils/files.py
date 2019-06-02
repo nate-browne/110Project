@@ -1,8 +1,7 @@
-import os
 from typing import Any
 from werkzeug.utils import secure_filename
 
-from config import ALLOWED_EXTENSIONS, app
+from config import s3, ALLOWED_EXTENSIONS, S3_BUCKET, S3_LOCATION
 
 
 def _allowed(filename: str) -> bool:
@@ -10,10 +9,11 @@ def _allowed(filename: str) -> bool:
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def upload_file(file: Any, filetype: str) -> str:
+def upload_file_to_s3(file: Any, filetype: str) -> str:
     if file and _allowed(file.filename):
         name = secure_filename(file.filename)
-        tmp = os.path.join(app.config['BASE_IMG_URL'], filetype, name)
-        file.save(tmp)
-        path = 'http://35.162.131.244/' + tmp[12:]
-        return path
+        name = '/imgs/' + filetype + '/' + name
+        s3.upload_fileobj(file, S3_BUCKET, name)
+        return "{}{}".format(S3_LOCATION, name)
+    else:
+        return ""
