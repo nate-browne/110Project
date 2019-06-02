@@ -13,7 +13,7 @@ const server = axios.create({
 });
 
 
-// Interfaces needed for navigation
+// Interfaces needed for navigation.
 interface IAppProps {
   navigation?: any;
 }

@@ -22,7 +22,7 @@ def create_user():
     first name - 'firstName' - the user's first name\n
     surname - 'lastName' - the user's surname\n
     phoneNumber - 'phoneNumber' - the user's phoneNumber\n
-    password - 'password' - the user's password\n
+    password - 'ppassword' - the user's password\n
 
     If the user already exists in the database, it will return an empty JSON
     object and status code 301 to signify this. If the user is
