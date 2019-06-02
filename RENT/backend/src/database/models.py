@@ -30,15 +30,15 @@ class Roommates(db.Model):
     __tablename__ = 'Roommates'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommate1 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=None)
+                          default=-1)
     roommate2 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=None)
+                          default=-1)
     roommate3 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=None)
+                          default=-1)
     roommate4 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=None)
+                          default=-1)
     roommate5 = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True,
-                          default=None)
+                          default=-1)
 
     def __repr__(self) -> str:
         to_print = []

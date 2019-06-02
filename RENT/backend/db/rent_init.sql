@@ -17,11 +17,11 @@ CREATE TABLE `Users` (
 
 CREATE TABLE `Roommates` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`roommate1` bigint(20) DEFAULT NULL,
-	`roommate2` bigint(20) DEFAULT NULL,
-	`roommate3` bigint(20) DEFAULT NULL,
-	`roommate4` bigint(20) DEFAULT NULL,
-	`roommate5` bigint(20) DEFAULT NULL,
+	`roommate1` bigint(20) DEFAULT -1,
+	`roommate2` bigint(20) DEFAULT -1,
+	`roommate3` bigint(20) DEFAULT -1,
+	`roommate4` bigint(20) DEFAULT -1,
+	`roommate5` bigint(20) DEFAULT -1,
 	PRIMARY KEY (`id`)
 );
 
