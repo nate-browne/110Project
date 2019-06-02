@@ -23,7 +23,6 @@ export default class Roommates extends Component<IAppProps,IAppState> {
             title: "Your Roommates!",
             headerStyle: {
                 backgroundColor: '#2bc0cd',
-
             },
 
             headerBackTitle: "Rental Home",
@@ -37,7 +36,9 @@ export default class Roommates extends Component<IAppProps,IAppState> {
     };
     state = {
         email: "",
-        listOfRoommates:[],
+        userID: 0,
+        rentalID: 0,
+        list:[],
         addVisible: false,
         deleteVisible: false,
         currentID: 0,
@@ -72,15 +73,20 @@ export default class Roommates extends Component<IAppProps,IAppState> {
         })
     }
 
-    getRoommate(): any{
+    getRoommate(): any {
+        this.state.rentalID = this.props.navigation.getParam("rentalID","");
+        this.state.userID = this.props.navigation.getParam("userID", "");
         server.get('/getroommates', {
             params: {
-                userID: this.props.navigation.getParam("userID",""),
-                rentalID: this.props.navigation.getParam("rentalID",""), /* TODO rental doesn't exist */
+                userID: this.props.navigation.getParam("userID", ""),
+                rentalID: this.props.navigation.getParam("rentalID",""),
             }
         }).then(resp => {
-            this.state.listOfRoommates = resp.data;
-        }).catch(err =>{
+            this.state.list = resp.data;
+            console.log("data ", resp.data);
+            console.log('get roommates');
+            console.log('roommates rental ID: ', this.state.rentalID);
+        }).catch(err => {
             console.log("ERROR getting roommate", err.response.data['Reason']);
         })
     }
@@ -91,7 +97,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
             <View style = {{width:'100%', height:'100%'}}>
                 <ScrollView>
                     {
-                        this.state.listOfRoommates.map((l, i) => (
+                        this.state.list.map((l, i) => (
                             <ListItem
                                 key={i}
                                 onPress={() => {
@@ -110,7 +116,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                                                 style: 'cancel',
                                             },
                                             {text: 'OK', onPress: () =>  {
-                                                    this.state.listOfRoommates.splice(this.state.currentID, 1);
+                                                    this.state.list.splice(this.state.currentID, 1);
                                                     this.setState({deleteVisible: false});
                                                 }},
                                         ],
@@ -151,6 +157,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                             leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                             placeholder="Roommate Email"
                             autoCorrect={false}
+                            autoCapitalize="none"
                             keyboardAppearance="light"
                             keyboardType="email-address"
                             leftIcon={

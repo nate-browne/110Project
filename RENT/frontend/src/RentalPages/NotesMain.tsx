@@ -2,8 +2,17 @@ import React, { Component } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { Overlay, Input, Icon, Button, ListItem, Text } from 'react-native-elements'
 import styles from '../style/Grocery-Stylesheet';
+import axios from 'axios';
 
-export default class Grocery extends Component {
+// @ts-ignore
+import configInfo from '../url';
+
+const serverURL = configInfo['serverURL'];
+const server = axios.create({
+    baseURL: serverURL
+});
+
+export default class NotesMain extends Component {
   [x: string]: any;
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
@@ -11,26 +20,76 @@ export default class Grocery extends Component {
     currentSubtitle:"",
     editVisible: false,
     addVisible: false,
-    list: [
-      {
-        name: 'Grocery',
-        subtitle: 'Things to buy for apartment',
-      },
-      {
-        name: 'Chores',
-        subtitle: 'Things to do for apartment',
-      },
-      {
-        name: 'Notes',
-        subtitle: 'Things to know for apartment',
-      },
-    ]
+    list: [],
+    rentalID: "",
+    tmpDescription: "",
+    tmpTitle: "",
+    tmpCategory: "",
 
   };
 
+  componentDidMount() {
+        this.state.rentalID = this.props.navigation.getParam("rentalID","");
+        server.get('/getnotes', {
+            params: {
+                rentalID: this.state.rentalID,
+            }
+        }).then(resp => {
+            this.state.list = resp.data["notes"]["Nop"];
+            if(this.state.list === undefined || this.state.list === null){
+                this.state.list = [];
+            }
+            console.log("list ", this.state.list);
+            console.log("data ", resp.data);
+            console.log('mount notes')
+            console.log('notes rental ID: ', this.state.rentalID);
+        }).catch(err => {
+            console.log('Error occurred in mount notes',err);
+        })
+    }
+
+
+    addNote(): any {
+        server.post('/addnote', {
+            rentalID: this.state.rentalID,
+            description: this.state.tmpDescription,
+            title: this.state.tmpTitle,
+            category: this.state.tmpCategory,
+        }).then(resp => {
+            /* Success */
+            if(resp.status === 201) {
+                console.log("Note Added!");
+            }
+            this.getNotes();
+        }).catch(err => {
+            console.log('Error occurred in addNote: ', err.response.data['Reason']);
+        })
+    }
+
+    getNotes(): any{
+        this.state.rentalID = this.props.navigation.getParam("rentalID","");
+        server.get('/getnotes', {
+            params: {
+                rentalID: this.state.rentalID,
+            }
+        }).then(resp => {
+            this.state.list = resp.data["notes"]["Nop"];
+            if(this.state.list === undefined || this.state.list === null){
+                this.state.list = [];
+            }
+            console.log("list ", this.state.list);
+            console.log("data ", resp.data);
+            console.log('get notes')
+            console.log('notes rental ID: ', this.state.rentalID);
+        }).catch(err => {
+            console.log('Error occurred in get notes',err);
+        })
+    }
+
     render() {
+        this.getNotes();
           return (
-            <View style= {{width:'100%', height:'100%'}}>
+              <View style= {{width:'100%', height:'100%'}}>
               <ScrollView style={styles.itemContainer}>
               {
                 this.state.list.map((l, i) => (
@@ -47,10 +106,10 @@ export default class Grocery extends Component {
                     }}
                     title={
                       <Text style={[styles.text, l.done ? styles.text_crossed : styles.text]}>
-                        {l.name}
+                          {l.title}
                       </Text>
                     }
-                    subtitle={l.subtitle}
+                    subtitle={l.description}
                   />
                 ))
               }
@@ -63,6 +122,7 @@ export default class Grocery extends Component {
               onPress={() => { this.setState({ addVisible: true }); }}
             />
           </View>
+
           <Overlay
             windowBackgroundColor="rgba(255, 255, 255, .5)"
             isVisible={this.state.editVisible}
@@ -74,7 +134,6 @@ export default class Grocery extends Component {
                 <Text style={{fontSize: 48}}>Edit Item</Text>
 
                 <Input
-                    //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Name"
                     defaultValue={this.state.currentName}
@@ -90,7 +149,6 @@ export default class Grocery extends Component {
                 />
 
                 <Input
-                    //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Description"
                     defaultValue={this.state.currentSubtitle}
@@ -109,7 +167,7 @@ export default class Grocery extends Component {
                 <Button
                   title="Save"
                   buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {this.setState({ editVisible: false }); Alert.alert("contact backend");}}
+                  onPress={() => {this.setState({ editVisible: false }); Alert.alert("contact backend"); this.getNotes();}}
                 />
 
               </ScrollView>
@@ -128,7 +186,6 @@ export default class Grocery extends Component {
                 <Text style={{fontSize: 48}}>Add Item</Text>
 
                 <Input
-                    //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Name"
                     autoCorrect={false}
@@ -139,11 +196,10 @@ export default class Grocery extends Component {
                     blurOnSubmit = {false}
                     onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({firstName: text})}
+                    onChangeText={(text: string) => this.setState({tmpTitle: text})}
                 />
 
                 <Input
-                    //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Item Description"
                     autoCorrect={false}
@@ -154,13 +210,31 @@ export default class Grocery extends Component {
                     ref = {(input) => {this.input1 = input}}
                     blurOnSubmit = {false}
                     returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({firstName: text})}
+                    onChangeText={(text: string) => this.setState({tmpDescription: text})}
+                />
+
+                <Input
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Category"
+                    autoCorrect={false}
+                    keyboardAppearance="light"
+                    leftIcon={
+                        <Icon name="account" type="material-community" color="black" size={25} />
+                    }
+                    ref = {(input) => {this.input1 = input}}
+                    blurOnSubmit = {false}
+                    returnKeyType="next"
+                    onChangeText={(text: string) => this.setState({tmpCategory: text})}
                 />
 
                 <Button
                   title="Save"
                   buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {this.setState({ addVisible: false }); Alert.alert("contact backend");}}
+                  onPress={() => {
+                      this.setState({addVisible: false});
+                      this.addNote();
+                      this.getNotes();
+                  }}
                 />
 
               </ScrollView>

@@ -466,6 +466,14 @@ def get_info():
     userID = request.args.get('userID')
     user = dq.getUserById(userID)
     contacts = dq.getContactsWithAssocUser(userID)
+    if user is not None:
+        data['firstName'] = user.firstName
+        data['lastName'] = user.lastName
+        data['phoneNumber'] = user.phoneNumber
+        data['email'] = user.email
+    else:
+        return jsonify({'reason': "User not found"}), 404
+
     if len(contacts) != 0:
         for num in range(len(contacts)):
             contact_str = 'contact' + repr(num)
@@ -474,17 +482,18 @@ def get_info():
             name = contacts[num].firstName + contacts[num].lastName
             data[contact_str]['name'] = name
             data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
-    else:
-        return jsonify({'reason': "No associated contacts found"}), 404
-
-    if user is not None:
-        data['firstName'] = user.firstName
-        data['lastName'] = user.lastName
-        data['phoneNumber'] = user.phoneNumber
-        data['email'] = user.email
         return jsonify(data), 200
     else:
-        return jsonify({'reason': "User not found"}), 404
+        for num in range(2):
+            print("HI")
+            print(num)
+            contact_str = 'contact' + repr(num)
+            data[contact_str] = {}
+            data[contact_str]['relation'] = 'Relative ' + repr(num)
+            name = 'Default Name'
+            data[contact_str]['name'] = name
+            data[contact_str]['phoneNumber'] = "1234567890"
+        return jsonify(data), 200
 
 
 @app.route('/getroommates', methods=['GET'])
@@ -505,6 +514,8 @@ def get_roommates():
             data[val]['email'] = roommates[num].email
         return jsonify(data), 200
     else:
+        print("asdasda")
+        data = {}
         return jsonify({'reason': "Rental not found"}), 404
 
 
