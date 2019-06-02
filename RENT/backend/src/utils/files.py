@@ -9,7 +9,7 @@ def _allowed(filename: str) -> bool:
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def upload_file_to_s3(file: Any, filetype: str) -> str:
+def upload_file(file: Any, filetype: str) -> str:
     if file and _allowed(file.filename):
         name = secure_filename(file.filename)
         name = '/imgs/' + filetype + '/' + name
