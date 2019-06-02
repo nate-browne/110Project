@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, Alert } from 'react-native';
 import { Button,Input, Overlay, Text} from 'react-native-elements';
 import axios from 'axios';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import * as EmailValidator from 'email-validator';
+import DatePicker from 'react-native-datepicker'
+
+var dismissKeyboard = require('dismissKeyboard');
 
 // @ts-ignore
 import configInfo from './url';
@@ -26,16 +31,20 @@ export default class Home extends Component<IAppProps, IAppState> {
   };
   state = {
     visible: false,
-    numRentals: 0,
+    formError: false,
     currentID: 0,
     pastID: 0,
     name: "",
     address: "",
-    landlord: "",
+    landlordFirstName: "",
+    landlordLastName:"",
+    landlordEmail:"",
     phoneNumber: "",
     start: "",
     end: "",
     rent: 0,
+    roommate1:"",
+    roommate2:""
   };
 
   setVisible(visible: boolean) {
@@ -67,6 +76,15 @@ export default class Home extends Component<IAppProps, IAppState> {
     }).catch(err => {
         console.log('Error occurred',err);
     })
+    var day = new Date().getDate(); //Current Date
+    var day2 = new Date().getDate() + 1; //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    this.setState({
+      //Setting the value of the date time
+      start: year + '-' + month + '-' + day,
+      end: year + '-' + month + '-' + day2
+    });
   }
 
   createRental(userID: any): void{
@@ -85,7 +103,17 @@ export default class Home extends Component<IAppProps, IAppState> {
         console.log('Error', err);
     })
   }
-
+  createLease( rentalID: any): void {
+    server.post('/addlease', {
+      rentalID: rentalID,
+      landlordFirstName: this.state.landlordFirstName,
+      landlordLastName: this.state.landlordLastName,
+      landlordPhoneNumber: this.state.phoneNumber,
+      landlordEmail: this.state.landlordEmail,
+      rentCost: this.state.rent,
+      startDate: this
+    })
+  }
   logout(): any {
     server.post('/logout', {
     }).then(resp => {
@@ -104,7 +132,6 @@ export default class Home extends Component<IAppProps, IAppState> {
       console.log('Error occurred',err);
     })
   }
-
 
   render() {
     const userID = this.props.navigation.getParam("userID","NO-ID");
@@ -160,15 +187,7 @@ export default class Home extends Component<IAppProps, IAppState> {
           onBackdropPress={() => this.setState({ visible: false })}
           fullScreen={false}
           >
-          <ScrollView>
-              <Button
-                raised={true}
-                type='clear'
-                title="x"
-                onPress={() =>{
-                  this.setState({ visible: false })
-                }}
-              />
+          <KeyboardAwareScrollView>
               <View>
                 <Text style={{fontSize: 24}}>Create New Rental</Text>
 
@@ -200,7 +219,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                 <Input
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="Landlord's name"
+                    placeholder="Landlord's First name"
                     keyboardAppearance="light"
                     returnKeyType="next"
                     ref = {(input) => {this.input2 = input}}
@@ -209,6 +228,29 @@ export default class Home extends Component<IAppProps, IAppState> {
                     onChangeText={(text: string) => this.setState({landlord: text})}
                   />
                 <Input
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Landlord's Last name"
+                    keyboardAppearance="light"
+                    returnKeyType="next"
+                    ref = {(input) => {this.input2 = input}}
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input3.focus()}}
+                    onChangeText={(text: string) => this.setState({landlord: text})}
+                  />
+                <Input
+                      //inputContainerStyle={styles.textinput}
+                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                      placeholder="Landlord's email"
+                      keyboardAppearance="light"
+                      keyboardType="email-address"
+                      returnKeyType="next"
+                      ref = {(input) => {this.input7 = input}}
+                      blurOnSubmit = {false}
+                      onSubmitEditing = {() => {this.input8.focus()}}
+                      onChangeText={(text: string) => this.setState({email: text})}
+                 />
+                 <Input
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                     placeholder="Phone number"
@@ -222,28 +264,29 @@ export default class Home extends Component<IAppProps, IAppState> {
                   />
 
                   <Text style={{fontSize: 24}}>Leasing Information</Text>
-
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="Start Date"
-                      keyboardAppearance="light"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input4 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input5.focus()}}
-                      onChangeText={(text: string) => this.setState({start: text})}
+                  <Text style={{fontSize: 18}}>Start Date</Text>
+                  <DatePicker
+                       style={{width: 200}}
+                       date={this.state.start}
+                       mode="date"
+                       placeholder="select date"
+                       format="YYYY-MM-DD"
+                       confirmBtnText="Confirm"
+                       cancelBtnText="Cancel"
+                       showIcon={false}
+                       onDateChange={(date: any) => {this.setState({start: date})}}
                   />
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="End Date"
-                      keyboardAppearance="light"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input5 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input6.focus()}}
-                      onChangeText={(text: string) => this.setState({end: text})}
+                  <Text style={{fontSize: 18}}>End Date</Text>
+                  <DatePicker
+                       style={{width: 200}}
+                       date={this.state.end}
+                       mode="date"
+                       placeholder="select date"
+                       format="YYYY-MM-DD"
+                       confirmBtnText="Confirm"
+                       cancelBtnText="Cancel"
+                       showIcon={false}
+                       onDateChange={(date: any) => {this.setState({end: date})}}
                   />
                   <Input
                       //inputContainerStyle={styles.textinput}
@@ -258,8 +301,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                       onChangeText={(text: string) => this.setState({rent: text})}
                   />
 
-
-                  <Text style={{fontSize: 24}}>Roommate Invite</Text>
+                  <Text style={{fontSize: 24}}>Add Roommate</Text>
 
                   <Input
                       //inputContainerStyle={styles.textinput}
@@ -282,14 +324,8 @@ export default class Home extends Component<IAppProps, IAppState> {
                       returnKeyType="next"
                       ref = {(input) => {this.input8 = input}}
                       blurOnSubmit = {false}
-                      onSubmitEditing = {() => {
-                        this.createRental(userID);
-                        this.setVisible(false);
-                      }}
                       onChangeText={(text: string) => this.setState({email: text})}
                   />
-
-                  <Text style={{fontSize: 24, margin: 20}}>Documents and Images</Text>
                 </View>
               <View>
                 <Button
@@ -297,12 +333,19 @@ export default class Home extends Component<IAppProps, IAppState> {
                   style = {{margin: 20}}
                   title="Create"
                   onPress={() => {
-                    this.createRental(userID);
-                    this.setVisible(false);
+                    if(this.state.name === "" || this.state.address === "" || this.state.landlord === "" || this.state.phoneNumber === ""
+                       || this.state.start === "" || this.state.end === "" || this.state.rent === 0) {
+                         this.setState({formError:true})
+                         Alert.alert("Please complete all the fields")
+                    } else {
+                      this.createRental(userID);
+                      this.
+                      this.setVisible(false);
+                    }
                   }}
                 />
               </View>
-          </ScrollView>
+          </KeyboardAwareScrollView>
         </Overlay>
 
       </View>
