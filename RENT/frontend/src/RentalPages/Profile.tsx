@@ -19,8 +19,11 @@ interface IAppProps {
 }
 
 interface IAppState {
-  isLoading: boolean,
-  otherName: boolean,
+
+  nameVisible: boolean,
+  phoneVisible: boolean,
+  contact1Visible: boolean,
+  contact2Visible: boolean,
 
   editVisible: boolean,
   firstName: string,
@@ -29,29 +32,18 @@ interface IAppState {
   phoneNumber: string,
 
   e1Relation: string,
-  e1FirstName: string,
-  e1LastName: string,
+  e1Name: string,
   e1Phone: string,
 
   e2Relation: string,
-  e2FirstName: string,
-  e2LastName: string,
+  e2Name: string,
   e2Phone: string,
 
   tmpFirstName: string,
   tmpLastName: string,
+  tmpRelation: string,
   tmpEmail: string,
   tmpPhoneNumber: string,
-
-  tmpE1Relation: string,
-  tmpE1FirstName: string,
-  tmpE1LastName: string,
-  tmpE1Phone: string,
-
-  tmpE2Relation: string,
-  tmpE2FirstName: string,
-  tmpE2LastName: string,
-  tmpE2Phone: string,
 }
 
 export default class Profile extends Component<IAppProps, IAppState> {
@@ -60,40 +52,31 @@ export default class Profile extends Component<IAppProps, IAppState> {
     super(props);
 
     this.state = {
-      isLoading: true,
       addVisible: false,
-      otherName: false,
-
       editVisible: false,
+      nameVisible: false,
+      phoneVisible: false,
+      contact1Visible: false,
+      contact2Visible: false,
+
       firstName: "",
       lastName: "",
       email: "",
       phoneNumber: "",
 
       e1Relation: "",
-      e1FirstName: "",
-      e1LastName: "",
+      e1Name: "",
       e1Phone: "",
 
       e2Relation: "",
-      e2FirstName: "",
-      e2LastName: "",
+      e2Name: "",
       e2Phone: "",
 
       tmpFirstName: "",
       tmpLastName: "",
+      tmpRelation: "",
       tmpEmail: "",
       tmpPhoneNumber: "",
-
-      tmpE1Relation: "",
-      tmpE1FirstName: "",
-      tmpE1LastName: "",
-      tmpE1Phone: "",
-
-      tmpE2Relation: "",
-      tmpE2FirstName: "",
-      tmpE2LastName: "",
-      tmpE2Phone: "",
     };
   }
   static navigationOptions = {
@@ -115,27 +98,11 @@ export default class Profile extends Component<IAppProps, IAppState> {
           lastName: resp.data['lastName'],
           email: resp.data['email'],
           phoneNumber: resp.data['phoneNumber'],
-          isLoading: false,
         });
       }
     }).catch(err => {
       console.log(err)
     });
-
-    // server.get('/getemergencyinfo',{
-    //   params: {
-    //     userID: this.props.navigation.getParam("userID", 0)
-    //   }
-    // }).then(resp => {
-    //   this.setState({
-    //     firstName: resp.data['firstName'],
-    //     lastName: resp.data['lastName'],
-    //     phoneNumber: resp.data['phoneNumber'],
-    //     email: resp.data['email'],
-    //   });
-    // }).catch(err => {
-    //   Alert.alert(err);
-    // });
   }
 
   getInfo(){
@@ -149,14 +116,13 @@ export default class Profile extends Component<IAppProps, IAppState> {
               this.state.lastName = resp.data['lastName'];
               this.state.email = resp.data['email'];
               this.state.phoneNumber = resp.data['phoneNumber'];
-              this.state.isLoading = false;
 
               this.state.e1Relation = resp.data['contact1']['relation'];
-              this.state.e1FirstName = resp.data['contact1']['name'];
+              this.state.e1Name = resp.data['contact1']['name'];
               this.state.e1Phone = resp.data['contact1']['phoneNumber'];
 
               this.state.e2Relation = resp.data['contact0']['relation'];
-              this.state.e2FirstName = resp.data['contact0']['name'];
+              this.state.e2Name = resp.data['contact0']['name'];
               this.state.e2Phone = resp.data['contact0']['phoneNumber'];
           }
       }).catch(err => {
@@ -164,18 +130,66 @@ export default class Profile extends Component<IAppProps, IAppState> {
       });
   }
 
+  changeUserInfo(): any {
+    server.post('/changeuserinfo', {
+      email: this.state.email,
+      change: null,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      phoneNumber: this.state.phoneNumber,
+    }).then(resp => {
+        // Success
+        console.log("Change Successful");
+    })
+    .catch(err => {
+      console.log('Error occurred', err);
+    })
+  }
+
+  changeContact1Info(): any {
+    server.post('/changecontactinfo', {
+      email: this.state.email,
+      change: null,
+      email: null,
+      firstName: this.state.e1Name,
+      lastName: null,
+      relation: this.state.e1Relation,
+      phoneNumber: this.state.e1Phone,
+    }).then(resp => {
+        // Success
+        console.log("Change contact 1 Successful");
+    })
+    .catch(err => {
+      console.log('Error occurred in contact 1', err);
+    })
+  }
+
+  changeContact2Info(): any {
+    server.post('/changecontactinfo', {
+      email: this.state.email,
+      change: null,
+      email: null,
+      firstName: this.state.e2Name,
+      lastName: null,
+      relation: this.state.e2Relation,
+      phoneNumber: this.state.e2Phone,
+    }).then(resp => {
+        // Success
+        console.log("Change contact 2 Successful");
+    })
+    .catch(err => {
+      console.log('Error occurred in contact 2', err);
+    })
+  }
 
   render() {
     this.getInfo();
       return (
-
-
-
           <View style = {{backgroundColor:"#666666", flex: 1}}>
               <Overlay
                   windowBackgroundColor="rgba(255, 255, 255, .5)"
-                  isVisible={this.state.otherName}
-                  onBackdropPress={() => this.setState({ otherName: false })}
+                  isVisible={this.state.nameVisible}
+                  onBackdropPress={() => this.setState({ nameVisible: false })}
                   height={'50%'}
               >
 
@@ -185,16 +199,31 @@ export default class Profile extends Component<IAppProps, IAppState> {
                       <Input
                           //inputContainerStyle={styles.textinput}
                           leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                          placeholder="John Smith"
+                          placeholder="John"
+                          defaultValue = {this.state.firstName}
                           autoCorrect={false}
                           keyboardAppearance="light"
                           leftIcon={
                               <Icon name="account" type="material-community" color="black" size={25} />
                           }
                           blurOnSubmit = {false}
-                          onSubmitEditing = {() => {this.input1.focus()}}
                           returnKeyType="done"
                           onChangeText={(text: string) => {this.setState({tmpFirstName : text})}}
+                      />
+
+                      <Input
+                          //inputContainerStyle={styles.textinput}
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="Smith"
+                          defaultValue = {this.state.lastName}
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          returnKeyType="done"
+                          onChangeText={(text: string) => {this.setState({tmpLastName : text})}}
                       />
 
 
@@ -202,8 +231,10 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           title="Save"
                           buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
                           onPress={() => {
-                              this.setState({otherName: false});
-                              this.state.firstName= this.state.tmpFirstName;
+                              this.state.firstName = this.state.tmpFirstName;
+                              this.state.lastName = this.state.tmpLastName;
+                              this.setState({nameVisible: false});
+                              this.changeUserInfo();
                           }}
                       />
 
@@ -211,12 +242,190 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
               </Overlay>
 
+              <Overlay
+                  windowBackgroundColor="rgba(255, 255, 255, .5)"
+                  isVisible={this.state.phoneVisible}
+                  onBackdropPress={() => this.setState({ phoneVisible: false })}
+                  height={'50%'}
+              >
+
+                  <ScrollView>
+                      <Text style={{fontSize: 48}}>Edit Phone Number</Text>
+
+                      <Input
+                          //inputContainerStyle={styles.textinput}
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="(123) 456-7890"
+                          defaultValue = {this.state.phoneNumber}
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          returnKeyType="done"
+                          onChangeText={(text: string) => {this.setState({tmpPhoneNumber : text})}}
+                      />
+
+
+                      <Button
+                          title="Save"
+                          buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                          onPress={() => {
+                              this.state.phoneNumber = this.state.tmpPhoneNumber;
+                              this.setState({phoneVisible: false});
+                              this.changeUserInfo();
+                          }}
+                      />
+
+                  </ScrollView>
+
+              </Overlay>
+
+              <Overlay
+                  windowBackgroundColor="rgba(255, 255, 255, .5)"
+                  isVisible={this.state.contact1Visible}
+                  onBackdropPress={() => this.setState({ contact1Visible: false })}
+                  height={'50%'}
+              >
+
+                  <ScrollView>
+                      <Text style={{fontSize: 48}}>Edit Contact 1 Info</Text>
+
+                      <Input
+                          //inputContainerStyle={styles.textinput}
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="Name"
+                          defaultValue = {this.state.e1Name}
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          returnKeyType="done"
+                          onChangeText={(text: string) => {this.setState({tmpFirstName : text})}}
+                      />
+                      <Input
+                          //inputContainerStyle={styles.textinput}
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder=""
+                          defaultValue = {this.state.e1Relation}
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          returnKeyType="done"
+                          onChangeText={(text: string) => {this.setState({tmpRelation : text})}}
+                      />
+                      <Input
+                          //inputContainerStyle={styles.textinput}
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder=""
+                          defaultValue = {this.state.e1Phone}
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          returnKeyType="done"
+                          onChangeText={(text: string) => {this.setState({tmpPhone : text})}}
+                      />
+
+                      <Button
+                          title="Save"
+                          buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                          onPress={() => {
+                              this.state.e1Name = this.state.tmpFirstName;
+                              this.state.e1Relation = this.state.tmpRelation;
+                              this.state.e1Phone = this.state.tmpPhone;
+                              this.setState({contact1Visible: false});
+                              this.changeContact1Info();
+                          }}
+                      />
+                      </ScrollView>
+                </Overlay>
+
+                <Overlay
+                    windowBackgroundColor="rgba(255, 255, 255, .5)"
+                    isVisible={this.state.contact2Visible}
+                    onBackdropPress={() => this.setState({ contact2Visible: false })}
+                    height={'50%'}
+                >
+
+                    <ScrollView>
+                        <Text style={{fontSize: 48}}>Edit Contact 2 Info</Text>
+
+                        <Input
+                            //inputContainerStyle={styles.textinput}
+                            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                            placeholder="Name"
+                            defaultValue = {this.state.e2Name}
+                            autoCorrect={false}
+                            keyboardAppearance="light"
+                            leftIcon={
+                                <Icon name="account" type="material-community" color="black" size={25} />
+                            }
+                            blurOnSubmit = {false}
+                            returnKeyType="done"
+                            onChangeText={(text: string) => {this.setState({tmpFirstName : text})}}
+                        />
+                        <Input
+                            //inputContainerStyle={styles.textinput}
+                            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                            placeholder=""
+                            defaultValue = {this.state.e2Relation}
+                            autoCorrect={false}
+                            keyboardAppearance="light"
+                            leftIcon={
+                                <Icon name="account" type="material-community" color="black" size={25} />
+                            }
+                            blurOnSubmit = {false}
+                            returnKeyType="done"
+                            onChangeText={(text: string) => {this.setState({tmpRelation : text})}}
+                        />
+                        <Input
+                            //inputContainerStyle={styles.textinput}
+                            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                            placeholder=""
+                            defaultValue = {this.state.e2Phone}
+                            autoCorrect={false}
+                            keyboardAppearance="light"
+                            leftIcon={
+                                <Icon name="account" type="material-community" color="black" size={25} />
+                            }
+                            blurOnSubmit = {false}
+                            returnKeyType="done"
+                            onChangeText={(text: string) => {this.setState({tmpPhone : text})}}
+                        />
+
+                        <Button
+                            title="Save"
+                            buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                            onPress={() => {
+                                this.state.e2Name = this.state.tmpFirstName;
+                                this.state.e2Relation = this.state.tmpRelation;
+                                this.state.e2Phone = this.state.tmpPhone;
+                                this.setState({contact1Visible: false});
+                                this.changeContact2Info();
+                            }}
+                        />
+                  </ScrollView>
+              </Overlay>
+
               <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
                   backgroundColor: "#FFFFFF", flex:1}}>
                   <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
 
 
-                  <TouchableOpacity onPress={ () => {this.setState({otherName: true})}} >
+                  <TouchableOpacity onPress={ () => {
+                      this.state.tmpFirstName = this.state.firstName;
+                      this.state.tmpLastName = this.state.lastName;
+                      this.setState({nameVisible: true})
+                      }} >
                   <Text style={{textAlign: 'center', marginTop:20,marginBottom:25,
                                 color: '#333333', fontWeight:"500", fontSize:35}}>
                       {this.state.firstName} {this.state.lastName}
@@ -225,7 +434,10 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
 
                   <Divider style={styles.divider} />
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")} >
+                  <TouchableOpacity onPress={ () => {
+                    this.state.tmpPhoneNumber = this.state.phoneNumber;
+                    this.setState({phoneVisible: true})
+                  }} >
                   <Text style={{textAlign: 'center', marginVertical:5, marginTop:10,
                       color: '#777777', fontWeight:"300", fontSize:14}}>
                     ({this.state.phoneNumber})
@@ -237,32 +449,20 @@ export default class Profile extends Component<IAppProps, IAppState> {
                   </Text>
                   <Divider style={styles.divider} />
                   <Text style={styles.emergency}>Emergency Contact 1</Text>
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")} >
-                      <Text style={styles.contactInfo}> {this.state.e1FirstName} {this.state.e1LastName} </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+
+                  <TouchableOpacity onPress={ () => this.setState({contact1Visible: true})} >
+                      <Text style={styles.contactInfo}> {this.state.e1Name} </Text>
                       <Text style={styles.contactInfo}> Relationship: {this.state.e1Relation} </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
                       <Text style={styles.contactInfo}> {this.state.e1Phone} </Text>
                   </TouchableOpacity>
+
                   <Divider style={{ marginTop:20, backgroundColor: '#AAAAAA', height: 2,}} />
+
                   <Text style={styles.emergency}>Emergency Contact 2</Text>
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
-                      <Text style={styles.contactInfo}> {this.state.e2FirstName} {this.state.e2LastName} </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
+                  <TouchableOpacity onPress={ () => this.setState({contact2Visible: true})}>
+                      <Text style={styles.contactInfo}> {this.state.e2Name} </Text>
                       <Text style={styles.contactInfo}> Relationship: {this.state.e2Relation} </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
                       <Text style={styles.contactInfo}> {this.state.e2Phone} </Text>
-                  </TouchableOpacity>
-                  <Divider style={{ marginTop:20, marginBottom:20, backgroundColor: '#AAAAAA', height: 2,}} />
-                  <TouchableOpacity onPress={ () => Alert.alert("Edit stuff")}>
-                  <Text style={{
-                      textAlign:"center",
-                      fontSize: 14,
-                      color:'#777777', textDecorationLine:"underline"}}> edit </Text>
                   </TouchableOpacity>
               </ScrollView>
 
