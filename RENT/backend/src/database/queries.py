@@ -1,10 +1,10 @@
 from typing import Optional, List, Any, Union
 
-from .models import Rental, Lease, PropertyDocument, db, Users, ContactInfo
-from .models import Roommates, CalendarEvent, Note, LeaseImages
+from .models import Rental, Lease, db, Users, ContactInfo, Roommates, Note
+from .models import CalendarEvent
 
 ModelTypes = Union[
-                    Rental, Lease, PropertyDocument, Users, ContactInfo,
+                    Rental, Lease, Users, ContactInfo,
                     Roommates, CalendarEvent, Note
                   ]
 
@@ -17,11 +17,6 @@ def getRentalByRentalID(rentalID: db.Integer) -> Optional[Rental]:
 def getLeaseByLeaseID(leaseID: db.Integer) -> Optional[Lease]:
     '''Returns a lease from the db by finding the matching leaseID'''
     return Lease.query.filter_by(id=leaseID).first()
-
-
-def getDocByDocID(documentID: db.Integer) -> Optional[PropertyDocument]:
-    '''Returns a document from the db by finding the matching documentID'''
-    return PropertyDocument.query.filter_by(id=documentID).first()
 
 
 def getUserByEmail(email: str) -> Optional[Users]:
@@ -67,10 +62,6 @@ def getNoteByNoteID(noteID: db.Integer) -> Optional[Note]:
 
 def getEventByEventID(eventID: db.Integer) -> Optional[CalendarEvent]:
     return CalendarEvent.query.filter_by(id=eventID).first()
-
-
-def getPhotosByLeaseID(leaseID: db.Integer) -> List[LeaseImages]:
-    return LeaseImages.query.filter_by(associatedLease=leaseID).all()
 
 
 def isUser(user: Users) -> bool:

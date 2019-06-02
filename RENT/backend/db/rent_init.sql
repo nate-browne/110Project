@@ -12,7 +12,6 @@ CREATE TABLE `Users` (
 	`currentRental` bigint(20) DEFAULT NULL,
 	`pastRental` bigint(20) DEFAULT NULL,
 	`deactivated` BOOL NOT NULL DEFAULT 0,
-	`profilePhoto` varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -26,12 +25,6 @@ CREATE TABLE `Roommates` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `PropertyDocument` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`url` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
-
 CREATE TABLE `Lease` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`landlordFirstName` varchar(255) NOT NULL,
@@ -42,7 +35,6 @@ CREATE TABLE `Lease` (
 	`startDate` DATE NOT NULL,
 	`endDate` DATE NOT NULL,
 	`rentDueDate` varchar(50) NOT NULL,
-	`document` bigint(20) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -50,7 +42,6 @@ CREATE TABLE `Rental` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`roommates` bigint(20) NOT NULL,
 	`lease` bigint(20) DEFAULT NULL,
-	`insurance` bigint(20) DEFAULT NULL,
 	`board` bigint(20) DEFAULT NULL,
 	`address` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
@@ -92,13 +83,6 @@ CREATE TABLE `CalendarEvent` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `LeaseImages` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`url` varchar(255) NOT NULL,
-	`associatedLease` bigint(20) NOT NULL,
-	PRIMARY KEY (`id`)
-);
-
 ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`currentRental`) REFERENCES `Rental`(`id`);
 
 ALTER TABLE `Users` ADD CONSTRAINT `Users_fk1` FOREIGN KEY (`pastRental`) REFERENCES `Rental`(`id`);
@@ -117,16 +101,10 @@ ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk0` FOREIGN KEY (`roommates`) REFER
 
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk2` FOREIGN KEY (`lease`) REFERENCES `Lease`(`id`);
 
-ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk3` FOREIGN KEY (`insurance`) REFERENCES `PropertyDocument`(`id`);
-
 ALTER TABLE `Rental` ADD CONSTRAINT `Rental_fk4` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);
-
-ALTER TABLE `Lease` ADD CONSTRAINT `Lease_fk0` FOREIGN KEY (`document`) REFERENCES `PropertyDocument`(`id`);
 
 ALTER TABLE `ContactInfo` ADD CONSTRAINT `ContactInfo_fk0` FOREIGN KEY (`associatedUser`) REFERENCES `Users`(`id`);
 
 ALTER TABLE `Note` ADD CONSTRAINT `Note_fk0` FOREIGN KEY (`board`) REFERENCES `Board`(`id`);
 
 ALTER TABLE `CalendarEvent` ADD CONSTRAINT `CalendarEvent_fk0` FOREIGN KEY (`rental`) REFERENCES `Rental`(`id`);
-
-ALTER TABLE `LeaseImages` ADD CONSTRAINT `LeaseImages_fk0` FOREIGN KEY (`associatedLease`) REFERENCES `Lease`(`id`);

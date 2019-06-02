@@ -5,11 +5,10 @@ from flask_login import login_user, login_required, logout_user
 
 from utils import mailer
 from config import app, _login
-from utils.files import upload_file
 
 import database.queries as dq
-from database.models import PropertyDocument, Note, CalendarEvent, ContactInfo
-from database.models import Users, Rental, Roommates, Board, Lease, LeaseImages
+from database.models import Note, CalendarEvent, ContactInfo, Users, Rental
+from database.models import Roommates, Board, Lease
 
 
 @app.route('/createuser', methods=['POST'])
@@ -126,10 +125,6 @@ def change_user_info():
     email = request.json['email']
     user = dq.getUserByEmail(email)
 
-    if request.files['profilePhoto']:
-        path = upload_file(request.files['profilePhoto'], "users")
-        dq.update(user, 'profilePhoto', path)
-
     for att in list(filter(lambda x: not x.startswith("__"), dir(user))):
         if att != 'id' and request.json[att] is not None:
             if att != 'email':
@@ -234,27 +229,6 @@ def change_calendar_event():
     return jsonify({}), 201
 
 
-@app.route('/addleasephotos', methods=['POST'])
-@login_required
-def add_lease_photos():
-    leaseID = request.json['leaseID']
-    path = upload_file(request.files['photo'], "lease")
-    img = LeaseImages(url=path, associatedLease=leaseID)
-    dq.add(img)
-    return jsonify({}), 201
-
-
-@app.route('/getleasephotos', methods=['GET'])
-@login_required
-def get_lease_photos():
-    leaseID = request.args.get('leaseID')
-    photoAlbum = dq.getPhotosByLeaseID(leaseID)
-    photos = list()
-    for photo in photoAlbum:
-        photos.append(photo.url)
-    return jsonify({'photos': photos}), 200
-
-
 @app.route('/addlease', methods=['POST'])
 @login_required
 def add_lease():
@@ -270,31 +244,15 @@ def add_lease():
     startDate = request.json['startDate']
     endDate = request.json['endDate']
     rentDueDate = request.json['rentDueDate']
-    path = upload_file(request.files['document'], "doc")
-    leaseDoc = PropertyDocument(url=path)
-    dq.add(leaseDoc)
 
     lease = Lease(landlordFirstName=landlordFirstName,
                   landlordLastName=landlordLastName,
                   landlordPhoneNumber=landlordPhoneNumber,
                   landlordEmail=landlordEmail,
                   rentCost=rentCost, startDate=startDate, endDate=endDate,
-                  rentDueDate=rentDueDate,
-                  document=leaseDoc.id)
+                  rentDueDate=rentDueDate)
     dq.add(lease)
     dq.update(rental, 'lease', lease.id)
-    return jsonify({}), 201
-
-
-@app.route('/addinsurancedocument', methods=['POST'])
-@login_required
-def add_insurance_document():
-    rentalID = request.json['rentalID']
-    rental = dq.getRentalByRentalID(rentalID)
-    path = upload_file(request.files['document'], "doc")
-    insuranceDoc = PropertyDocument(url=path)
-    dq.add(insuranceDoc)
-    dq.update(rental, 'insurance', insuranceDoc.id)
     return jsonify({}), 201
 
 
@@ -493,23 +451,6 @@ def get_lease_end_date():
             data['endDate'] = dt
             data['daysTill'] = daysTill
             return jsonify(data), 200
-        else:
-            return jsonify({'reason': "Lease not found"}), 404
-    else:
-        return jsonify({'reason': "Rental not found"}), 404
-
-
-@app.route('/getdocuments', methods=['GET'])
-@login_required
-def get_documents():
-    rentalID = request.args.get('rentalID')
-    rental = dq.getRentalByRentalID(rentalID)
-    if rental is not None:
-        lease = dq.getLeaseByLeaseID(rental.lease)
-        if lease is not None:
-            doc = dq.getDocByDocID(lease.document)
-            if doc is not None:
-                return jsonify({'doc': doc.document}), 200
         else:
             return jsonify({'reason': "Lease not found"}), 404
     else:
