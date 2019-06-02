@@ -76,7 +76,8 @@ CREATE TABLE `ContactInfo` (
 CREATE TABLE `CalendarEvent` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`eventName` varchar(255) NOT NULL,
-	`eventDate` DATE NOT NULL,
+	`eventStartDate` DATE NOT NULL,
+	`eventEndDate` DATE NOT NULL,
 	`eventDescription` varchar(255) DEFAULT NULL,
 	`rental` bigint(20) NOT NULL,
 	`isDeleted` BOOL NOT NULL DEFAULT 0,
