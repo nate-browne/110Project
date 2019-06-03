@@ -19,6 +19,7 @@ interface IAppProps {
 }
 
 interface IAppState {
+  canEdit: boolean,
   addVisible: boolean,
   nameVisible: boolean,
   phoneVisible: boolean,
@@ -60,6 +61,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
     super(props);
 
     this.state = {
+      canEdit: false,
       addVisible: false,
       editVisible: false,
       nameVisible: false,
@@ -119,6 +121,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
     }).catch(err => {
       console.log(err)
     });
+    this.setState({canEdit: this.props.navigation.getParam("canEdit", false)})
   }
 
   getInfo(){
@@ -233,12 +236,20 @@ export default class Profile extends Component<IAppProps, IAppState> {
   }
 
   render() {
+
+    let changePassword
+    if(this.state.canEdit) {
+
+      changePassword = <TouchableOpacity onPress={ () => this.setState({changePasswordVisible: true})}>
+                          <Text style={styles.emergency}>Change Password</Text>
+                       </TouchableOpacity>
+    }
     this.getInfo();
       return (
           <View style = {{backgroundColor:"#666666", flex: 1}}>
               <Overlay
                   windowBackgroundColor="rgba(255, 255, 255, .5)"
-                  isVisible={this.state.nameVisible}
+                  isVisible={this.state.nameVisible && this.state.canEdit}
                   onBackdropPress={() => this.setState({ nameVisible: false })}
                   height={'50%'}
               >
@@ -293,7 +304,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
               <Overlay
                   windowBackgroundColor="rgba(255, 255, 255, .5)"
-                  isVisible={this.state.phoneVisible}
+                  isVisible={this.state.phoneVisible && this.state.canEdit}
                   onBackdropPress={() => this.setState({ phoneVisible: false })}
                   height={'50%'}
               >
@@ -333,7 +344,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
               <Overlay
                   windowBackgroundColor="rgba(255, 255, 255, .5)"
-                  isVisible={this.state.contact1Visible}
+                  isVisible={this.state.contact1Visible && this.state.canEdit}
                   onBackdropPress={() => this.setState({ contact1Visible: false })}
                   height={'50%'}
               >
@@ -400,7 +411,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
                 <Overlay
                     windowBackgroundColor="rgba(255, 255, 255, .5)"
-                    isVisible={this.state.contact2Visible}
+                    isVisible={this.state.contact2Visible && this.state.canEdit}
                     onBackdropPress={() => this.setState({ contact2Visible: false })}
                     height={'50%'}
                 >
@@ -593,10 +604,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
                   <Divider style={{ marginTop:20, backgroundColor: '#AAAAAA', height: 2,}} />
 
-
-                  <TouchableOpacity onPress={ () => this.setState({changePasswordVisible: true})}>
-                    <Text style={styles.emergency}>Change Password</Text>
-                  </TouchableOpacity>
+                  {changePassword}
               </ScrollView>
 
           </View>

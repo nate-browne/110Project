@@ -199,7 +199,9 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                                 <ListItem
                                     key={i}
                                     onPress={() => {
-                                        this.props.navigation.push('Profile');
+                                        this.props.navigation.push('Profile',{
+                                          userID: l.id
+                                        });
                                     }}
                                     onLongPress={() => {
                                         this.state.currentID = i;
