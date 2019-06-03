@@ -19,11 +19,15 @@ interface IAppProps {
 }
 
 interface IAppState {
-
+  addVisible: boolean,
   nameVisible: boolean,
   phoneVisible: boolean,
   contact1Visible: boolean,
   contact2Visible: boolean,
+  changePasswordVisible: boolean,
+  passwordLengthError: boolean,
+  passwordMatchError: boolean,
+  passwordIncorrectError: boolean,
 
   editVisible: boolean,
   firstName: string,
@@ -44,6 +48,10 @@ interface IAppState {
   tmpRelation: string,
   tmpEmail: string,
   tmpPhoneNumber: string,
+
+  oldPassword: string,
+  newPassword: string,
+  confirmPassword: string
 }
 
 export default class Profile extends Component<IAppProps, IAppState> {
@@ -58,6 +66,10 @@ export default class Profile extends Component<IAppProps, IAppState> {
       phoneVisible: false,
       contact1Visible: false,
       contact2Visible: false,
+      changePasswordVisible: false,
+      passwordLengthError: false,
+      passwordMatchError: false,
+      passwordIncorrectError: false,
 
       firstName: "",
       lastName: "",
@@ -77,6 +89,10 @@ export default class Profile extends Component<IAppProps, IAppState> {
       tmpRelation: "",
       tmpEmail: "",
       tmpPhoneNumber: "",
+
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: ""
     };
   }
   static navigationOptions = {
@@ -182,6 +198,40 @@ export default class Profile extends Component<IAppProps, IAppState> {
     })
   }
 
+  changePassword(): any {
+    server.post('/resetpassword', {
+      email: this.state.email,
+      old: this.state.oldPassword,
+      password: this.state.newPassword,
+    }).then(resp => {
+      // Success
+      if (resp.status === 201) {
+        console.log("Change password Successful");
+        this.setState({changePasswordVisible: false});
+      }
+    })
+    .catch (err => {
+      this.setState({passwordIncorrectError: true});
+      console.log('Error occurred in change password', err);
+    })
+  }
+
+  displayChangePasswordError(): any {
+    if (this.state.passwordMatchError) {
+      return "Passwords do not match";
+    } else if (this.state.passwordLengthError) {
+      return "Password must contain at least 5 characters";
+    }
+    return "";
+  }
+
+  displayOldPasswordError(): any {
+    if (this.state.passwordIncorrectError) {
+      return "Old password is incorrect";
+    }
+    return "";
+  }
+
   render() {
     this.getInfo();
       return (
@@ -225,7 +275,6 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           returnKeyType="done"
                           onChangeText={(text: string) => {this.setState({tmpLastName : text})}}
                       />
-
 
                       <Button
                           title="Save"
@@ -416,6 +465,83 @@ export default class Profile extends Component<IAppProps, IAppState> {
                   </ScrollView>
               </Overlay>
 
+              <Overlay
+                  windowBackgroundColor="rgba(255, 255, 255, .5)"
+                  isVisible={this.state.changePasswordVisible}
+                  onBackdropPress={() => this.setState({ changePasswordVisible: false })}
+                  height={'50%'}
+              >
+
+                  <ScrollView>
+                      <Text style={{fontSize: 48}}>Change Password</Text>
+
+                      <Input
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="Old Password"
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          secureTextEntry={true}
+                          returnKeyType="next"
+                          errorStyle={{ color: 'red', alignSelf: "center" }}
+                          errorMessage={this.displayOldPasswordError()}
+                          onChangeText={(text: string) => {this.setState({oldPassword : text, passwordIncorrectError : false})}}
+                      />
+
+                      <Input
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="New Password"
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          secureTextEntry={true}
+                          returnKeyType="next"
+                          onChangeText={(text: string) => {this.setState({newPassword : text, passwordLengthError : false})}}
+                      />
+
+                      <Input
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="Confirm Password"
+                          autoCorrect={false}
+                          keyboardAppearance="light"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          secureTextEntry={true}
+                          returnKeyType="done"
+                          errorStyle={{ color: 'red', alignSelf: "center" }}
+                          errorMessage={this.displayChangePasswordError()}
+                          onChangeText={(text: string) => {this.setState({confirmPassword : text, passwordMatchError : false})}}
+                      />
+
+
+                      <Button
+                          title="Save"
+                          buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                          onPress={() => {
+                              if (this.state.confirmPassword !== this.state.newPassword) {
+                                this.setState({passwordMatchError: true});
+                              }
+                              else if (this.state.newPassword.length <= 4) {
+                                this.setState({passwordLengthError: true});
+                              }
+                              else {
+                                this.changePassword();
+                              }
+                          }}
+                      />
+
+                  </ScrollView>
+
+              </Overlay>
+
               <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
                   backgroundColor: "#FFFFFF", flex:1}}>
                   <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
@@ -463,6 +589,13 @@ export default class Profile extends Component<IAppProps, IAppState> {
                       <Text style={styles.contactInfo}> {this.state.e2Name} </Text>
                       <Text style={styles.contactInfo}> Relationship: {this.state.e2Relation} </Text>
                       <Text style={styles.contactInfo}> {this.state.e2Phone} </Text>
+                  </TouchableOpacity>
+
+                  <Divider style={{ marginTop:20, backgroundColor: '#AAAAAA', height: 2,}} />
+
+                  
+                  <TouchableOpacity onPress={ () => this.setState({changePasswordVisible: true})}>
+                    <Text style={styles.emergency}>Change Password</Text>
                   </TouchableOpacity>
               </ScrollView>
 
