@@ -43,8 +43,6 @@ export default class Home extends Component<IAppProps, IAppState> {
     start: "",
     end: "",
     rent: 0,
-    roommate1:"",
-    roommate2:""
   };
 
   setVisible(visible: boolean) {
@@ -95,9 +93,10 @@ export default class Home extends Component<IAppProps, IAppState> {
         if(resp.status == 201) {
             this.setState({currentID: resp.data['currentRental']});
             this.setState({pastID: resp.data['pastRental']});
-            console.log('create')
+            console.log('create');
             console.log('currentID: ', this.state.currentID);
             console.log('pastID: ', this.state.pastID);
+            this.createLease(resp.data['currentRental']);
         }
     }).catch (err => {
         console.log('Error', err);
@@ -111,8 +110,10 @@ export default class Home extends Component<IAppProps, IAppState> {
       landlordPhoneNumber: this.state.phoneNumber,
       landlordEmail: this.state.landlordEmail,
       rentCost: this.state.rent,
-      startDate: this
-    })
+      startDT: this.state.start,
+      endDT: this.state.end,
+      rentDueDate: ""
+    }).then(resp => {}).catch(err =>{})
   }
   logout(): any {
     server.post('/logout', {
@@ -225,7 +226,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                     ref = {(input) => {this.input2 = input}}
                     blurOnSubmit = {false}
                     onSubmitEditing = {() => {this.input3.focus()}}
-                    onChangeText={(text: string) => this.setState({landlord: text})}
+                    onChangeText={(text: string) => this.setState({landlordFirstName: text})}
                   />
                 <Input
                     //inputContainerStyle={styles.textinput}
@@ -236,7 +237,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                     ref = {(input) => {this.input2 = input}}
                     blurOnSubmit = {false}
                     onSubmitEditing = {() => {this.input3.focus()}}
-                    onChangeText={(text: string) => this.setState({landlord: text})}
+                    onChangeText={(text: string) => this.setState({landlordLastName: text})}
                   />
                 <Input
                       //inputContainerStyle={styles.textinput}
@@ -248,7 +249,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                       ref = {(input) => {this.input7 = input}}
                       blurOnSubmit = {false}
                       onSubmitEditing = {() => {this.input8.focus()}}
-                      onChangeText={(text: string) => this.setState({email: text})}
+                      onChangeText={(text: string) => this.setState({landlordEmail: text})}
                  />
                  <Input
                     //inputContainerStyle={styles.textinput}
@@ -300,32 +301,6 @@ export default class Home extends Component<IAppProps, IAppState> {
                       onSubmitEditing = {() => {this.input7.focus()}}
                       onChangeText={(text: string) => this.setState({rent: text})}
                   />
-
-                  <Text style={{fontSize: 24}}>Add Roommate</Text>
-
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="Roommate email"
-                      keyboardAppearance="light"
-                      keyboardType="email-address"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input7 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input8.focus()}}
-                      onChangeText={(text: string) => this.setState({email: text})}
-                  />
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="Roommate email"
-                      keyboardAppearance="light"
-                      keyboardType="email-address"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input8 = input}}
-                      blurOnSubmit = {false}
-                      onChangeText={(text: string) => this.setState({email: text})}
-                  />
                 </View>
               <View>
                 <Button
@@ -333,13 +308,13 @@ export default class Home extends Component<IAppProps, IAppState> {
                   style = {{margin: 20}}
                   title="Create"
                   onPress={() => {
-                    if(this.state.name === "" || this.state.address === "" || this.state.landlord === "" || this.state.phoneNumber === ""
-                       || this.state.start === "" || this.state.end === "" || this.state.rent === 0) {
+                    if(this.state.name === "" || this.state.address === "" || this.state.landlordFirstName === ""
+                       || this.state.landlordLastName === "" || this.state.landlordEmail === ""
+                       || this.state.phoneNumber === "" || this.state.start === "" || this.state.end === "" || this.state.rent === 0) {
                          this.setState({formError:true})
                          Alert.alert("Please complete all the fields")
                     } else {
                       this.createRental(userID);
-                      this.
                       this.setVisible(false);
                     }
                   }}
