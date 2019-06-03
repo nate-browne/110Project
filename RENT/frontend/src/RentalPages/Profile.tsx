@@ -127,8 +127,9 @@ export default class Profile extends Component<IAppProps, IAppState> {
           e2Name : resp.data['contact1']['name'],
           e2Phone : resp.data['contact1']['phoneNumber']
         });
+        if(resp.data['contact0']['name'] !== "Default Name" ) { this.setState({e1: true})}
+        if(resp.data['contact1']['name'] !== "Default Name" ) { this.setState({e2: true})}
       }
-      console.log(this.props.navigation.getParam("userID", 0))
     }).catch(err => {
       console.log(err)
     });
@@ -266,9 +267,9 @@ export default class Profile extends Component<IAppProps, IAppState> {
     }
     else {
       displayE1 =       <TouchableOpacity onPress={ () => this.setState({contact1Visible: true})} >
-                          <Text style={styles.contactInfo}> {this.state.e1Name} </Text>
+                          <Text style={styles.contactInfo}> Name: {this.state.e1Name} </Text>
                           <Text style={styles.contactInfo}> Relationship: {this.state.e1Relation} </Text>
-                          <Text style={styles.contactInfo}> {this.state.e1Phone} </Text>
+                          <Text style={styles.contactInfo}> Phone Number: {this.state.e1Phone} </Text>
                         </TouchableOpacity>
     }
 
@@ -282,9 +283,9 @@ export default class Profile extends Component<IAppProps, IAppState> {
     }
     else {
       displayE2 = <TouchableOpacity onPress={ () => this.setState({contact2Visible: true})} >
-                          <Text style={styles.contactInfo}> {this.state.e2Name} </Text>
+                          <Text style={styles.contactInfo}> Name: {this.state.e2Name} </Text>
                           <Text style={styles.contactInfo}> Relationship: {this.state.e2Relation} </Text>
-                          <Text style={styles.contactInfo}> {this.state.e2Phone} </Text>
+                          <Text style={styles.contactInfo}> Phone Number: {this.state.e2Phone} </Text>
                   </TouchableOpacity>
     }
       return (
