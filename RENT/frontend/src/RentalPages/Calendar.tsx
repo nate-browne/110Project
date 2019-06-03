@@ -63,27 +63,29 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       
       calendarEvents: [],
     };
-  }
 
+  }
+  
   setDisplayCalendarEvents(value: boolean) {
     this.setState({
       displayCalendarEvents: value,
       isVisible: !value,
     })
   }
-
+  
   setFormVisible(value: boolean) {
     this.setState({
       isVisible: value,
       displayCalendarEvents: !value,
     });
   }
-
+  
   componentDidMount() {
+    
     
     server.get('/getcalendarevents',{
       params: {
-        userID: this.props.navigation.getParam("rentalID", 0)
+        rentalID: this.navigation.getParam("rentalID", "")
       }
     }).then(resp => {
       if(resp.status === 200) {
@@ -116,8 +118,9 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
           isLoading: false,
           calendarEvents: resp.data['events'],
         });
-
       }
+    }).then(resp => {
+      console.log(resp);
     }).catch(err => {
       console.log(err)
     });
