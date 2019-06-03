@@ -305,6 +305,7 @@ export default class Login extends Component<IAppProps, IAppState> {
         >
         <TouchableWithoutFeedback onPress = {dismissKeyboard}>
 
+        <KeyboardAwareScrollView>
 
         <View style={styles.container}>
 
@@ -428,6 +429,7 @@ export default class Login extends Component<IAppProps, IAppState> {
             />
           </View>
         </View>
+        </KeyboardAwareScrollView>
         </TouchableWithoutFeedback>
       </Overlay>
     </View>

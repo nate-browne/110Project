@@ -102,8 +102,7 @@ class Note(db.Model):
 class ContactInfo(db.Model):
     __tablename__ = 'ContactInfo'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    firstName = db.Column(db.String(255), nullable=False)
-    lastName = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     phoneNumber = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(255), nullable=True)
     associatedUser = db.Column(db.Integer, db.ForeignKey('Users.id'),
