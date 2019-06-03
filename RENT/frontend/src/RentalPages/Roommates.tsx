@@ -83,6 +83,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
             }
         }).then(resp => {
             this.state.list = resp.data;
+
             console.log("data ", resp.data);
             console.log('get roommates');
             console.log('roommates rental ID: ', this.state.rentalID);
