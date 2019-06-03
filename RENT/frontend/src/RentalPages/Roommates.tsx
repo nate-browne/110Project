@@ -82,8 +82,24 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                 rentalID: this.props.navigation.getParam("rentalID",""),
             }
         }).then(resp => {
-            this.state.list = resp.data;
-            console.log("data ", resp.data);
+            var tmp = [];
+            if(resp.data["roommate0"] !== undefined){
+              tmp.push(resp.data['roommate0'])
+            }
+            if(resp.data["roommate1"] !== undefined){
+              tmp.push(resp.data['roommate1'])
+            }
+            if(resp.data["roommate2"] !== undefined){
+              tmp.push(resp.data['roommate2'])
+            }
+            if(resp.data["roommate3"] !== undefined){
+              tmp.push(resp.data['roommate3'])
+            }
+            if(resp.data["roommate4"] !== undefined){
+              tmp.push(resp.data['roommate4'])
+            }
+            this.state.list = tmp;
+            console.log("data ", this.state.list);
             console.log('get roommates');
             console.log('roommates rental ID: ', this.state.rentalID);
         }).catch(err => {
@@ -97,41 +113,41 @@ export default class Roommates extends Component<IAppProps,IAppState> {
             <View style = {{width:'100%', height:'100%'}}>
                 <ScrollView>
                     {
-                        this.state.list.map((l, i) => (
-                            <ListItem
-                                key={i}
-                                onPress={() => {
-                                    this.props.navigation.push('Profile');
-                                }}
-                                onLongPress = {() => {
-                                    this.state.currentID = i;
-                                    this.setState({deleteVisible: true});
-                                    Alert.alert(
-                                        'Delete Roommate?',
-                                        'This will permanently delete this roommate.',
-                                        [
-                                            {
-                                                text: 'Cancel',
-                                                onPress: () => console.log('Cancel Pressed'),
-                                                style: 'cancel',
-                                            },
-                                            {text: 'OK', onPress: () =>  {
-                                                    this.state.list.splice(this.state.currentID, 1);
-                                                    this.setState({deleteVisible: false});
-                                                }},
-                                        ],
-                                        {cancelable: false},
-                                    );
-                                }}
-                                style = {{borderColor: "#BBBBBB", borderBottomWidth:1}}
-                                leftAvatar={{ rounded: true, source: { uri: "https://bootdey.com/img/Content/avatar/avatar6.png" } }}
-                                title={l.name}
-                                titleStyle={{ color: '#555555', fontSize: 20}}
-                                subtitleStyle={{ color: '#555555' }}
-                                chevronColor="#555555"
-                                chevron
-                            />
-                        ))
+                      this.state.list.map((l, i) => (
+                        <ListItem
+                          key={i}
+                          onPress={() => {
+                              this.props.navigation.push('Profile');
+                          }}
+                          onLongPress = {() => {
+                              this.state.currentID = i;
+                              this.setState({deleteVisible: true});
+                              Alert.alert(
+                                  'Delete Roommate?',
+                                  'This will permanently delete this roommate.',
+                                  [
+                                      {
+                                          text: 'Cancel',
+                                          onPress: () => console.log('Cancel Pressed'),
+                                          style: 'cancel',
+                                      },
+                                      {text: 'OK', onPress: () =>  {
+                                              this.state.list.splice(this.state.currentID, 1);
+                                              this.setState({deleteVisible: false});
+                                          }},
+                                  ],
+                                  {cancelable: false},
+                              );
+                          }}
+                          style = {{borderColor: "#BBBBBB", borderBottomWidth:1}}
+                          leftAvatar={{ rounded: true, source: { uri: "https://bootdey.com/img/Content/avatar/avatar6.png" } }}
+                          title={l.name}
+                          titleStyle={{ color: '#555555', fontSize: 20}}
+                          subtitleStyle={{ color: '#555555' }}
+                          chevronColor="#555555"
+                          chevron
+                          />
+                      ))
                     }
                 </ScrollView>
                 <View style={{alignItems: 'flex-end', padding: 20}}>
