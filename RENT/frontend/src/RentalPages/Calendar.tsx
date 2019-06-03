@@ -78,11 +78,15 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
 
   }
   
-  setDisplayCalendarEvents = (value: boolean, date: string) => {
+  setDisplayCalendarEvents = (value: boolean, date: any) => {
+
+    console.log("date formats as " + date.slice(0,10));
     
+    const formattedDate = date.slice(0,10);
+
     this.setState({
-      selectedDate: date,
-      currentDayCalendarEvents: this.getCurrentDayCalendarEvents(date),
+      selectedDate: formattedDate,
+      currentDayCalendarEvents: this.getCurrentDayCalendarEvents(formattedDate),
       isVisible: !value,
       displayCalendarEvents: value,
     });
@@ -105,25 +109,19 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
     calendarEvents.forEach(element => {
 
       console.log("Strings to compare:");
+      console.log("Element from state:");
       console.log(element);
+      console.log("Element picked from calendar:");
       console.log(date);
 
-      if (element.eventStartDate.slice(0, 4) <= date.slice(0,4)) {
-        if (element.eventStartDate.slice(5, 7) <= date.slice(5,7)) {
-          if (element.eventStartDate.slice(8, 10) <= date.slice(8, 10)) {
-            isWithinLeftBound = true;
-            console.log("dates within left range!");
-          }
-        }
-      }
+      var sDate = new Date(element.eventStartDate);
+      var mDate = new Date(date);
+      var eDate = new Date(element.eventEndDate);
 
-      if (element.eventEndDate.slice(0, 4) >= date.slice(0,4)) {
-        if (element.eventEndDate.slice(5, 7) >= date.slice(5,7)) {
-          if (element.eventEndDate.slice(8, 10) >= date.slice(8, 10)) {
-            isWithinRightBound = true;
-            console.log("dates within right range!");
-          }
-        }
+      if (sDate <= mDate && mDate <= eDate) {
+        console.log("event is within the range of both elements!");
+        isWithinLeftBound=true;
+        isWithinRightBound=true;
       }
 
       if (isWithinLeftBound && isWithinRightBound) {
@@ -132,6 +130,9 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
 
       isWithinLeftBound = false;
       isWithinRightBound = false;
+
+      console.log("\n\n")
+
     });
 
     return currentDayCalendarEvents;
@@ -213,14 +214,10 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       });
     });
 
-    console.log(updatedEvents);
-
     this.setState({
       calendarEvents: updatedEvents,
       isLoading: false,
     });
-
-    this.getCurrentDayCalendarEvents(updatedEvents[0].eventStartDate);
 
   }
 
@@ -243,7 +240,7 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
             onChange={(event: any) => {
               console.log("Tapped calendar:");
               console.log(event);
-              this.setDisplayCalendarEvents(true, event.startDate.toString().slice(0,10));
+              this.setDisplayCalendarEvents(true, event.startDate.toISOString());
             }}
             minDate="2018-04-20"
             startDate="2018-04-30"
