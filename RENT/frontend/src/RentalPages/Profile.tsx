@@ -39,6 +39,8 @@ interface IAppState {
   e1Relation: string,
   e1Name: string,
   e1Phone: string,
+  e1: boolean,
+  e2: boolean,
 
   e2Relation: string,
   e2Name: string,
@@ -81,6 +83,8 @@ export default class Profile extends Component<IAppProps, IAppState> {
       e1Relation: "",
       e1Name: "",
       e1Phone: "",
+      e1: false,
+      e2: false,
 
       e2Relation: "",
       e2Name: "",
@@ -116,8 +120,15 @@ export default class Profile extends Component<IAppProps, IAppState> {
           lastName: resp.data['lastName'],
           email: resp.data['email'],
           phoneNumber: resp.data['phoneNumber'],
+          e1Relation : resp.data['contact0']['relation'],
+          e1Name : resp.data['contact0']['name'],
+          e1Phone : resp.data['contact0']['phoneNumber'],
+          e2Relation : resp.data['contact1']['relation'],
+          e2Name : resp.data['contact1']['name'],
+          e2Phone : resp.data['contact1']['phoneNumber']
         });
       }
+      console.log(this.props.navigation.getParam("userID", 0))
     }).catch(err => {
       console.log(err)
     });
@@ -166,16 +177,15 @@ export default class Profile extends Component<IAppProps, IAppState> {
   }
 
   changeContact1Info(): any {
-    server.post('/changecontactinfo', {
-      email: this.state.email,
-      change: null,
-      email: null,
-      firstName: this.state.e1Name,
-      lastName: null,
-      relation: this.state.e1Relation,
+    server.post('/addcontactinfo', {
+      userID: this.props.navigation.getParam("userID",""),
+      email: "",
+      name: this.state.e1Name,
+      relationship: this.state.e1Relation,
       phoneNumber: this.state.e1Phone,
     }).then(resp => {
         // Success
+        this.setState({e1: true})
         console.log("Change contact 1 Successful");
     })
     .catch(err => {
@@ -184,16 +194,15 @@ export default class Profile extends Component<IAppProps, IAppState> {
   }
 
   changeContact2Info(): any {
-    server.post('/changecontactinfo', {
-      email: this.state.email,
-      change: null,
-      email: null,
-      firstName: this.state.e2Name,
-      lastName: null,
-      relation: this.state.e2Relation,
+    server.post('/addcontactinfo', {
+      userID: this.props.navigation.getParam("userID",""),
+      email: "",
+      name: this.state.e2Name,
+      relationship: this.state.e2Relation,
       phoneNumber: this.state.e2Phone,
     }).then(resp => {
         // Success
+        this.setState({e2: true})
         console.log("Change contact 2 Successful");
     })
     .catch(err => {
@@ -238,13 +247,46 @@ export default class Profile extends Component<IAppProps, IAppState> {
   render() {
 
     let changePassword
+    let displayE1
+    let displayE2
     if(this.state.canEdit) {
 
       changePassword = <TouchableOpacity onPress={ () => this.setState({changePasswordVisible: true})}>
                           <Text style={styles.emergency}>Change Password</Text>
                        </TouchableOpacity>
     }
-    this.getInfo();
+
+    if(!this.state.canEdit && !this.state.e1){
+      displayE1 = <Text style={styles.contactInfo}> Roommate does not a emergency contact 1 </Text>
+    }
+    else if(this.state.canEdit && !this.state.e1) {
+      displayE1 =       <TouchableOpacity onPress={ () => this.setState({contact1Visible: true})} >
+                            <Text style={styles.contactInfo}> Create Emergency Contact </Text>
+                        </TouchableOpacity>
+    }
+    else {
+      displayE1 =       <TouchableOpacity onPress={ () => this.setState({contact1Visible: true})} >
+                          <Text style={styles.contactInfo}> {this.state.e1Name} </Text>
+                          <Text style={styles.contactInfo}> Relationship: {this.state.e1Relation} </Text>
+                          <Text style={styles.contactInfo}> {this.state.e1Phone} </Text>
+                        </TouchableOpacity>
+    }
+
+    if(!this.state.canEdit && !this.state.e2){
+      displayE2 = <Text style={styles.contactInfo}> Roommate does not a emergency contact 2 </Text>
+    }
+    else if(this.state.canEdit && !this.state.e2) {
+          displayE2 = <TouchableOpacity onPress={ () => this.setState({contact2Visible: true})} >
+                                <Text style={styles.contactInfo}> Create Emergency Contact </Text>
+                      </TouchableOpacity>
+    }
+    else {
+      displayE2 = <TouchableOpacity onPress={ () => this.setState({contact2Visible: true})} >
+                          <Text style={styles.contactInfo}> {this.state.e2Name} </Text>
+                          <Text style={styles.contactInfo}> Relationship: {this.state.e2Relation} </Text>
+                          <Text style={styles.contactInfo}> {this.state.e2Phone} </Text>
+                  </TouchableOpacity>
+    }
       return (
           <View style = {{backgroundColor:"#666666", flex: 1}}>
               <Overlay
@@ -356,7 +398,6 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           //inputContainerStyle={styles.textinput}
                           leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                           placeholder="Name"
-                          defaultValue = {this.state.e1Name}
                           autoCorrect={false}
                           keyboardAppearance="light"
                           leftIcon={
@@ -369,8 +410,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                       <Input
                           //inputContainerStyle={styles.textinput}
                           leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                          placeholder=""
-                          defaultValue = {this.state.e1Relation}
+                          placeholder="Relationship"
                           autoCorrect={false}
                           keyboardAppearance="light"
                           leftIcon={
@@ -383,8 +423,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                       <Input
                           //inputContainerStyle={styles.textinput}
                           leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                          placeholder=""
-                          defaultValue = {this.state.e1Phone}
+                          placeholder="Phone Number"
                           autoCorrect={false}
                           keyboardAppearance="light"
                           leftIcon={
@@ -423,7 +462,6 @@ export default class Profile extends Component<IAppProps, IAppState> {
                             //inputContainerStyle={styles.textinput}
                             leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                             placeholder="Name"
-                            defaultValue = {this.state.e2Name}
                             autoCorrect={false}
                             keyboardAppearance="light"
                             leftIcon={
@@ -436,8 +474,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                         <Input
                             //inputContainerStyle={styles.textinput}
                             leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                            placeholder=""
-                            defaultValue = {this.state.e2Relation}
+                            placeholder="Relationship"
                             autoCorrect={false}
                             keyboardAppearance="light"
                             leftIcon={
@@ -450,8 +487,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                         <Input
                             //inputContainerStyle={styles.textinput}
                             leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                            placeholder=""
-                            defaultValue = {this.state.e2Phone}
+                            placeholder="Phone Number"
                             autoCorrect={false}
                             keyboardAppearance="light"
                             leftIcon={
@@ -587,20 +623,12 @@ export default class Profile extends Component<IAppProps, IAppState> {
                   <Divider style={styles.divider} />
                   <Text style={styles.emergency}>Emergency Contact 1</Text>
 
-                  <TouchableOpacity onPress={ () => this.setState({contact1Visible: true})} >
-                      <Text style={styles.contactInfo}> {this.state.e1Name} </Text>
-                      <Text style={styles.contactInfo}> Relationship: {this.state.e1Relation} </Text>
-                      <Text style={styles.contactInfo}> {this.state.e1Phone} </Text>
-                  </TouchableOpacity>
+                  {displayE1}
 
                   <Divider style={{ marginTop:20, backgroundColor: '#AAAAAA', height: 2,}} />
-
                   <Text style={styles.emergency}>Emergency Contact 2</Text>
-                  <TouchableOpacity onPress={ () => this.setState({contact2Visible: true})}>
-                      <Text style={styles.contactInfo}> {this.state.e2Name} </Text>
-                      <Text style={styles.contactInfo}> Relationship: {this.state.e2Relation} </Text>
-                      <Text style={styles.contactInfo}> {this.state.e2Phone} </Text>
-                  </TouchableOpacity>
+
+                  {displayE2}
 
                   <Divider style={{ marginTop:20, backgroundColor: '#AAAAAA', height: 2,}} />
 

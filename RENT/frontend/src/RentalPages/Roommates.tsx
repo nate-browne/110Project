@@ -122,7 +122,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
         }).then(resp => {
             var tmp = [];
             if (resp.data["roommate0"] !== undefined) {
-                tmp.push(resp.data['roommate0'])
+                //tmp.push(resp.data['roommate0'])
             }
             if (resp.data["roommate1"] !== undefined) {
                 tmp.push(resp.data['roommate1'])
