@@ -17,12 +17,17 @@ export default class Notes extends Component {
   state = {
     // this list is actually stored in backend - it's only here for viewing purposes
     currentName:"",
+    noteID:"",
     category: "",
     currentSubtitle:"",
     editVisible: false,
     addVisible: false,
     rentalID: "",
-    list: []
+    list: [],
+    tmpDescription: "",
+    tmpTitle: "",
+    tmpCategory: "",
+
   };
 
   constructor(props:any){
@@ -65,6 +70,23 @@ export default class Notes extends Component {
         })
     }
 
+    addNote(): any {
+        server.post('/addnote', {
+            rentalID: this.state.rentalID,
+            description: this.state.tmpDescription,
+            title: this.state.tmpTitle,
+            category: this.state.category,
+        }).then(resp => {
+            /* Success */
+            if(resp.status === 201) {
+                console.log("Note Added!");
+            }
+            this.getNotes();
+        }).catch(err => {
+            console.log('Error occurred in addNote: ', err.response.data['Reason']);
+        })
+    }
+
     getNotes(): any{
 
         this.state.rentalID = this.props.navigation.getParam("rentalID","");
@@ -88,11 +110,27 @@ export default class Notes extends Component {
             }
             console.log("category is "+this.state.category);
             console.log("items include " + this.state.list);
-            console.log("a title is "+this.state.list[0]['title']);
+            console.log("a title is "+this.state.list[2]['title']);
             console.log('notes rental ID: ', this.state.rentalID);
         }).catch(err => {
             console.log('Error occurred in mount item notes',err);
         })
+    }
+
+    changeNote(isDeleted:boolean): any {
+        server.post('/changenoteinfo', {
+            noteID: this.state.noteID,
+            title: this.state.tmpTitle,
+            description : this.state.tmpDescription,
+            isDeleted : isDeleted,
+            category: this.state.category,
+        }).then(resp => {
+            // Success
+            console.log("Change Successful");
+        })
+            .catch(err => {
+                console.log('Error occurred', err);
+            })
     }
 
     render() {
@@ -108,6 +146,9 @@ export default class Notes extends Component {
                       //edit item
                       this.state.currentName=l['title'];
                       this.state.currentSubtitle=l['description'];
+                      this.state.tmpTitle = this.state.currentName;
+                      this.state.tmpDescription = this.state.currentSubtitle;
+                      this.state.noteID = l['noteID'];
                       this.setEditVisible(true);
                     }}
                     onPress={() => {
@@ -154,9 +195,7 @@ export default class Notes extends Component {
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
                     blurOnSubmit = {false}
-                    onSubmitEditing = {() => {this.input1.focus()}}
-                    returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({firstName: text})}
+                    onChangeText={(text: string) => this.setState({tmpTitle: text})}
                 />
 
                 <Input
@@ -170,18 +209,21 @@ export default class Notes extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
-                    ref = {(input) => {this.input1 = input}}
                     blurOnSubmit = {false}
-                    returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({firstName: text})}
+                    onChangeText={(text: string) => this.setState({tmpDescription: text})}
                 />
 
                 <Button
                   title="Save"
                   buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {this.setState({ editVisible: false }); Alert.alert("contact backend");}}
+                  onPress={() => {this.setState({ editVisible: false }); this.changeNote(false);}}
                 />
 
+                <Button
+                    title="Delete Note"
+                    buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
+                    onPress={() => {this.setState({ editVisible: false }); this.changeNote(true);}}
+                />
               </ScrollView>
 
           </Overlay>
@@ -207,9 +249,8 @@ export default class Notes extends Component {
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
                     blurOnSubmit = {false}
-                    onSubmitEditing = {() => {this.input1.focus()}}
                     returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({firstName: text})}
+                    onChangeText={(text: string) => this.setState({tmpTitle: text})}
                 />
 
                 <Input
@@ -221,16 +262,15 @@ export default class Notes extends Component {
                     leftIcon={
                       <Icon name="account" type="material-community" color="black" size={25} />
                     }
-                    ref = {(input) => {this.input1 = input}}
                     blurOnSubmit = {false}
                     returnKeyType="next"
-                    onChangeText={(text: string) => this.setState({firstName: text})}
+                    onChangeText={(text: string) => this.setState({tmpDescription: text})}
                 />
 
                 <Button
                   title="Save"
                   buttonStyle={{backgroundColor:"#2bc0cd", marginTop:20, marginRight:10, marginLeft:10}}
-                  onPress={() => {this.setState({ addVisible: false }); Alert.alert("contact backend");}}
+                  onPress={() => {this.setState({ addVisible: false }); this.addNote();}}
                 />
 
               </ScrollView>
