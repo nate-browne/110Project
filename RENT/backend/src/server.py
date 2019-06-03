@@ -331,7 +331,7 @@ def add_calendar_event():
     rentalID = request.json['rentalID']
     eventName = request.json['eventName']
     eventStartDT = request.json['eventStartDT']
-    eventEndDT = request.json['evenEndDT']
+    eventEndDT = request.json['eventEndDT']
     eventDescription = request.json['eventDescription']
     event = CalendarEvent(eventName=eventName, eventStartDT=eventStartDT,
                           eventEndDT=eventEndDT,
@@ -587,4 +587,4 @@ def unauthorized():
 _login.unauthorized_handler(unauthorized)
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=80)
