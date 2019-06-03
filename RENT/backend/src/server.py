@@ -469,7 +469,7 @@ def get_lease_end_date():
         lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
             dt = lease.endDT
-            daysTill = (d.today() - dt).days
+            daysTill = (dt - d.today()).days
             data = {}
             data['endDT'] = dt
             data['daysTill'] = daysTill
