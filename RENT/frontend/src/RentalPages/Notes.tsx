@@ -42,9 +42,12 @@ export default class Notes extends Component {
   setAddVisible(visible: boolean) {
     this.setState({addVisible: visible});
   }
+  componentWillMount() {
+    this.setState({tmpTitle:"hello"})
+  }
     componentDidMount() {
 
-        this.state.rentalID = this.props.navigation.getParam("rentalID","");
+        this.setState({rentalID:this.props.navigation.getParam("rentalID","")});
         this.state.category = this.props.navigation.getParam("category","");
         console.log("first "+ this.props.navigation.getParam("category",""));
         server.get('/getnotes', {

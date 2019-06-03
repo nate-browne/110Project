@@ -150,6 +150,12 @@ export default class Login extends Component<IAppProps, IAppState> {
         })
         console.log("Login Successful");
       }
+      this.setState({signupVisible: false,
+                     passwordError: false,
+                      emailError: false,
+                      phoneError: false,
+                      signupError: false,
+                      passwordLengthError: false })
     })
     .catch(err => {
       this.setState({loginError: true})
@@ -214,7 +220,7 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Button
           title="Login"
           buttonStyle={{backgroundColor:"#2bc0cd"}}
-          onPress={() => {this.login()}}
+          onPress={() => {this.login()} }
           />
       </View>
 
