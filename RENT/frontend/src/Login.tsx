@@ -163,7 +163,7 @@ export default class Login extends Component<IAppProps, IAppState> {
       email: this.state.email,
     }).then(resp => {
       //forgot password is successful
-      if(resp.status === 201) {
+      if(resp.status === 200) {
         Alert.alert('Temporary password sent to: ' + this.state.email)
         console.log("Forgot password email sent");
       }
