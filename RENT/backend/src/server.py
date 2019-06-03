@@ -338,7 +338,14 @@ def add_calendar_event():
                           eventEndDT=eventEndDT,
                           eventDescription=eventDescription, rental=rentalID)
     dq.add(event)
-    return jsonify({}), 201
+    data = {}
+    data['id'] = event.id
+    data['eventName'] = event.eventName
+    data['eventStartDT'] = event.eventStartDT
+    data['eventEndDT'] = event.eventEndDT
+    data['eventDescription'] = event.eventDescription
+
+    return jsonify(data), 201
 
 
 @app.route('/addnote', methods=['POST'])
