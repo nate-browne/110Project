@@ -331,7 +331,7 @@ def add_calendar_event():
     rentalID = request.json['rentalID']
     eventName = request.json['eventName']
     eventStartDT = request.json['eventStartDT']
-    eventEndDT = request.json['evenEndDT']
+    eventEndDT = request.json['eventEndDT']
     eventDescription = request.json['eventDescription']
     event = CalendarEvent(eventName=eventName, eventStartDT=eventStartDT,
                           eventEndDT=eventEndDT,

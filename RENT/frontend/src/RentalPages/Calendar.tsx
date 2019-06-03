@@ -6,9 +6,9 @@ of user.
 
 import React, {Component} from 'react';
 //import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import {Text, Alert, View, ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {Text, Alert, View, ScrollView, TouchableOpacity, ActivityIndicator, FlatList} from 'react-native';
 
-import {Button, Icon, Image, Input, Overlay} from 'react-native-elements';
+import {Button, Icon, Image, Input, Overlay, ListItem} from 'react-native-elements';
 import Calendar from 'react-native-calendario';
 import DatePicker from 'react-native-datepicker';
 import styles from '../style/Calendar-Stylesheet';
@@ -16,8 +16,6 @@ import axios from 'axios';
 
 // @ts-ignore
 import configInfo from '../url';
-import { eventNames } from 'cluster';
-import { timingSafeEqual } from 'crypto';
 
 const serverURL = configInfo['serverURL'];
 const server = axios.create({
@@ -25,28 +23,36 @@ const server = axios.create({
 });
 
 interface IAppProps {
-  navigation?: any;
+  navigation?:any,
 }
 
 interface IAppState {
   isLoading: boolean,
   isVisible: boolean,
   items: any[],
+
   formControls: {
-    startDateTime: string,
-    endDateTime: string,
     eventName: string,
     eventDesc: string,
+
+    startDate: string,
+    startTime: string,
+
+    endDate: string,
+    endTime: string,
   },
+
   displayCalendarEvents: boolean,
 
-  calendarEvents: [],
+  calendarEvents: any[],
+  currentDayCalendarEvents: any[],
+  selectedDate: string,
 }
 
 export default class EventCalendar extends Component<IAppProps, IAppState> {
   [x: string]: any;
 
-  constructor(props){
+  constructor(props: any){
     super(props);
 
     this.state = {
@@ -54,69 +60,122 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       isVisible: false,
       items:[],
       formControls: {
-        startDateTime: '',
-        endDateTime: '',
         eventName: '',
         eventDesc: '',
+
+        startDate: '',
+        startTime: '',
+
+        endDate: '',
+        endTime: '',
       },
       displayCalendarEvents: false,
       
       calendarEvents: [],
+      currentDayCalendarEvents: [],
+      selectedDate: '',
     };
 
   }
   
-  setDisplayCalendarEvents(value: boolean) {
+  setDisplayCalendarEvents = (value: boolean, date: string) => {
+    
     this.setState({
-      displayCalendarEvents: value,
+      selectedDate: date,
+      currentDayCalendarEvents: this.getCurrentDayCalendarEvents(date),
       isVisible: !value,
-    })
+      displayCalendarEvents: value,
+    });
   }
   
-  setFormVisible(value: boolean) {
+  setFormVisible = (value: boolean) => {
     this.setState({
       isVisible: value,
       displayCalendarEvents: !value,
     });
   }
+
+  getCurrentDayCalendarEvents = (date: string) => {
+    const calendarEvents = this.state.calendarEvents;
+    const currentDayCalendarEvents :any[] = [];
+
+    let isWithinLeftBound = false;
+    let isWithinRightBound = false;
+
+    calendarEvents.forEach(element => {
+
+      console.log("Strings to compare:");
+      console.log(element);
+      console.log(date);
+
+      if (element.eventStartDate.slice(0, 4) <= date.slice(0,4)) {
+        if (element.eventStartDate.slice(5, 7) <= date.slice(5,7)) {
+          if (element.eventStartDate.slice(8, 10) <= date.slice(8, 10)) {
+            isWithinLeftBound = true;
+            console.log("dates within left range!");
+          }
+        }
+      }
+
+      if (element.eventEndDate.slice(0, 4) >= date.slice(0,4)) {
+        if (element.eventEndDate.slice(5, 7) >= date.slice(5,7)) {
+          if (element.eventEndDate.slice(8, 10) >= date.slice(8, 10)) {
+            isWithinRightBound = true;
+            console.log("dates within right range!");
+          }
+        }
+      }
+
+      if (isWithinLeftBound && isWithinRightBound) {
+        currentDayCalendarEvents.push(element);
+      }
+
+      isWithinLeftBound = false;
+      isWithinRightBound = false;
+    });
+
+    return currentDayCalendarEvents;
+  }
+
+  keyExtractor = (item:any) => item.eventID.toString();
   
   componentDidMount() {
     
-    
     server.get('/getcalendarevents',{
       params: {
-        rentalID: this.navigation.getParam("rentalID", "")
+        rentalID: this.props.navigation.getParam("rentalID", ""),
       }
     }).then(resp => {
       if(resp.status === 200) {
 
-        this.setState({
-          isLoading: false,
-          calendarEvents: resp.data['events'],
-        });
+        console.log("Returned events:");
+        console.log(resp.data);
 
+        this.updateCalendarEvents(resp.data['events']);
       }
     }).catch(err => {
       console.log(err)
     });
   }
 
-  createNewCalendarEvent() {
+  createNewCalendarEvent = () => {
+
+    let formControls = this.state.formControls;
+
+    let startDateTime = formControls['startDate'] + " " + formControls['startTime'] + ":00";
+    let endDateTime = formControls['endDate'] + " " + formControls['endTime'] + ":00";
 
     server.post('/addcalendarevent',{
-      params: {
-        rentalID: this.props.navigation.getParam("rentalID", 0),
-        eventName: this.state.formControls['eventName'],
-        eventDescription: this.state.formControls['eventDesc'],
-        eventStartDT: this.state.formControls['startDateTime'],
-        eventEndDT: this.state.formControls['endDateTime'],
-      }
+        rentalID: this.props.navigation.getParam("rentalID", ""),
+        eventName: formControls['eventName'],
+        eventDescription: formControls['eventDesc'],
+        eventStartDT: startDateTime,
+        eventEndDT: endDateTime,
     }).then(resp => {
       if(resp.status === 200) {
 
         this.setState({
           isLoading: false,
-          calendarEvents: resp.data['events'],
         });
       }
     }).then(resp => {
@@ -126,7 +185,43 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
     });
   }
 
-  updateCalendarEvents(events: any) {
+  updateCalendarEvents = (events: any) => {
+
+    let updatedEvents : any[] = [];
+
+    events.forEach((element:any) => {
+      let eventName = element.eventName;
+      let eventDescription = element.eventDescription;
+
+      let startDate = element.eventStartDT.slice(0, 10);
+      let startTime = element.eventStartDT.slice(10);
+      let endDate = element.eventEndDT.slice(0, 10);
+      let endTime = element.eventEndDT.slice(10);
+
+      let eventID = element.eventID;
+
+      //TODO: add deletion handling
+
+      updatedEvents.push({
+        eventID: eventID,
+        eventName: eventName,
+        eventDescription: eventDescription,
+        eventStartDate: startDate,
+        eventEndDate: endDate,
+        eventStartTime: startTime,
+        eventEndTime: endTime,
+      });
+    });
+
+    console.log(updatedEvents);
+
+    this.setState({
+      calendarEvents: updatedEvents,
+      isLoading: false,
+    });
+
+    this.getCurrentDayCalendarEvents(updatedEvents[0].eventStartDate);
+
   }
 
   render() {
@@ -145,7 +240,11 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
         <View>
 
           <Calendar
-            onChange={() => {this.setDisplayCalendarEvents(true)}}
+            onChange={(event: any) => {
+              console.log("Tapped calendar:");
+              console.log(event);
+              this.setDisplayCalendarEvents(true, event.startDate.toString().slice(0,10));
+            }}
             minDate="2018-04-20"
             startDate="2018-04-30"
             endDate="2018-05-05"
@@ -197,11 +296,29 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
           <Overlay
             isVisible={this.state.displayCalendarEvents}
             fullScreen={true}
+            windowBackgroundColor='#724CF9'
+            overlayBackgroundColor='#724CF9'
           >
-            <View>
-              <Text>
-                June 1, 2019
+            <View 
+              style={styles.viewEventForm}
+            >
+              <Text
+                style={{fontSize:20, textAlign:'center', marginTop: 30}}
+              >
+                {this.state.selectedDate}
               </Text>
+
+              <FlatList
+                data={this.state.currentDayCalendarEvents}
+                renderItem={( {item} ) => (
+                  <View>
+                    <Text>{item.eventName}</Text>
+                    <Text>{item.eventDescription}</Text>
+                  </View>
+                )}
+                keyExtractor={this.keyExtractor}
+              ></FlatList>
+
               <Button
                 title="Add event"
                 onPress={() => 
@@ -378,13 +495,20 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
                   inputStyle={{marginTop:20}}
                   blurOnSubmit = {false}
                   returnKeyType="next"
+                  onChangeText={(desc) => {
+                    const updatedControls = this.state.formControls;
+                    updatedControls['eventDesc'] = desc;
+                    this.setState({
+                      formControls: updatedControls,
+                    });
+                  }}
               />
               
-            </ScrollView>
             <Button
               title="Create"
               onPress={this.createNewCalendarEvent}
             ></Button>
+            </ScrollView>
           </Overlay>
           
         </View>

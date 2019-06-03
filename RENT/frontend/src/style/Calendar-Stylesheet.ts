@@ -2,6 +2,10 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
 
+  viewEventForm: {
+    backgroundColor: '#724CF9',
+  },
+
   addEventForm: {
     backgroundColor: '#EC4E20',
   },
