@@ -449,13 +449,26 @@ def login():
         return jsonify({'reason': "User/Password doesn't match"}), 400
 
 
-@app.route('/getaddress', methods=['GET'])
+@app.route('/getleaseinfo', methods=['GET'])
 @login_required
-def get_address():
+def get_lease_info():
     rentalID = request.args.get('rentalID')
     rental = dq.getRentalByRentalID(rentalID)
+
     if rental is not None:
-        return jsonify({'address': rental.address}), 200
+        lease = dq.getLeaseByLeaseID(rental.lease)
+        if lease is not None:
+            data = {}
+            data['address'] = rental.address
+            data['landlordFirstName'] = lease.landlordFirstName
+            data['landlordLastName'] = lease.landlordLastName
+            data['landlordPhoneNumber'] = lease.landlordPhoneNumber
+            data['landlordEmail'] = lease.landlordEmail
+            data['rentCost'] = str(lease.rentCost)
+            data['rentDueDate'] = lease.rentDueDate
+            return jsonify(data), 200
+        else:
+            return jsonify({'reason': "Lease not found"}), 404
     else:
         return jsonify({'reason': "Rental not found"}), 404
 
@@ -574,4 +587,4 @@ def unauthorized():
 _login.unauthorized_handler(unauthorized)
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', post=80)
+    app.run(debug=True, host='0.0.0.0')
