@@ -32,8 +32,8 @@ CREATE TABLE `Lease` (
 	`landlordPhoneNumber` varchar(25) DEFAULT NULL,
 	`landlordEmail` varchar(255) DEFAULT NULL,
 	`rentCost` DECIMAL(13, 2) NOT NULL DEFAULT 0,
-	`startDate` DATE NOT NULL,
-	`endDate` DATE NOT NULL,
+	`startDT` DATETIME NOT NULL,
+	`endDT` DATETIME NOT NULL,
 	`rentDueDate` varchar(50) NOT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -76,8 +76,8 @@ CREATE TABLE `ContactInfo` (
 CREATE TABLE `CalendarEvent` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`eventName` varchar(255) NOT NULL,
-	`eventStartDate` DATE NOT NULL,
-	`eventEndDate` DATE NOT NULL,
+	`eventStartDT` DATETIME NOT NULL,
+	`eventEndDT` DATETIME NOT NULL,
 	`eventDescription` varchar(255) DEFAULT NULL,
 	`rental` bigint(20) NOT NULL,
 	`isDeleted` BOOL NOT NULL DEFAULT 0,

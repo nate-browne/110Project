@@ -241,15 +241,15 @@ def add_lease():
     rentCost = request.json['rentCost']
     if rentCost == "":
         rentCost = 0
-    startDate = request.json['startDate']
-    endDate = request.json['endDate']
+    startDT = request.json['startDT']
+    endDT = request.json['endDT']
     rentDueDate = request.json['rentDueDate']
 
     lease = Lease(landlordFirstName=landlordFirstName,
                   landlordLastName=landlordLastName,
                   landlordPhoneNumber=landlordPhoneNumber,
                   landlordEmail=landlordEmail,
-                  rentCost=rentCost, startDate=startDate, endDate=endDate,
+                  rentCost=rentCost, startDT=startDT, endDT=endDT,
                   rentDueDate=rentDueDate)
     dq.add(lease)
     dq.update(rental, 'lease', lease.id)
@@ -281,7 +281,16 @@ def get_notes():
 def get_calendar_events():
     rentalID = request.args.get('rentalID')
     events = dq.getEventsWithRental(rentalID)
-    return jsonify({'events': events}), 200
+    ret = list()
+    for eve in events:
+        currEve = {}
+        currEve['eventName'] = eve.eventName
+        currEve['eventStartDT'] = eve.eventStartDT
+        currEve['eventEndDT'] = eve.eventEndDT
+        currEve['eventDescription'] = eve.eventDescription
+        currEve['eventID'] = eve.id
+        ret.append(currEve)
+    return jsonify({'events': ret}), 200
 
 
 @app.route('/addcalendarevent', methods=['POST'])
@@ -289,11 +298,11 @@ def get_calendar_events():
 def add_calendar_event():
     rentalID = request.json['rentalID']
     eventName = request.json['eventName']
-    eventStartDate = request.json['eventStartDate']
-    eventEndDate = request.json['evenEndDate']
+    eventStartDT = request.json['eventStartDT']
+    eventEndDT = request.json['evenEndDT']
     eventDescription = request.json['eventDescription']
-    event = CalendarEvent(eventName=eventName, eventStartDate=eventStartDate,
-                          eventEndDate=eventEndDate,
+    event = CalendarEvent(eventName=eventName, eventStartDT=eventStartDT,
+                          eventEndDT=eventEndDT,
                           eventDescription=eventDescription, rental=rentalID)
     dq.add(event)
     return jsonify({}), 201
@@ -398,9 +407,13 @@ def forgot_password():
 def reset_password():
     email = request.json['email']
     password = request.json['password']
+    old = request.json['old']
     user = dq.getUserByEmail(email)
-    _change_password(user, password)
-    return jsonify({}), 201
+    if _validate(user, old):
+        _change_password(user, password)
+        return jsonify({}), 201
+    else:
+        return jsonify({'reason': 'Old password doesn\'t match'}), 400
 
 
 @app.route('/logout', methods=['POST'])
@@ -445,10 +458,10 @@ def get_lease_end_date():
     if rental is not None:
         lease = dq.getLeaseByLeaseID(rental.lease)
         if lease is not None:
-            dt = lease.endDate
-            daysTill = (d.today() - d.fromisoformat(dt)).days
+            dt = lease.endDT
+            daysTill = (d.today() - d.strptime(dt, '%Y-%m-%d %H:%M:%S')).days
             data = {}
-            data['endDate'] = dt
+            data['endDT'] = dt
             data['daysTill'] = daysTill
             return jsonify(data), 200
         else:
