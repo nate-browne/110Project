@@ -550,7 +550,7 @@ def get_roommates():
             val = 'roommate' + repr(num)
             data[val] = {}
             if roommates[num] is not None:
-                name = roommates[num].firstName + roommates[num].lastName
+                name = roommates[num].firstName + " " + roommates[num].lastName
                 data[val]['id'] = roommates[num].id
                 data[val]['name'] = name
                 data[val]['phoneNumber'] = roommates[num].phoneNumber
