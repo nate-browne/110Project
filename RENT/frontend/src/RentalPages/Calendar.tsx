@@ -244,8 +244,6 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
 
           <Calendar
             onChange={(event: any) => {
-              console.log("Tapped calendar:");
-              console.log(event);
               this.setDisplayCalendarEvents(true, event.startDate.toISOString());
             }}
             minDate="2018-04-20"
@@ -299,16 +297,16 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
           <Overlay
             isVisible={this.state.displayCalendarEvents}
             fullScreen={true}
-            windowBackgroundColor='#724CF9'
-            overlayBackgroundColor='#724CF9'
+            windowBackgroundColor='#f6f7f8'
+            overlayBackgroundColor='#f6f7f8'
           >
             <View 
               style={styles.viewEventForm}
             >
               <Text
-                style={{fontSize:20, textAlign:'center', marginTop: 30}}
+                style={{fontSize:24, textAlign:'center', marginTop: 40, marginBottom: 40}}
               >
-                {this.state.selectedDate}
+                {this.state.selectedDate.toString()}
               </Text>
 
               <FlatList
@@ -322,25 +320,30 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
                 keyExtractor={this.keyExtractor}
               ></FlatList>
 
-              <Button
-                title="Add event"
-                onPress={() => 
-                  {
-                    this.setFormVisible(true); 
-                  }
-                }
+              <View 
+                style={{display:'flex', justifyContent:'center', flexDirection:'row'}}
               >
-              </Button>
-              
-              <Button
-                title="Back to calendar"
-                onPress={() => 
-                  {
-                    this.setEventsVisible(false); 
+                <Button
+                  title="Add event"
+                  containerStyle={styles.dateTimeButton}
+                  onPress={() => 
+                    {
+                      this.setFormVisible(true); 
+                    }
                   }
-                }
-              >
-              </Button>
+                >
+                </Button>
+                
+                <Button
+                  title="Back to calendar"
+                  onPress={() => 
+                    {
+                      this.setEventsVisible(false); 
+                    }
+                  }
+                >
+                </Button>
+              </View>
             </View>
           </Overlay>
 
@@ -349,7 +352,9 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
             containerStyle={styles.addEventForm}
           >
             <ScrollView>
-              <Text>Add Event</Text>
+              <Text
+                style={{fontSize:24, textAlign:'center', marginBottom:30}}
+              >Add Event</Text>
 
               <View
                 style={styles.dateTimeGroup}
@@ -501,11 +506,9 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
 
               <Input
                   placeholder="Event Description"
-                  multiline={true}
-                  numberOfLines={8}
                   autoCorrect={true}
                   keyboardAppearance="light"
-                  inputStyle={{marginTop:20}}
+                  inputStyle={{marginTop:20, marginBottom:20}}
                   blurOnSubmit = {false}
                   returnKeyType="next"
                   onChangeText={(desc) => {
@@ -517,15 +520,21 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
                   }}
               />
               
-            <Button
-              title="Create"
-              onPress={this.createNewCalendarEvent}
-            ></Button>
+            <View
+              style={{display:'flex', justifyContent:'center', flexDirection:'row'}}
+            >
+              <Button
+                title="Create"
+                onPress={this.createNewCalendarEvent}
+                containerStyle={styles.dateTimeButton}
+              ></Button>
 
-            <Button
-              title="Cancel"
-              onPress={() => this.setFormVisible(false)}
-            ></Button>
+              <Button
+                title="Cancel"
+                onPress={() => this.setFormVisible(false)}
+                containerStyle={styles.dateTimeButton}
+              ></Button>
+            </View>            
             </ScrollView>
           </Overlay>
           
