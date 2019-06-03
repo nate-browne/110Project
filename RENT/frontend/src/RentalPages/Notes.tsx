@@ -33,7 +33,7 @@ interface IAppState {
     randomBool: false,
 }
 
-export default class Notes extends Component {
+export default class Notes extends Component<IAppProps,IAppState> {
     [x: string]: any;
 
     constructor(props: any) {
@@ -56,13 +56,6 @@ export default class Notes extends Component {
             randomBool: false,
         };
     }
-
-
-    update() {
-        this.state.randomBool = !this.state.randomBool;
-    }
-
-
     setEditVisible(visible: boolean) {
         this.setState({editVisible: visible});
     }
