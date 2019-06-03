@@ -1,7 +1,7 @@
 /*
   Name: Login.tsx
   Description: This file renders the login page and handles sign up and logging in
-  of user.
+  of user..
 */
 // Library Imports
 import React, {Component} from 'react';
@@ -203,7 +203,6 @@ export default class Login extends Component<IAppProps, IAppState> {
             keyboardAppearance="light"
             returnKeyType="done"
             ref = {(input) => {this.nextInput = input;}}
-            onSubmitEditing={() => {this.login();}}
             placeholder="Password"
             errorStyle={{ color: 'red' }}
             errorMessage={this.displayLoginError()}
@@ -304,10 +303,7 @@ export default class Login extends Component<IAppProps, IAppState> {
         containerStyle={styles.container}
         >
         <TouchableWithoutFeedback onPress = {dismissKeyboard}>
-
-
         <View style={styles.container}>
-
           <Input
             inputContainerStyle={styles.textinput}
             placeholder="First Name"

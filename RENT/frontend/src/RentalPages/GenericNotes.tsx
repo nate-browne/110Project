@@ -10,7 +10,6 @@ export default class Grocery extends Component {
     // Need to retrieve all of this from the backend
     editVisible: false,
     addVisible: false,
-    currentID: 0,
 
     // Temporary item for same/edits
     tmp: {
