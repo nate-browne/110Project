@@ -111,6 +111,39 @@ export default class Roommates extends Component<IAppProps,IAppState> {
         this.getRoommate();
         return (
             <View style = {{width:'100%', height:'100%'}}>
+              <Overlay
+                  windowBackgroundColor="rgba(255, 255, 255, .5)"
+                  isVisible={this.state.addVisible}
+                  onBackdropPress={() => this.setState({ addVisible: false })}
+                  >
+
+                  <ScrollView>
+                      <Text style={{fontSize: 48}}>Add Roommate</Text>
+
+                      <Input
+                          leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                          placeholder="Roommate Email"
+                          autoCorrect={false}
+                          autoCapitalize="none"
+                          keyboardAppearance="light"
+                          keyboardType="email-address"
+                          leftIcon={
+                              <Icon name="account" type="material-community" color="black" size={25} />
+                          }
+                          blurOnSubmit = {false}
+                          returnKeyType="done"
+                          onChangeText={(text: string) => {this.state.tmp.email = text}}
+                      />
+
+                      <Button
+                          title="Add Roommate"
+                          onPress={() => {
+                              this.addRoommate();
+                              this.setState({addVisible: false});
+                          }}
+                      />
+                  </ScrollView>
+              </Overlay>
                 <ScrollView>
                     {
                       this.state.list.map((l, i) => (
@@ -160,39 +193,6 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                         onPress={() => { this.setState({addVisible: true}); }}
                     />
                 </View>
-                <Overlay
-                    windowBackgroundColor="rgba(255, 255, 255, .5)"
-                    isVisible={this.state.addVisible}
-                    onBackdropPress={() => this.setState({ addVisible: false })}
-                    >
-
-                    <ScrollView>
-                        <Text style={{fontSize: 48}}>Add Roommate</Text>
-
-                        <Input
-                            leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                            placeholder="Roommate Email"
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            keyboardAppearance="light"
-                            keyboardType="email-address"
-                            leftIcon={
-                                <Icon name="account" type="material-community" color="black" size={25} />
-                            }
-                            blurOnSubmit = {false}
-                            returnKeyType="done"
-                            onChangeText={(text: string) => {this.state.tmp.email = text}}
-                        />
-
-                        <Button
-                            title="Add Roommate"
-                            onPress={() => {
-                                this.addRoommate();
-                                this.setState({addVisible: false});
-                            }}
-                        />
-                    </ScrollView>
-                </Overlay>
             </View>
         )
     }
