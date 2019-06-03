@@ -19,6 +19,11 @@ export default class Logistics extends Component {
     image1Visible: false,
     daysLeft: 0,
     endDate: "",
+    landlordFirstName: "",
+    landlordLastName:"",
+    landlordEmail:"",
+    phoneNumber: "",
+    rent: 0,
   }
   static navigationOptions = ({ navigation }) => {
     const {params} = navigation.state;
@@ -52,13 +57,18 @@ export default class Logistics extends Component {
       console.log('Error occurred',err);
 
     })
-    server.get('/getaddress',{
+    server.get('/getleaseinfo',{
       params: {
         //name of json field requested: value,
         rentalID: id
       }
     }).then(resp => {
         this.props.navigation.setParams({address:resp.data['address']})
+        this.setState({landlordFirstName:resp.data['landlordFirstName']})
+        this.setState({landlordLastName:resp.data['landlordLastName']})
+        this.setState({landlordEmail:resp.data['landlordEmail']})
+        this.setState({phoneNumber:resp.data['landlordPhoneNumber']})
+        this.setState({rent:resp.data['rentCost']})
     }).catch(err => {
       console.log('Error occurred',err);
     })
@@ -69,7 +79,7 @@ export default class Logistics extends Component {
       <ImageBackground imageStyle={{opacity: 0.4}} style={styles.background}>
         <ScrollView style={styles.container}>
 
-          <Text style={styles.countdownHeader}> Lease ends in: </Text>
+          <Text style={styles.countdownHeader}> Lease Timer: </Text>
 
           <CountDown
               until={24 * 60 * 60 * this.state.daysLeft + 2 * 60 * 60 * 24}
@@ -85,17 +95,16 @@ export default class Logistics extends Component {
           />
           <Text style={styles.lease}> End Date: {this.state.endDate.slice(0,17)} </Text>
 
-          <Text> </Text>
-          <Text> </Text>
+          <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
+          <Text style={styles.countdownHeader}> Rental Payment Info </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> Monthly Rent: ${this.state.rent} </Text>
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
 
-
-
-
-          <Text> </Text>
-          <Text> </Text>
+          <Text style={styles.countdownHeader}> Landlord Info </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> {this.state.landlordFirstName}, {this.state.landlordLastName} </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> Email: {this.state.landlordEmail} </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> PhoneNumber: {this.state.phoneNumber} </Text>
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
-
 
         </ScrollView>
       </ImageBackground>
