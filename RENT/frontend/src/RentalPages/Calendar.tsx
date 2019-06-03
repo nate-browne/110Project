@@ -80,8 +80,7 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
   
   setDisplayCalendarEvents = (value: boolean, date: any) => {
 
-    console.log("date formats as " + date.slice(0,10));
-    
+    //console.log("date formats as " + date.slice(0,10));
     const formattedDate = date.slice(0,10);
 
     this.setState({
@@ -89,6 +88,12 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       currentDayCalendarEvents: this.getCurrentDayCalendarEvents(formattedDate),
       isVisible: !value,
       displayCalendarEvents: value,
+    });
+  }
+
+  setEventsVisible = (value: boolean) => {
+    this.setState({
+      displayCalendarEvents: value
     });
   }
   
@@ -108,18 +113,17 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
 
     calendarEvents.forEach(element => {
 
-      console.log("Strings to compare:");
+      /*console.log("Strings to compare:");
       console.log("Element from state:");
       console.log(element);
       console.log("Element picked from calendar:");
-      console.log(date);
+      console.log(date);*/
 
       var sDate = new Date(element.eventStartDate);
       var mDate = new Date(date);
       var eDate = new Date(element.eventEndDate);
 
       if (sDate <= mDate && mDate <= eDate) {
-        console.log("event is within the range of both elements!");
         isWithinLeftBound=true;
         isWithinRightBound=true;
       }
@@ -178,9 +182,11 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
         this.setState({
           isLoading: false,
         });
+
       }
     }).then(resp => {
       console.log(resp);
+      this.setFormVisible(false);
     }).catch(err => {
       console.log(err)
     });
@@ -321,6 +327,16 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
                 onPress={() => 
                   {
                     this.setFormVisible(true); 
+                  }
+                }
+              >
+              </Button>
+              
+              <Button
+                title="Back to calendar"
+                onPress={() => 
+                  {
+                    this.setEventsVisible(false); 
                   }
                 }
               >
@@ -504,6 +520,11 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
             <Button
               title="Create"
               onPress={this.createNewCalendarEvent}
+            ></Button>
+
+            <Button
+              title="Cancel"
+              onPress={() => this.setFormVisible(false)}
             ></Button>
             </ScrollView>
           </Overlay>
