@@ -226,7 +226,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                                     style={{borderColor: "#BBBBBB", borderBottomWidth: 1}}
                                     leftAvatar={{
                                         rounded: true,
-                                        source: {uri: "https://bootdey.com/img/Content/avatar/avatar6.png"}
+                                        source: require('../../assets/admin_1246364.png')
                                     }}
                                     title={l.name}
                                     titleStyle={{color: '#555555', fontSize: 20}}

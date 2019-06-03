@@ -544,7 +544,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
               <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
                   backgroundColor: "#FFFFFF", flex:1}}>
-                  <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
+                  <Image style={styles.avatar} source={require('../../assets/admin_1246364.png')}/>
 
 
                   <TouchableOpacity onPress={ () => {
@@ -593,7 +593,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
                   <Divider style={{ marginTop:20, backgroundColor: '#AAAAAA', height: 2,}} />
 
-                  
+
                   <TouchableOpacity onPress={ () => this.setState({changePasswordVisible: true})}>
                     <Text style={styles.emergency}>Change Password</Text>
                   </TouchableOpacity>

@@ -79,7 +79,7 @@ export default class Logistics extends Component {
       <ImageBackground imageStyle={{opacity: 0.4}} style={styles.background}>
         <ScrollView style={styles.container}>
 
-          <Text style={styles.countdownHeader}> Lease ends in: </Text>
+          <Text style={styles.countdownHeader}> Lease Timer: </Text>
 
           <CountDown
               until={24 * 60 * 60 * this.state.daysLeft + 2 * 60 * 60 * 24}
@@ -97,13 +97,13 @@ export default class Logistics extends Component {
 
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
           <Text style={styles.countdownHeader}> Rental Payment Info </Text>
-          <Text> Monthly Rent: ${this.state.rent} </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> Monthly Rent: ${this.state.rent} </Text>
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
 
           <Text style={styles.countdownHeader}> Landlord Info </Text>
-          <Text> {this.state.landlordFirstName}, {this.state.landlordLastName} </Text>
-          <Text> {this.state.landlordEmail} </Text>
-          <Text> {this.state.phoneNumber} </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> {this.state.landlordFirstName}, {this.state.landlordLastName} </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> Email: {this.state.landlordEmail} </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> PhoneNumber: {this.state.phoneNumber} </Text>
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
 
         </ScrollView>
