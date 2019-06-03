@@ -88,7 +88,7 @@ export default class Logistics extends Component {
           <Text> </Text>
           <Text> </Text>
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
-
+          <Text style={styles.countdownHeader}> Rental Payment Info </Text>
 
 
 
