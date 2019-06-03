@@ -31,6 +31,10 @@ export default class NotesMain extends Component {
 
   };
 
+  constructor(props){
+      super(props);
+      this.getNotes();
+  }
   componentDidMount() {
 
         this.state.rentalID = this.props.navigation.getParam("rentalID","");
@@ -113,7 +117,6 @@ export default class NotesMain extends Component {
 
     render() {
         this.getNotes();
-
           return (
               <View style= {{width:'100%', height:'100%'}}>
               <ScrollView style={styles.itemContainer}>
@@ -139,48 +142,9 @@ export default class NotesMain extends Component {
                             </Text>
                         }
                         subtitle="random subtitle"
-                    />/*
-                    this.state.list[l].map((l1,i1)=>(
-                        <ListItem
-                            key={i1}
-                            onLongPress={() => {
-                                //edit item
-                                this.state.currentName="the";
-                                this.state.currentSubtitle="tlek";
-                                this.setEditVisible(true);
-                            }}
-                            onPress={() => {
-                                this.props.navigation.push(l1.name);
-                            }}
-                            title={
-                                <Text style={[styles.text, l1.done ? styles.text_crossed : styles.text]}>
-                                    {l1.title}
-                                </Text>
-                            }
-                            subtitle={l1.description}
-                        />
-                    ))*/
+                    />
                 ))
-                /*this.state.list.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    onLongPress={() => {
-                      //edit item
-                      this.state.currentName=l.name;
-                      this.state.currentSubtitle=l.subtitle;
-                      this.setEditVisible(true);
-                    }}
-                    onPress={() => {
-                      this.props.navigation.push(l.name);
-                    }}
-                    title={
-                      <Text style={[styles.text, l.done ? styles.text_crossed : styles.text]}>
-                          {l.title}
-                      </Text>
-                    }
-                    subtitle={l.description}
-                  />
-                ))*/
+
               }
             </ScrollView>
             <View style={styles.button}>

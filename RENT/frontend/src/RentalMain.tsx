@@ -64,7 +64,10 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
             <TouchableHighlight onPress={()=> {
               switch(item.name){
                 case 'Leasing Info':
-                  this.props.navigation.push('LeasingInfo');
+                  this.props.navigation.push('LeasingInfo',{
+                      rentalID: this.props.navigation.getParam("rentalID",""),
+                      address: "Loading..."
+                  });
                   break;
                 case 'Notes':
                   this.props.navigation.push('NotesMain',{
@@ -81,9 +84,7 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                 case 'Calendar':
                   this.props.navigation.push('Calendar');
                   break;
-                  case 'GroceryList':
-                      this.props.navigation.push('GroceryList');
-                      break;
+
 
 
                   //case 'Expenses':
