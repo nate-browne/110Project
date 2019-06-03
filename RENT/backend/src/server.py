@@ -317,8 +317,9 @@ def get_calendar_events():
     for eve in events:
         currEve = {}
         currEve['eventName'] = eve.eventName
-        currEve['eventStartDT'] = eve.eventStartDT
-        currEve['eventEndDT'] = eve.eventEndDT
+        currEve['eventStartDT'] = \
+            eve.eventStartDT.strftime("%Y-%m-%d %H:%M:%S")
+        currEve['eventEndDT'] = eve.eventEndDT.strftime("%Y-%m-%d %H:%M:%S")
         currEve['eventDescription'] = eve.eventDescription
         currEve['eventID'] = eve.id
         ret.append(currEve)
@@ -337,7 +338,14 @@ def add_calendar_event():
                           eventEndDT=eventEndDT,
                           eventDescription=eventDescription, rental=rentalID)
     dq.add(event)
-    return jsonify({}), 201
+    data = {}
+    data['id'] = event.id
+    data['eventName'] = event.eventName
+    data['eventStartDT'] = event.eventStartDT
+    data['eventEndDT'] = event.eventEndDT
+    data['eventDescription'] = event.eventDescription
+
+    return jsonify(data), 201
 
 
 @app.route('/addnote', methods=['POST'])
@@ -484,7 +492,7 @@ def get_lease_end_date():
             dt = lease.endDT
             daysTill = (dt - d.today()).days
             data = {}
-            data['endDT'] = dt
+            data['endDT'] = dt.strftime("%Y-%m-%d %H:%M:%S")
             data['daysTill'] = daysTill
             return jsonify(data), 200
         else:
