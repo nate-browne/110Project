@@ -84,6 +84,8 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                     });
                   break;
                 case 'Calendar':
+
+                  console.log("Rental ID:" + this.props.navigation.getParam("rentalID", ""));
                   this.props.navigation.push('Calendar', {
                     rentalID: this.props.navigation.getParam("rentalID", ""),
                   });
