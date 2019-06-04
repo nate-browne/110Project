@@ -6,9 +6,9 @@ of user.
 
 import React, {Component} from 'react';
 //import styles from './style/App-Stylesheet'; // This is how you can import stuff from other folders
-import {Text, Alert, View, ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {Text, Alert, View, ScrollView, TouchableOpacity, ActivityIndicator, FlatList} from 'react-native';
 
-import {Button, Icon, Image, Input, Overlay} from 'react-native-elements';
+import {Button, Icon, Image, Input, Overlay, ListItem} from 'react-native-elements';
 import Calendar from 'react-native-calendario';
 import DatePicker from 'react-native-datepicker';
 import styles from '../style/Calendar-Stylesheet';
@@ -16,8 +16,6 @@ import axios from 'axios';
 
 // @ts-ignore
 import configInfo from '../url';
-import { eventNames } from 'cluster';
-import { timingSafeEqual } from 'crypto';
 
 const serverURL = configInfo['serverURL'];
 const server = axios.create({
@@ -25,28 +23,36 @@ const server = axios.create({
 });
 
 interface IAppProps {
-  navigation?: any;
+  navigation?:any,
 }
 
 interface IAppState {
   isLoading: boolean,
   isVisible: boolean,
   items: any[],
+
   formControls: {
-    startDateTime: string,
-    endDateTime: string,
     eventName: string,
     eventDesc: string,
+
+    startDate: string,
+    startTime: string,
+
+    endDate: string,
+    endTime: string,
   },
+
   displayCalendarEvents: boolean,
 
-  calendarEvents: [],
+  calendarEvents: any[],
+  currentDayCalendarEvents: any[],
+  selectedDate: string,
 }
 
 export default class EventCalendar extends Component<IAppProps, IAppState> {
   [x: string]: any;
 
-  constructor(props){
+  constructor(props: any){
     super(props);
 
     this.state = {
@@ -54,79 +60,171 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       isVisible: false,
       items:[],
       formControls: {
-        startDateTime: '',
-        endDateTime: '',
         eventName: '',
         eventDesc: '',
+
+        startDate: '',
+        startTime: '',
+
+        endDate: '',
+        endTime: '',
       },
       displayCalendarEvents: false,
       
       calendarEvents: [],
+      currentDayCalendarEvents: [],
+      selectedDate: '',
     };
 
   }
   
-  setDisplayCalendarEvents(value: boolean) {
+  setDisplayCalendarEvents = (value: boolean, date: any) => {
+
+    //console.log("date formats as " + date.slice(0,10));
+    const formattedDate = date.slice(0,10);
+
     this.setState({
-      displayCalendarEvents: value,
+      selectedDate: formattedDate,
+      currentDayCalendarEvents: this.getCurrentDayCalendarEvents(formattedDate),
       isVisible: !value,
-    })
+      displayCalendarEvents: value,
+    });
+  }
+
+  setEventsVisible = (value: boolean) => {
+    this.setState({
+      displayCalendarEvents: value
+    });
   }
   
-  setFormVisible(value: boolean) {
+  setFormVisible = (value: boolean) => {
     this.setState({
       isVisible: value,
       displayCalendarEvents: !value,
     });
   }
+
+  getCurrentDayCalendarEvents = (date: string) => {
+    const calendarEvents = this.state.calendarEvents;
+    const currentDayCalendarEvents :any[] = [];
+
+    let isWithinLeftBound = false;
+    let isWithinRightBound = false;
+
+    calendarEvents.forEach(element => {
+
+      /*console.log("Strings to compare:");
+      console.log("Element from state:");
+      console.log(element);
+      console.log("Element picked from calendar:");
+      console.log(date);*/
+
+      var sDate = new Date(element.eventStartDate);
+      var mDate = new Date(date);
+      var eDate = new Date(element.eventEndDate);
+
+      if (sDate <= mDate && mDate <= eDate) {
+        isWithinLeftBound=true;
+        isWithinRightBound=true;
+      }
+
+      if (isWithinLeftBound && isWithinRightBound) {
+        currentDayCalendarEvents.push(element);
+      }
+
+      isWithinLeftBound = false;
+      isWithinRightBound = false;
+
+      console.log("\n\n")
+
+    });
+
+    return currentDayCalendarEvents;
+  }
+
+  keyExtractor = (item:any) => item.eventID.toString();
   
   componentDidMount() {
     
-    
     server.get('/getcalendarevents',{
       params: {
-        rentalID: this.navigation.getParam("rentalID", "")
+        rentalID: this.props.navigation.getParam("rentalID", ""),
       }
     }).then(resp => {
       if(resp.status === 200) {
 
-        this.setState({
-          isLoading: false,
-          calendarEvents: resp.data['events'],
-        });
+        console.log("Returned events:");
+        console.log(resp.data);
 
+        this.updateCalendarEvents(resp.data['events']);
       }
     }).catch(err => {
       console.log(err)
     });
   }
 
-  createNewCalendarEvent() {
+  createNewCalendarEvent = () => {
+
+    let formControls = this.state.formControls;
+
+    let startDateTime = formControls['startDate'] + " " + formControls['startTime'] + ":00";
+    let endDateTime = formControls['endDate'] + " " + formControls['endTime'] + ":00";
 
     server.post('/addcalendarevent',{
-      params: {
-        rentalID: this.props.navigation.getParam("rentalID", 0),
-        eventName: this.state.formControls['eventName'],
-        eventDescription: this.state.formControls['eventDesc'],
-        eventStartDT: this.state.formControls['startDateTime'],
-        eventEndDT: this.state.formControls['endDateTime'],
-      }
+        rentalID: this.props.navigation.getParam("rentalID", ""),
+        eventName: formControls['eventName'],
+        eventDescription: formControls['eventDesc'],
+        eventStartDT: startDateTime,
+        eventEndDT: endDateTime,
     }).then(resp => {
       if(resp.status === 200) {
 
         this.setState({
           isLoading: false,
-          calendarEvents: resp.data['events'],
         });
+
       }
     }).then(resp => {
       console.log(resp);
+      this.setFormVisible(false);
     }).catch(err => {
       console.log(err)
     });
   }
 
-  updateCalendarEvents(events: any) {
+  updateCalendarEvents = (events: any) => {
+
+    let updatedEvents : any[] = [];
+
+    events.forEach((element:any) => {
+      let eventName = element.eventName;
+      let eventDescription = element.eventDescription;
+
+      let startDate = element.eventStartDT.slice(0, 10);
+      let startTime = element.eventStartDT.slice(10);
+      let endDate = element.eventEndDT.slice(0, 10);
+      let endTime = element.eventEndDT.slice(10);
+
+      let eventID = element.eventID;
+
+      //TODO: add deletion handling
+
+      updatedEvents.push({
+        eventID: eventID,
+        eventName: eventName,
+        eventDescription: eventDescription,
+        eventStartDate: startDate,
+        eventEndDate: endDate,
+        eventStartTime: startTime,
+        eventEndTime: endTime,
+      });
+    });
+
+    this.setState({
+      calendarEvents: updatedEvents,
+      isLoading: false,
+    });
+
   }
 
   render() {
@@ -145,7 +243,9 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
         <View>
 
           <Calendar
-            onChange={() => {this.setDisplayCalendarEvents(true)}}
+            onChange={(event: any) => {
+              this.setDisplayCalendarEvents(true, event.startDate.toISOString());
+            }}
             minDate="2018-04-20"
             startDate="2018-04-30"
             endDate="2018-05-05"
@@ -197,20 +297,53 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
           <Overlay
             isVisible={this.state.displayCalendarEvents}
             fullScreen={true}
+            windowBackgroundColor='#f6f7f8'
+            overlayBackgroundColor='#f6f7f8'
           >
-            <View>
-              <Text>
-                June 1, 2019
-              </Text>
-              <Button
-                title="Add event"
-                onPress={() => 
-                  {
-                    this.setFormVisible(true); 
-                  }
-                }
+            <View 
+              style={styles.viewEventForm}
+            >
+              <Text
+                style={{fontSize:24, textAlign:'center', marginTop: 40, marginBottom: 40}}
               >
-              </Button>
+                {this.state.selectedDate.toString()}
+              </Text>
+
+              <FlatList
+                data={this.state.currentDayCalendarEvents}
+                renderItem={( {item} ) => (
+                  <View>
+                    <Text>{item.eventName}</Text>
+                    <Text>{item.eventDescription}</Text>
+                  </View>
+                )}
+                keyExtractor={this.keyExtractor}
+              ></FlatList>
+
+              <View 
+                style={{display:'flex', justifyContent:'center', flexDirection:'row'}}
+              >
+                <Button
+                  title="Add event"
+                  containerStyle={styles.dateTimeButton}
+                  onPress={() => 
+                    {
+                      this.setFormVisible(true); 
+                    }
+                  }
+                >
+                </Button>
+                
+                <Button
+                  title="Back to calendar"
+                  onPress={() => 
+                    {
+                      this.setEventsVisible(false); 
+                    }
+                  }
+                >
+                </Button>
+              </View>
             </View>
           </Overlay>
 
@@ -219,7 +352,9 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
             containerStyle={styles.addEventForm}
           >
             <ScrollView>
-              <Text>Add Event</Text>
+              <Text
+                style={{fontSize:24, textAlign:'center', marginBottom:30}}
+              >Add Event</Text>
 
               <View
                 style={styles.dateTimeGroup}
@@ -371,20 +506,36 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
 
               <Input
                   placeholder="Event Description"
-                  multiline={true}
-                  numberOfLines={8}
                   autoCorrect={true}
                   keyboardAppearance="light"
-                  inputStyle={{marginTop:20}}
+                  inputStyle={{marginTop:20, marginBottom:20}}
                   blurOnSubmit = {false}
                   returnKeyType="next"
+                  onChangeText={(desc) => {
+                    const updatedControls = this.state.formControls;
+                    updatedControls['eventDesc'] = desc;
+                    this.setState({
+                      formControls: updatedControls,
+                    });
+                  }}
               />
               
+            <View
+              style={{display:'flex', justifyContent:'center', flexDirection:'row'}}
+            >
+              <Button
+                title="Create"
+                onPress={this.createNewCalendarEvent}
+                containerStyle={styles.dateTimeButton}
+              ></Button>
+
+              <Button
+                title="Cancel"
+                onPress={() => this.setFormVisible(false)}
+                containerStyle={styles.dateTimeButton}
+              ></Button>
+            </View>            
             </ScrollView>
-            <Button
-              title="Create"
-              onPress={this.createNewCalendarEvent}
-            ></Button>
           </Overlay>
           
         </View>

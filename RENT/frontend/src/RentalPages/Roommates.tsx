@@ -199,7 +199,9 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                                 <ListItem
                                     key={i}
                                     onPress={() => {
-                                        this.props.navigation.push('Profile');
+                                        this.props.navigation.push('Profile',{
+                                          userID: l.id
+                                        });
                                     }}
                                     onLongPress={() => {
                                         this.state.currentID = i;
@@ -226,7 +228,7 @@ export default class Roommates extends Component<IAppProps,IAppState> {
                                     style={{borderColor: "#BBBBBB", borderBottomWidth: 1}}
                                     leftAvatar={{
                                         rounded: true,
-                                        source: {uri: "https://bootdey.com/img/Content/avatar/avatar6.png"}
+                                        source: require('../../assets/admin_1246364.png')
                                     }}
                                     title={l.name}
                                     titleStyle={{color: '#555555', fontSize: 20}}

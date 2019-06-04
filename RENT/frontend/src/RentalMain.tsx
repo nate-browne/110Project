@@ -29,7 +29,8 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
               marginRight: 10
             }} onPress={ () => navigation.push('Profile', {
               userID: navigation.getParam("userID",""),
-              userName: navigation.getParam("userName","")
+              userName: navigation.getParam("userName",""),
+              canEdit: true
             })}
         >
           <Icon name={"face"}  size={30}  />
@@ -83,6 +84,8 @@ export default class RentalMain extends Component<IAppProps, IAppState> {
                     });
                   break;
                 case 'Calendar':
+
+                  console.log("Rental ID:" + this.props.navigation.getParam("rentalID", ""));
                   this.props.navigation.push('Calendar', {
                     rentalID: this.props.navigation.getParam("rentalID", ""),
                   });

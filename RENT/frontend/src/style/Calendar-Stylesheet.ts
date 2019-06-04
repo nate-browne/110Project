@@ -2,8 +2,12 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
 
+  viewEventForm: {
+    backgroundColor: '#f6f7f8',
+  },
+
   addEventForm: {
-    backgroundColor: '#EC4E20',
+    backgroundColor: '#f6f7f8',
   },
 
   dateTimeGroup: {
@@ -19,6 +23,14 @@ const styles = StyleSheet.create({
     width: '30%',
     marginLeft: 2,
     marginRight: 2,
+    borderColor: '#000',
+    borderRadius: 3,
+  },
+  
+  addEventButton: {
+    width: '40%',
+    marginLeft: 5,
+    marginRight: 5,
     borderColor: '#000',
     borderRadius: 3,
   },

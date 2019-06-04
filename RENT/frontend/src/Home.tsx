@@ -140,8 +140,8 @@ export default class Home extends Component<IAppProps, IAppState> {
     let displayCurr;
     let displayPast;
     let button;
-    if( this.state.currentID === 0) {
-        displayErr = <Text> First time using RENT? Add a rental below and start managing your properties right away </Text>
+    if( this.state.currentID === null) {
+        displayErr = <Text style={{fontSize:24, textAlign:"center"}}> First time using RENT? Add a rental below and start managing your properties right away! </Text>
     }
     else{
       if( this.state.currentID !== 0 && this.state.currentID !== null && this.state.currentID !== undefined ) {
