@@ -522,7 +522,7 @@ def get_info():
             contact_str = 'contact' + repr(num)
             data[contact_str] = {}
             data[contact_str]['relation'] = contacts[num].relationship
-            name = contacts[num].firstName + contacts[num].lastName
+            name = contacts[num].name
             data[contact_str]['name'] = name
             data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
         return jsonify(data), 200
