@@ -522,7 +522,7 @@ def get_info():
             contact_str = 'contact' + repr(num)
             data[contact_str] = {}
             data[contact_str]['relation'] = contacts[num].relationship
-            name = contacts[num].firstName + contacts[num].lastName
+            name = contacts[num].name
             data[contact_str]['name'] = name
             data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
         return jsonify(data), 200
@@ -550,7 +550,7 @@ def get_roommates():
             val = 'roommate' + repr(num)
             data[val] = {}
             if roommates[num] is not None:
-                name = roommates[num].firstName + roommates[num].lastName
+                name = roommates[num].firstName + " " + roommates[num].lastName
                 data[val]['id'] = roommates[num].id
                 data[val]['name'] = name
                 data[val]['phoneNumber'] = roommates[num].phoneNumber
