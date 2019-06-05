@@ -165,7 +165,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
   changeUserInfo(): any {
     server.post('/changeuserinfo', {
-      userID: this.props.navigation.getParam("userID",0)
+      userID: this.props.navigation.getParam("userID",0),
       email: this.state.email,
       change: null,
       firstName: this.state.firstName,

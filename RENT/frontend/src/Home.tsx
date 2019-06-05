@@ -234,9 +234,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                     placeholder="Landlord's Last name"
                     keyboardAppearance="light"
                     returnKeyType="next"
-                    ref = {(input) => {this.input2 = input}}
+                    ref = {(input) => {this.input3 = input}}
                     blurOnSubmit = {false}
-                    onSubmitEditing = {() => {this.input3.focus()}}
+                    onSubmitEditing = {() => {this.input4.focus()}}
                     onChangeText={(text: string) => this.setState({landlordLastName: text})}
                   />
                 <Input
@@ -246,9 +246,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                       keyboardAppearance="light"
                       keyboardType="email-address"
                       returnKeyType="next"
-                      ref = {(input) => {this.input7 = input}}
+                      ref = {(input) => {this.input4 = input}}
                       blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input8.focus()}}
+                      onSubmitEditing = {() => {this.input5.focus()}}
                       onChangeText={(text: string) => this.setState({landlordEmail: text})}
                  />
                  <Input
@@ -258,9 +258,8 @@ export default class Home extends Component<IAppProps, IAppState> {
                     keyboardAppearance="light"
                     keyboardType="phone-pad"
                     returnKeyType="next"
-                    ref = {(input) => {this.input3 = input}}
+                    ref = {(input) => {this.input5 = input}}
                     blurOnSubmit = {false}
-                    onSubmitEditing = {() => {this.input4.focus()}}
                     onChangeText={(text: string) => this.setState({phoneNumber: text})}
                   />
 
@@ -296,9 +295,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                       keyboardAppearance="light"
                       keyboardType="numeric"
                       returnKeyType="next"
-                      ref = {(input) => {this.input6 = input}}
                       blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input7.focus()}}
                       onChangeText={(text: string) => this.setState({rent: text})}
                   />
                 </View>
