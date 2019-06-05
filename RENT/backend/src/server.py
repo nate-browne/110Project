@@ -518,13 +518,29 @@ def get_info():
         return jsonify({'reason': "User not found"}), 404
 
     if len(contacts) != 0:
-        for num in range(len(contacts)):
-            contact_str = 'contact' + repr(num)
+        counter = 0
+        for ind, cont in enumerate(contacts):
+            counter += 1
+            contact_str = 'contact' + repr(ind)
             data[contact_str] = {}
+<<<<<<< HEAD
             data[contact_str]['relation'] = contacts[num].relationship
             name = contacts[num].name
             data[contact_str]['name'] = name
             data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
+=======
+            data[contact_str]['relation'] = cont.relationship
+            data[contact_str]['name'] = cont.name
+            data[contact_str]['phoneNumber'] = cont.phoneNumber
+
+        if counter != 2:
+            contact_str = 'contact' + repr(counter)
+            data[contact_str] = {}
+            data[contact_str]['relation'] = 'Relative ' + repr(counter)
+            name = 'Default Name'
+            data[contact_str]['name'] = name
+            data[contact_str]['phoneNumber'] = "1234567890"
+>>>>>>> bb2cb04dff7932239cd2b3efa04739ab6ec5ea3a
         return jsonify(data), 200
     else:
         for num in range(2):
