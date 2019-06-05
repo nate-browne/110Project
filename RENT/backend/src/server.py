@@ -525,13 +525,6 @@ def get_info():
             name = contacts[num].name
             data[contact_str]['name'] = name
             data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
-        if len(contacts) < 2:
-            contact_str = 'contact' + repr(2)
-            data[contact_str] = {}
-            data[contact_str]['relation'] = 'Relative ' + repr(2)
-            name = 'Default Name'
-            data[contact_str]['name'] = name
-            data[contact_str]['phoneNumber'] = "1234567890"
         return jsonify(data), 200
     else:
         for num in range(2):

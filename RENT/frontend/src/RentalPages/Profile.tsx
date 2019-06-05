@@ -165,6 +165,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
 
   changeUserInfo(): any {
     server.post('/changeuserinfo', {
+      userID: this.props.navigation.getParam("userID",0)
       email: this.state.email,
       change: null,
       firstName: this.state.firstName,
@@ -508,7 +509,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                                 this.state.e2Name = this.state.tmpFirstName;
                                 this.state.e2Relation = this.state.tmpRelation;
                                 this.state.e2Phone = this.state.tmpPhone;
-                                this.setState({contact1Visible: false});
+                                this.setState({contact2Visible: false});
                                 this.changeContact2Info();
                             }}
                         />
