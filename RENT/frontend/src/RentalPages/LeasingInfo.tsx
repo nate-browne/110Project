@@ -101,7 +101,7 @@ export default class Logistics extends Component {
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />
 
           <Text style={styles.countdownHeader}> Landlord Info </Text>
-          <Text style={{fontSize:24,textAlign:"center"}}> {this.state.landlordFirstName}, {this.state.landlordLastName} </Text>
+          <Text style={{fontSize:24,textAlign:"center"}}> {this.state.landlordFirstName},{this.state.landlordLastName} </Text>
           <Text style={{fontSize:24,textAlign:"center"}}> Email: {this.state.landlordEmail} </Text>
           <Text style={{fontSize:24,textAlign:"center"}}> PhoneNumber: {this.state.phoneNumber} </Text>
           <Divider style={{ backgroundColor: '#2bc0cd', height: 10}} />

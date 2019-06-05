@@ -70,14 +70,14 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
         endTime: '',
       },
       displayCalendarEvents: false,
-      
+
       calendarEvents: [],
       currentDayCalendarEvents: [],
       selectedDate: '',
     };
 
   }
-  
+
   setDisplayCalendarEvents = (value: boolean, date: any) => {
 
     //console.log("date formats as " + date.slice(0,10));
@@ -96,7 +96,7 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       displayCalendarEvents: value
     });
   }
-  
+
   setFormVisible = (value: boolean) => {
     this.setState({
       isVisible: value,
@@ -112,12 +112,6 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
     let isWithinRightBound = false;
 
     calendarEvents.forEach(element => {
-
-      /*console.log("Strings to compare:");
-      console.log("Element from state:");
-      console.log(element);
-      console.log("Element picked from calendar:");
-      console.log(date);*/
 
       var sDate = new Date(element.eventStartDate);
       var mDate = new Date(date);
@@ -143,9 +137,9 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
   }
 
   keyExtractor = (item:any) => item.eventID.toString();
-  
+
+
   componentDidMount() {
-    
     server.get('/getcalendarevents',{
       params: {
         rentalID: this.props.navigation.getParam("rentalID", ""),
@@ -190,6 +184,7 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
     }).catch(err => {
       console.log(err)
     });
+
   }
 
   updateCalendarEvents = (events: any) => {
@@ -293,14 +288,14 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
               nonTouchableLastMonthDayTextStyle: {},
             }}
           />
-          
+
           <Overlay
             isVisible={this.state.displayCalendarEvents}
             fullScreen={true}
             windowBackgroundColor='#f6f7f8'
             overlayBackgroundColor='#f6f7f8'
           >
-            <View 
+            <View
               style={styles.viewEventForm}
             >
               <Text
@@ -320,25 +315,25 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
                 keyExtractor={this.keyExtractor}
               ></FlatList>
 
-              <View 
+              <View
                 style={{display:'flex', justifyContent:'center', flexDirection:'row'}}
               >
                 <Button
                   title="Add event"
                   containerStyle={styles.dateTimeButton}
-                  onPress={() => 
+                  onPress={() =>
                     {
-                      this.setFormVisible(true); 
+                      this.setFormVisible(true);
                     }
                   }
                 >
                 </Button>
-                
+
                 <Button
                   title="Back to calendar"
-                  onPress={() => 
+                  onPress={() =>
                     {
-                      this.setEventsVisible(false); 
+                      this.setEventsVisible(false);
                     }
                   }
                 >
@@ -486,7 +481,7 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
                   >
                 </DatePicker>
               </View>
-              
+
               <Input
                   placeholder="Event Name"
                   autoCorrect={true}
@@ -519,7 +514,7 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
                     });
                   }}
               />
-              
+
             <View
               style={{display:'flex', justifyContent:'center', flexDirection:'row'}}
             >
@@ -531,13 +526,13 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
 
               <Button
                 title="Cancel"
-                onPress={() => this.setFormVisible(false)}
+                onPress={() => this.setFormVisible(false) }
                 containerStyle={styles.dateTimeButton}
               ></Button>
-            </View>            
+            </View>
             </ScrollView>
           </Overlay>
-          
+
         </View>
       );
     }

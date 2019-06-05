@@ -88,11 +88,15 @@ export default class Roommates extends Component<IAppProps,IAppState> {
             /* Success */
             if (resp.status === 201) {
                 console.log("Roommate Added!");
+                this.getRoommate();
+                this.setState({isLoading: false});
             }
-            this.getRoommate();
-            this.setState({isLoading: false});
+
+
         }).catch(err => {
-            console.log('Error occurred ', err.response.data['Reason']);
+            console.log('Error occurred shit ', err.response.data['Reason']);
+              this.setState({isLoading:false})
+              Alert.alert("Could not find user with that email.")
         })
     }
 
@@ -143,6 +147,8 @@ export default class Roommates extends Component<IAppProps,IAppState> {
             this.setState({isLoading: false});
         }).catch(err => {
             console.log("ERROR getting roommate", err.response.data['Reason']);
+            this.setState({isLoading:false})
+            Alert.alert("Could not find any roommates.")
         })
     }
 

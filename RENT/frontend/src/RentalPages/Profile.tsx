@@ -156,6 +156,8 @@ export default class Profile extends Component<IAppProps, IAppState> {
               this.state.e2Name = resp.data['contact0']['name'];
               this.state.e2Phone = resp.data['contact0']['phoneNumber'];
           }
+          if(resp.data['contact0']['name'] !== "Default Name" ) { this.setState({e1: true})}
+          if(resp.data['contact1']['name'] !== "Default Name" ) { this.setState({e2: true})}
       }).catch(err => {
           console.log(err.response.data['reason'])
       });
