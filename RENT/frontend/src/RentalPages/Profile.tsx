@@ -248,6 +248,25 @@ export default class Profile extends Component<IAppProps, IAppState> {
     return "";
   }
 
+  onTextChange(text: string) {
+    var cleaned = ('' + text).replace(/\D/g, '')
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+        var intlCode = (match[1] ? '+1 ' : ''),
+            number = [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+
+        this.setState({
+            tmpPhoneNumber: number
+        });
+
+        return;
+    }
+
+    this.setState({
+        tmpPhoneNumber: text,
+    });
+  }
+
   render() {
 
     let changePassword
@@ -363,14 +382,19 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                           placeholder="(123) 456-7890"
                           defaultValue = {this.state.phoneNumber}
+                          value = {this.state.tmpPhoneNumber}
                           autoCorrect={false}
                           keyboardAppearance="light"
                           leftIcon={
-                              <Icon name="account" type="material-community" color="black" size={25} />
+                              <Icon name="phone" type="material-community" color="black" size={25} />
                           }
                           blurOnSubmit = {false}
                           returnKeyType="done"
-                          onChangeText={(text: string) => {this.setState({tmpPhoneNumber : text})}}
+                          keyboardType="number-pad"
+                          textContentType='telephoneNumber'
+                          dataDetectorTypes='phoneNumber'
+                          maxLength={14}
+                          onChangeText={(text) => this.onTextChange(text)}
                       />
 
 
@@ -418,7 +442,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           autoCorrect={false}
                           keyboardAppearance="light"
                           leftIcon={
-                              <Icon name="account" type="material-community" color="black" size={25} />
+                              <Icon name="account-multiple" type="material-community" color="black" size={25} />
                           }
                           blurOnSubmit = {false}
                           returnKeyType="done"
@@ -429,13 +453,19 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                           placeholder="Phone Number"
                           autoCorrect={false}
+                          defaultValue={this.state.e1Phone}
                           keyboardAppearance="light"
                           leftIcon={
-                              <Icon name="account" type="material-community" color="black" size={25} />
+                              <Icon name="phone" type="material-community" color="black" size={25} />
                           }
                           blurOnSubmit = {false}
+                          keyboardType="number-pad"
                           returnKeyType="done"
-                          onChangeText={(text: string) => {this.setState({tmpPhone : text})}}
+                          value = {this.state.tmpPhoneNumber}
+                          textContentType='telephoneNumber'
+                          dataDetectorTypes='phoneNumber'
+                          maxLength={14}
+                          onChangeText={(text) => this.onTextChange(text)}
                       />
 
                       <Button
@@ -482,7 +512,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                             autoCorrect={false}
                             keyboardAppearance="light"
                             leftIcon={
-                                <Icon name="account" type="material-community" color="black" size={25} />
+                                <Icon name="account-multiple" type="material-community" color="black" size={25} />
                             }
                             blurOnSubmit = {false}
                             returnKeyType="done"
@@ -492,14 +522,20 @@ export default class Profile extends Component<IAppProps, IAppState> {
                             //inputContainerStyle={styles.textinput}
                             leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
                             placeholder="Phone Number"
+                            defaultValue={this.state.e2Phone}
                             autoCorrect={false}
                             keyboardAppearance="light"
                             leftIcon={
-                                <Icon name="account" type="material-community" color="black" size={25} />
+                                <Icon name="phone" type="material-community" color="black" size={25} />
                             }
                             blurOnSubmit = {false}
+                            keyboardType="number-pad"
                             returnKeyType="done"
-                            onChangeText={(text: string) => {this.setState({tmpPhone : text})}}
+                            value = {this.state.tmpPhoneNumber}
+                            textContentType='telephoneNumber'
+                            dataDetectorTypes='phoneNumber'
+                            maxLength={14}
+                            onChangeText={(text) => this.onTextChange(text)}
                         />
 
                         <Button
@@ -617,7 +653,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                   }} >
                   <Text style={{textAlign: 'center', marginVertical:5, marginTop:10,
                       color: '#777777', fontWeight:"300", fontSize:14}}>
-                    ({this.state.phoneNumber})
+                    {this.state.phoneNumber}
                   </Text>
                   </TouchableOpacity>
                   <Text style={{textAlign: 'center', marginBottom:10,

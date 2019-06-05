@@ -185,6 +185,25 @@ export default class Login extends Component<IAppProps, IAppState> {
       console.log('Error occurred',err);
     })
   }
+  onTextChange(text: string) {
+    var cleaned = ('' + text).replace(/\D/g, '')
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+        var intlCode = (match[1] ? '+1 ' : ''),
+            number = [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+
+        this.setState({
+            phoneNumber: number
+        });
+
+        return;
+    }
+
+    this.setState({
+        phoneNumber: text,
+        phoneError: false
+    });
+  }
 
   render() {
     let displayCreated
@@ -363,18 +382,22 @@ export default class Login extends Component<IAppProps, IAppState> {
 
           <Input
             inputContainerStyle={styles.textinput}
-            placeholder="Phone (optional)"
+            placeholder="(###) ### ####"
             autoCapitalize="none"
             autoCorrect={false}
             keyboardAppearance="light"
             keyboardType="phone-pad"
             returnKeyType="next"
+            value={this.state.phoneNumber}
             ref = {(input) => {this.input3 = input}}
             blurOnSubmit = {false}
             onSubmitEditing = {() => {this.input4.focus()}}
             errorStyle={{ color: 'red' }}
             errorMessage={this.displayPhoneError()}
-            onChangeText={(text) => this.setState({phoneNumber: text, phoneError: false})}
+            textContentType='telephoneNumber'
+            dataDetectorTypes='phoneNumber'
+            maxLength={14}
+            onChangeText={(text) => this.onTextChange(text)}
           />
 
           <Input
