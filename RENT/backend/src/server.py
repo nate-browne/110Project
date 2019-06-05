@@ -512,6 +512,7 @@ def get_info():
     contacts = dq.getContactsWithAssocUser(userID)
     if user is not None:
         data['firstName'] = user.firstName
+        data['lastName'] = user.lastName
         data['phoneNumber'] = user.phoneNumber
         data['email'] = user.email
     else:
@@ -523,12 +524,6 @@ def get_info():
             counter += 1
             contact_str = 'contact' + repr(ind)
             data[contact_str] = {}
-<<<<<<< HEAD
-            data[contact_str]['relation'] = contacts[num].relationship
-            name = contacts[num].name
-            data[contact_str]['name'] = name
-            data[contact_str]['phoneNumber'] = contacts[num].phoneNumber
-=======
             data[contact_str]['relation'] = cont.relationship
             data[contact_str]['name'] = cont.name
             data[contact_str]['phoneNumber'] = cont.phoneNumber
@@ -540,7 +535,6 @@ def get_info():
             name = 'Default Name'
             data[contact_str]['name'] = name
             data[contact_str]['phoneNumber'] = "1234567890"
->>>>>>> bb2cb04dff7932239cd2b3efa04739ab6ec5ea3a
         return jsonify(data), 200
     else:
         for num in range(2):
