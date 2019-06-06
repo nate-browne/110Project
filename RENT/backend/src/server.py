@@ -512,6 +512,7 @@ def get_info():
     contacts = dq.getContactsWithAssocUser(userID)
     if user is not None:
         data['firstName'] = user.firstName
+        data['lastName'] = user.lastName
         data['phoneNumber'] = user.phoneNumber
         data['email'] = user.email
     else:

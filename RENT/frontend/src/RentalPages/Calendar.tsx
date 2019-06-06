@@ -16,6 +16,7 @@ import axios from 'axios';
 
 // @ts-ignore
 import configInfo from '../url';
+import { any } from 'prop-types';
 
 const serverURL = configInfo['serverURL'];
 const server = axios.create({
@@ -129,14 +130,38 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       isWithinLeftBound = false;
       isWithinRightBound = false;
 
-      console.log("\n\n")
-
     });
 
     return currentDayCalendarEvents;
   }
 
+  updateCurrentDayCalendarEvents = (events: any) => {
+    
+    const currentDayCalendarEvents = this.state.currentDayCalendarEvents;
+    currentDayCalendarEvents.push(events[0]);
+
+
+    this.setState({
+      currentDayCalendarEvents: currentDayCalendarEvents,
+    });
+
+  }
+
   keyExtractor = (item:any) => item.eventID.toString();
+
+  getEvents = () => {
+    server.get('/getcalendarevents',{
+      params: {
+        rentalID: this.props.navigation.getParam("rentalID", ""),
+      }
+    }).then(resp => {
+      if(resp.status === 200) {
+        this.updateCalendarEvents(resp.data['events']);
+      }
+    }).catch(err => {
+      console.log(err)
+    });
+  }
 
 
   componentDidMount() {
@@ -146,10 +171,6 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
       }
     }).then(resp => {
       if(resp.status === 200) {
-
-        console.log("Returned events:");
-        console.log(resp.data);
-
         this.updateCalendarEvents(resp.data['events']);
       }
     }).catch(err => {
@@ -164,23 +185,38 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
     let startDateTime = formControls['startDate'] + " " + formControls['startTime'] + ":00";
     let endDateTime = formControls['endDate'] + " " + formControls['endTime'] + ":00";
 
+    const newEvent = [{
+      eventID: 9999,
+      eventName:formControls['eventName'],
+      eventDescription: formControls['eventDesc'],
+      eventStartDate: formControls['startDate'],
+      eventEndDate: formControls['endDate'],
+      eventStartTime: formControls['startTime'],
+      eventEndTime: formControls['endTime'],
+    }];
+
+    this.setState({
+      isLoading: true
+    });
+
     server.post('/addcalendarevent',{
         rentalID: this.props.navigation.getParam("rentalID", ""),
         eventName: formControls['eventName'],
         eventDescription: formControls['eventDesc'],
         eventStartDT: startDateTime,
         eventEndDT: endDateTime,
-    }).then(resp => {
-      if(resp.status === 200) {
-
-        this.setState({
-          isLoading: false,
-        });
-
+    }).then((response) => {
+      if(response.status === 201) {
+        this.updateCurrentDayCalendarEvents(newEvent); 
       }
     }).then(resp => {
-      console.log(resp);
       this.setFormVisible(false);
+    }).then(resp => {
+      this.getEvents();
+    }).then(resp => {
+      this.setState({
+        isLoading: false,
+      });
     }).catch(err => {
       console.log(err)
     });
