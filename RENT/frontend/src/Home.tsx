@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, TouchableOpacity } from 'react-native';
 import { Button,Input, Overlay, Text} from 'react-native-elements';
 import axios from 'axios';
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
@@ -27,7 +27,24 @@ export default class Home extends Component<IAppProps, IAppState> {
   [x: string]: any;
   static navigationOptions = {
       headerLeft: null,
-      headerBackTitle: "Rentals"
+      headerBackTitle: "Rentals",
+      headerRight:  <TouchableOpacity
+          style={{
+            alignItems:'center',
+            justifyContent:'center',
+            width:45,
+            height:45,
+            backgroundColor:'#fff',
+            borderRadius:50,
+            marginRight: 10
+          }} onPress={ () => navigation.push('Profile', {
+            userID: navigation.getParam("userID",""),
+            userName: navigation.getParam("userName",""),
+            canEdit: true
+          })}
+      >
+        <Icon name={"face"}  size={30}  />
+      </TouchableOpacity>
   };
   state = {
     visible: false,
