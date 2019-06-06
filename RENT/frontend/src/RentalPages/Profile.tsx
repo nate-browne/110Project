@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, ScrollView, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Alert, ScrollView, Text, View, Image, TouchableOpacity, Keyboard } from 'react-native';
 import { Button, Overlay, Input, Icon, Card, Divider } from 'react-native-elements';
 import styles from '../style/Contact-Stylesheet';
 import axios from 'axios';
@@ -394,6 +394,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           textContentType='telephoneNumber'
                           dataDetectorTypes='phoneNumber'
                           maxLength={14}
+                          onSubmitEditing={() => Keyboard.dismiss()}
                           onChangeText={(text) => this.onTextChange(text)}
                       />
 
@@ -465,6 +466,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           textContentType='telephoneNumber'
                           dataDetectorTypes='phoneNumber'
                           maxLength={14}
+                          onSubmitEditing={() => Keyboard.dismiss()}
                           onChangeText={(text) => this.onTextChange(text)}
                       />
 
@@ -474,7 +476,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                           onPress={() => {
                               this.state.e1Name = this.state.tmpFirstName;
                               this.state.e1Relation = this.state.tmpRelation;
-                              this.state.e1Phone = this.state.tmpPhone;
+                              this.state.e1Phone = this.state.tmpPhoneNumber;
                               this.setState({contact1Visible: false});
                               this.changeContact1Info();
                           }}
@@ -534,6 +536,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                             value = {this.state.tmpPhoneNumber}
                             textContentType='telephoneNumber'
                             dataDetectorTypes='phoneNumber'
+                            onSubmitEditing={() => Keyboard.dismiss()}
                             maxLength={14}
                             onChangeText={(text) => this.onTextChange(text)}
                         />
@@ -544,7 +547,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                             onPress={() => {
                                 this.state.e2Name = this.state.tmpFirstName;
                                 this.state.e2Relation = this.state.tmpRelation;
-                                this.state.e2Phone = this.state.tmpPhone;
+                                this.state.e2Phone = this.state.tmpPhoneNumber;
                                 this.setState({contact2Visible: false});
                                 this.changeContact2Info();
                             }}

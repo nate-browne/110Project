@@ -54,6 +54,8 @@ export default class Login extends Component<IAppProps, IAppState> {
     phoneNumber: "",
     created: false,
 
+    firstError: false,
+    lastError: false,
     phoneError: false,
     emailError: false,
     passwordError: false,
@@ -82,6 +84,18 @@ export default class Login extends Component<IAppProps, IAppState> {
     this.setState({isRemembered: !this.state.isRemembered});
   }
 
+  displayFirstError() : string {
+    if(this.state.firstError) {
+      return "Please enter your first name"
+    }
+    return ""
+  }
+  displayLastError() : string {
+    if(this.state.lastError) {
+      return "Pleas enter your last name"
+    }
+    return ""
+  }
   /* Displaying Error messages here */
   displayEmailError(): string {
     if(this.state.emailError) {
@@ -154,8 +168,11 @@ export default class Login extends Component<IAppProps, IAppState> {
           })
           console.log("Login Successful");
         }
-        this.setState({signupVisible: false,
-                       passwordError: false,
+        this.setState({
+                        firstError: false,
+                        lastError: false,
+                        signupVisible: false,
+                        passwordError: false,
                         emailError: false,
                         phoneError: false,
                         signupError: false,
@@ -329,6 +346,8 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Overlay
         isVisible={this.state.signupVisible}
         onBackdropPress={() => this.setState({
+                                      firstError: false,
+                                      lastError: false,
                                       signupVisible: false,
                                       passwordError: false,
                                       emailError: false,
@@ -347,8 +366,10 @@ export default class Login extends Component<IAppProps, IAppState> {
             keyboardAppearance="light"
             returnKeyType="next"
             blurOnSubmit = {false}
+            errorStyle={{ color: 'red', alignSelf: "center" }}
+            errorMessage={this.displayFirstError()}
             onSubmitEditing = {() => {this.input1.focus()}}
-            onChangeText={(text) => this.setState({firstName: text})}
+            onChangeText={(text) => this.setState({firstName: text, firstError:false})}
           />
 
           <Input
@@ -360,8 +381,10 @@ export default class Login extends Component<IAppProps, IAppState> {
             returnKeyType="next"
             ref = {(input) => {this.input1 = input}}
             blurOnSubmit = {false}
+            errorStyle={{ color: 'red', alignSelf: "center" }}
+            errorMessage={this.displayLastError()}
             onSubmitEditing = {() => {this.input2.focus()}}
-            onChangeText={(text) => this.setState({lastName: text})}
+            onChangeText={(text) => this.setState({lastName: text, lastError: false})}
           />
 
           <Input
@@ -392,7 +415,7 @@ export default class Login extends Component<IAppProps, IAppState> {
             ref = {(input) => {this.input3 = input}}
             blurOnSubmit = {false}
             onSubmitEditing = {() => {this.input4.focus()}}
-            errorStyle={{ color: 'red' }}
+            errorStyle={{ color: 'red', alignSelf: "center" }}
             errorMessage={this.displayPhoneError()}
             textContentType='telephoneNumber'
             dataDetectorTypes='phoneNumber'
@@ -436,6 +459,18 @@ export default class Login extends Component<IAppProps, IAppState> {
               title="Sign Up"
 
               onPress={() => {
+                if(this.state.firstName === "") {
+                  this.setState({firstError: true})
+                }
+                if(this.state.lastName === "") {
+                  this.setState({lastError: true})
+                }
+                if(this.state.email === "") {
+                  this.setState({emailError: true})
+                }
+                if(this.state.phoneNumber === "" || this.state.phoneNumber.length < 14) {
+                  this.setState({phoneError: true})
+                }
                 if( !EmailValidator.validate(this.state.email) ) {
                   this.setState({emailError: true})
                 }
