@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Alert, TouchableOpacity } from 'react-native';
-import { Button,Input, Overlay, Text} from 'react-native-elements';
+import { Button,Input, Icon, Overlay, Text} from 'react-native-elements';
 import axios from 'axios';
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import * as EmailValidator from 'email-validator';
@@ -25,9 +25,14 @@ interface IAppState {
 
 export default class Home extends Component<IAppProps, IAppState> {
   [x: string]: any;
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => {
+      return {
       headerLeft: null,
       headerBackTitle: "Rentals",
+      title: "Welcome back " + navigation.getParam('userName', '') + "!",
+      headerStyle: {
+        backgroundColor: '#2bc0cd',
+      },
       headerRight:  <TouchableOpacity
           style={{
             alignItems:'center',
@@ -45,6 +50,7 @@ export default class Home extends Component<IAppProps, IAppState> {
       >
         <Icon name={"face"}  size={30}  />
       </TouchableOpacity>
+    };
   };
   state = {
     visible: false,
@@ -184,14 +190,16 @@ export default class Home extends Component<IAppProps, IAppState> {
         displayCurr = <Button raised={true} title="View Current Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
           userName: this.props.navigation.getParam("userName",""), //trying to get parameters from navigation
           userID: userID,
-          rentalID: this.state.currentID
+          rentalID: this.state.currentID,
+          address: this.state.address
         })}} />
       }
       if( this.state.pastID !== 0 && this.state.pastID !== null && this.state.pastID !== undefined  ) {
         displayPast = <Button raised={true} title="View Past Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
           userName: this.props.navigation.getParam("userName",""),
           userID: userID,
-          rentalID: this.state.pastID
+          rentalID: this.state.pastID,
+          address: this.state.address
         })}} />
       }
     }
