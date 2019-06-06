@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
-import { Button,Input, Overlay, Text} from 'react-native-elements';
+import { View, Alert, TouchableOpacity } from 'react-native';
+import { Button,Input, Icon, Overlay, Text} from 'react-native-elements';
 import axios from 'axios';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import * as EmailValidator from 'email-validator';
+import DatePicker from 'react-native-datepicker'
+
+var dismissKeyboard = require('dismissKeyboard');
 
 // @ts-ignore
 import configInfo from './url';
@@ -20,24 +25,63 @@ interface IAppState {
 
 export default class Home extends Component<IAppProps, IAppState> {
   [x: string]: any;
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => {
+      return {
       headerLeft: null,
-      headerBackTitle: "Rentals"
+      headerBackTitle: "Rentals",
+      title: "Welcome back " + navigation.getParam('userName', '') + "!",
+      headerStyle: {
+        backgroundColor: '#2bc0cd',
+      },
+      headerRight:  <TouchableOpacity
+          style={{
+            alignItems:'center',
+            justifyContent:'center',
+            width:45,
+            height:45,
+            backgroundColor:'#fff',
+            borderRadius:50,
+            marginRight: 10
+          }} onPress={ () => navigation.push('Profile', {
+            userID: navigation.getParam("userID",""),
+            userName: navigation.getParam("userName",""),
+            canEdit: true
+          })}
+      >
+        <Icon name={"face"}  size={30}  />
+      </TouchableOpacity>
+    };
   };
   state = {
     visible: false,
-    userRentals: 0,
+    formError: false,
     currentID: 0,
     pastID: 0,
     name: "",
     address: "",
-    landlord: "",
+    landlordFirstName: "",
+    landlordLastName:"",
+    landlordEmail:"",
     phoneNumber: "",
+    emailError: false,
+    phoneError: false,
     start: "",
     end: "",
     rent: 0,
   };
-
+  /* Displaying Error messages here */
+  displayEmailError(): string {
+    if(this.state.emailError) {
+      return "Please enter a valid email";
+    }
+    return "";
+  }
+  displayPhoneError(): string {
+    if (this.state.phoneError) {
+      return "Please enter a valid phone number";
+    }
+    return "";
+  }
   setVisible(visible: boolean) {
     this.setState({visible: visible});
   }
@@ -49,17 +93,33 @@ export default class Home extends Component<IAppProps, IAppState> {
         userID: userID
       }
     }).then(resp => {
-        if (resp.data.currentRental !== null ) {
-          this.setState({userRentals: this.state.userRentals + 1})
-          this.setState({currentID: resp.data.currentRental})
+        if (resp.data['currentRental'] !== undefined || resp.data['currentRental'] !== null) {
+          this.setState({currentID: resp.data['currentRental']})
         }
-        if (resp.data.pastRental !== null) {
-          this.setState({userRentals: this.state.userRentals + 1})
-          this.setState({past: resp.data.pastRental})
+        else{
+            this.setState({currentID: 0})
         }
+        if (resp.data['pastRental'] !== undefined || resp.data['pastRental'] !== null) {
+          this.setState({pastID: resp.data['pastRental']})
+        }
+        else{
+            this.setState({pastID: 0})
+        }
+        console.log('mount')
+        console.log('currentID: ', this.state.currentID);
+        console.log('pastID: ', this.state.pastID);
     }).catch(err => {
         console.log('Error occurred',err);
     })
+    var day = new Date().getDate(); //Current Date
+    var day2 = new Date().getDate() + 1; //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    this.setState({
+      //Setting the value of the date time
+      start: year + '-' + month + '-' + day,
+      end: year + '-' + month + '-' + day2
+    });
   }
 
   createRental(userID: any): void{
@@ -67,25 +127,31 @@ export default class Home extends Component<IAppProps, IAppState> {
       address: this.state.address,
       userID: userID
     }).then(resp => {
-      server.get('/getrentalIDs', {
-        params: {
-          userID: userID
+        if(resp.status == 201) {
+            this.setState({currentID: resp.data['currentRental']});
+            this.setState({pastID: resp.data['pastRental']});
+            console.log('create');
+            console.log('currentID: ', this.state.currentID);
+            console.log('pastID: ', this.state.pastID);
+            this.createLease(resp.data['currentRental']);
         }
-      }).then(resp => {
-          if (resp.data.currentRental !== null ) {
-            this.setState({userRentals: this.state.userRentals + 1})
-            this.setState({currentID: resp.data.currentRental})
-          }
-          if (resp.data.pastRental !== null) {
-            this.setState({userRentals: this.state.userRentals + 1})
-            this.setState({past: resp.data.pastRental})
-          }
-      }).catch(err => {
-          console.log('Error occurred',err);
-      })
+    }).catch (err => {
+        console.log('Error', err);
     })
   }
-
+  createLease( rentalID: any): void {
+    server.post('/addlease', {
+      rentalID: rentalID,
+      landlordFirstName: this.state.landlordFirstName,
+      landlordLastName: this.state.landlordLastName,
+      landlordPhoneNumber: this.state.phoneNumber,
+      landlordEmail: this.state.landlordEmail,
+      rentCost: this.state.rent,
+      startDT: this.state.start,
+      endDT: this.state.end,
+      rentDueDate: ""
+    }).then(resp => {}).catch(err =>{})
+  }
   logout(): any {
     server.post('/logout', {
     }).then(resp => {
@@ -105,32 +171,59 @@ export default class Home extends Component<IAppProps, IAppState> {
     })
   }
 
+  onTextChange(text: string) {
+    var cleaned = ('' + text).replace(/\D/g, '')
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+        var intlCode = (match[1] ? '+1 ' : ''),
+            number = [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+
+        this.setState({
+            phoneNumber: number,
+            phoneError: false
+        });
+
+        return;
+    }
+
+    this.setState({
+        phoneNumber: text,
+        phoneError: false
+    });
+  }
 
   render() {
     const userID = this.props.navigation.getParam("userID","NO-ID");
-    let display;
+    let displayErr;
+    let displayCurr;
+    let displayPast;
     let button;
-    if( this.state.userRentals !== 0) {
-      if( this.state.currentID !== 0 ) {
-        display = <Button raised={true} title="View Current Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
-          userName: this.props.navigation.getParam("userName",""),
+    if( this.state.currentID === null) {
+        displayErr = <Text style={{fontSize:24, textAlign:"center"}}> First time using RENT? Add a rental below and start managing your properties right away! </Text>
+    }
+    else{
+      if( this.state.currentID !== 0 && this.state.currentID !== null && this.state.currentID !== undefined ) {
+        displayCurr = <Button raised={true} title="View Current Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
+          userName: this.props.navigation.getParam("userName",""), //trying to get parameters from navigation
           userID: userID,
-          rentalID: this.state.currentID
+          rentalID: this.state.currentID,
+          address: this.state.address
         })}} />
       }
-      if( this.state.pastID !== 0) {
-        display = <Button raised={true} title="View Past Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
+      if( this.state.pastID !== 0 && this.state.pastID !== null && this.state.pastID !== undefined  ) {
+        displayPast = <Button raised={true} title="View Past Rental" onPress={() =>{ this.props.navigation.navigate('RentalMain',{
           userName: this.props.navigation.getParam("userName",""),
           userID: userID,
-          rentalID: this.state.pastID
+          rentalID: this.state.pastID,
+          address: this.state.address
         })}} />
       }
-    } else {
-      display = <Text> First time using RENT? Add a rental below and start managing your properties right away </Text>
     }
     return(
       <View>
-        {display}
+        {displayErr}
+        {displayCurr}
+        {displayPast}
         {button}
         <View>
           <Button
@@ -155,15 +248,7 @@ export default class Home extends Component<IAppProps, IAppState> {
           onBackdropPress={() => this.setState({ visible: false })}
           fullScreen={false}
           >
-          <ScrollView>
-              <Button
-                raised={true}
-                type='clear'
-                title="x"
-                onPress={() =>{
-                  this.setState({ visible: false })
-                }}
-              />
+          <KeyboardAwareScrollView>
               <View>
                 <Text style={{fontSize: 24}}>Create New Rental</Text>
 
@@ -195,50 +280,81 @@ export default class Home extends Component<IAppProps, IAppState> {
                 <Input
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="Landlord's name"
+                    placeholder="Landlord's First name"
                     keyboardAppearance="light"
                     returnKeyType="next"
                     ref = {(input) => {this.input2 = input}}
                     blurOnSubmit = {false}
                     onSubmitEditing = {() => {this.input3.focus()}}
-                    onChangeText={(text: string) => this.setState({landlord: text})}
+                    onChangeText={(text: string) => this.setState({landlordFirstName: text})}
                   />
                 <Input
                     //inputContainerStyle={styles.textinput}
                     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                    placeholder="Phone number"
+                    placeholder="Landlord's Last name"
                     keyboardAppearance="light"
-                    keyboardType="phone-pad"
                     returnKeyType="next"
                     ref = {(input) => {this.input3 = input}}
                     blurOnSubmit = {false}
                     onSubmitEditing = {() => {this.input4.focus()}}
-                    onChangeText={(text: string) => this.setState({phoneNumber: text})}
+                    onChangeText={(text: string) => this.setState({landlordLastName: text})}
+                  />
+                <Input
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Landlord's email"
+                    keyboardAppearance="light"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    ref = {(input) => {this.input4 = input}}
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input5.focus()}}
+                    errorStyle={{ color: 'red', alignSelf: "center" }}
+                    errorMessage={this.displayEmailError()}
+                    onChangeText={(text: string) => this.setState({landlordEmail: text, emailError:false})}
+                 />
+                 <Input
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    value={this.state.phoneNumber}
+                    placeholder="Phone number"
+                    keyboardAppearance="light"
+                    keyboardType="phone-pad"
+                    returnKeyType="next"
+                    ref = {(input) => {this.input5 = input}}
+                    blurOnSubmit = {false}
+                    textContentType='telephoneNumber'
+                    dataDetectorTypes='phoneNumber'
+                    maxLength={14}
+                    errorStyle={{ color: 'red', alignSelf: "center" }}
+                    errorMessage={this.displayPhoneError()}
+                    onChangeText={(text) => this.onTextChange(text)}
                   />
 
                   <Text style={{fontSize: 24}}>Leasing Information</Text>
-
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="Start Date"
-                      keyboardAppearance="light"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input4 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input5.focus()}}
-                      onChangeText={(text: string) => this.setState({start: text})}
+                  <Text style={{fontSize: 18}}>Start Date</Text>
+                  <DatePicker
+                       style={{width: 200}}
+                       date={this.state.start}
+                       mode="date"
+                       placeholder="select date"
+                       format="YYYY-MM-DD"
+                       confirmBtnText="Confirm"
+                       cancelBtnText="Cancel"
+                       showIcon={false}
+                       onDateChange={(date: any) => {this.setState({start: date})}}
                   />
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="End Date"
-                      keyboardAppearance="light"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input5 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input6.focus()}}
-                      onChangeText={(text: string) => this.setState({end: text})}
+                  <Text style={{fontSize: 18}}>End Date</Text>
+                  <DatePicker
+                       style={{width: 200}}
+                       date={this.state.end}
+                       mode="date"
+                       placeholder="select date"
+                       format="YYYY-MM-DD"
+                       confirmBtnText="Confirm"
+                       cancelBtnText="Cancel"
+                       showIcon={false}
+                       onDateChange={(date: any) => {this.setState({end: date})}}
                   />
                   <Input
                       //inputContainerStyle={styles.textinput}
@@ -247,44 +363,9 @@ export default class Home extends Component<IAppProps, IAppState> {
                       keyboardAppearance="light"
                       keyboardType="numeric"
                       returnKeyType="next"
-                      ref = {(input) => {this.input6 = input}}
                       blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input7.focus()}}
                       onChangeText={(text: string) => this.setState({rent: text})}
                   />
-
-
-                  <Text style={{fontSize: 24}}>Roommate Invite</Text>
-
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="Roommate email"
-                      keyboardAppearance="light"
-                      keyboardType="email-address"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input7 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input8.focus()}}
-                      onChangeText={(text: string) => this.setState({email: text})}
-                  />
-                  <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="Roommate email"
-                      keyboardAppearance="light"
-                      keyboardType="email-address"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input8 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {
-                        this.createRental(userID);
-                        this.setVisible(false);
-                      }}
-                      onChangeText={(text: string) => this.setState({email: text})}
-                  />
-
-                  <Text style={{fontSize: 24, margin: 20}}>Documents and Images</Text>
                 </View>
               <View>
                 <Button
@@ -292,12 +373,26 @@ export default class Home extends Component<IAppProps, IAppState> {
                   style = {{margin: 20}}
                   title="Create"
                   onPress={() => {
-                    this.createRental(userID);
-                    this.setVisible(false);
+                    if(this.state.name === "" || this.state.address === "" || this.state.landlordFirstName === ""
+                       || this.state.landlordLastName === "" || this.state.landlordEmail === ""
+                       || this.state.phoneNumber === "" || this.state.start === "" || this.state.end === "" || this.state.rent === 0) {
+                         this.setState({formError:true})
+                         Alert.alert("Please complete all the fields")
+                    }
+                    else if( !EmailValidator.validate(this.state.landlordEmail) ) {
+                      this.setState({emailError: true})
+                    }
+                    else if( this.state.phoneNumber.length !== 14) {
+                      this.setState({phoneError: true})
+                    }
+                    else {
+                      this.createRental(userID);
+                      this.setVisible(false);
+                    }
                   }}
                 />
               </View>
-          </ScrollView>
+          </KeyboardAwareScrollView>
         </Overlay>
 
       </View>

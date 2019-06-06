@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
       paddingTop: 20,
     },
     countdownHeader: {
-        fontSize: 24,
+        fontSize: 32,
         color: '#000',
         textAlign: 'center',
         fontWeight: "700",

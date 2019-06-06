@@ -1,7 +1,7 @@
 /*
   Name: Login.tsx
   Description: This file renders the login page and handles sign up and logging in
-  of user.
+  of user..
 */
 // Library Imports
 import React, {Component} from 'react';
@@ -52,7 +52,10 @@ export default class Login extends Component<IAppProps, IAppState> {
     password: "",
     confirmPassword: "",
     phoneNumber: "",
+    created: false,
 
+    firstError: false,
+    lastError: false,
     phoneError: false,
     emailError: false,
     passwordError: false,
@@ -81,6 +84,18 @@ export default class Login extends Component<IAppProps, IAppState> {
     this.setState({isRemembered: !this.state.isRemembered});
   }
 
+  displayFirstError() : string {
+    if(this.state.firstError) {
+      return "Please enter your first name"
+    }
+    return ""
+  }
+  displayLastError() : string {
+    if(this.state.lastError) {
+      return "Pleas enter your last name"
+    }
+    return ""
+  }
   /* Displaying Error messages here */
   displayEmailError(): string {
     if(this.state.emailError) {
@@ -127,7 +142,7 @@ export default class Login extends Component<IAppProps, IAppState> {
     }).then(resp => {
       if(resp.status === 201) {
         console.log("Account created");
-        this.setState({signupVisible: false});
+        this.setState({signupVisible: false, created:true});
       }
     }).catch(err => {
       this.setState({signupError: true})
@@ -136,25 +151,39 @@ export default class Login extends Component<IAppProps, IAppState> {
   }
 
   login(): any {
-    server.post('/login', {
-      email: this.state.email,
-      password: this.state.password,
-      remember: this.state.isRemembered ? 'true' : 'false',
-    }).then(resp => {
-      // Success
-      if(resp.status === 200) {
-        this.props.navigation.navigate('Home',{
-          userName: resp.data.firstName,
-          userID: resp.data.userID,
-          loggedIn: resp.data.loggedIn
-        })
-        console.log("Login Successful");
-      }
-    })
-    .catch(err => {
+    if(this.state.email === "" || this.state.password === "") {
       this.setState({loginError: true})
-      console.log('Error occurred',err);
-    })
+    } else {
+      server.post('/login', {
+        email: this.state.email,
+        password: this.state.password,
+        remember: this.state.isRemembered ? 'true' : 'false',
+      }).then(resp => {
+        // Success
+        if(resp.status === 200) {
+          this.props.navigation.navigate('Home',{
+            userName: resp.data.firstName,
+            userID: resp.data.userID,
+            loggedIn: resp.data.loggedIn
+          })
+          console.log("Login Successful");
+        }
+        this.setState({
+                        firstError: false,
+                        lastError: false,
+                        signupVisible: false,
+                        passwordError: false,
+                        emailError: false,
+                        phoneError: false,
+                        signupError: false,
+                        passwordLengthError: false,
+                        created:false })
+      })
+      .catch(err => {
+        this.setState({loginError: true})
+        console.log('Error occurred',err);
+      })
+    }
   }
 
   forgotPassword(): any {
@@ -163,7 +192,7 @@ export default class Login extends Component<IAppProps, IAppState> {
       email: this.state.email,
     }).then(resp => {
       //forgot password is successful
-      if(resp.status === 201) {
+      if(resp.status === 200) {
         Alert.alert('Temporary password sent to: ' + this.state.email)
         console.log("Forgot password email sent");
       }
@@ -173,8 +202,31 @@ export default class Login extends Component<IAppProps, IAppState> {
       console.log('Error occurred',err);
     })
   }
+  onTextChange(text: string) {
+    var cleaned = ('' + text).replace(/\D/g, '')
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+        var intlCode = (match[1] ? '+1 ' : ''),
+            number = [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+
+        this.setState({
+            phoneNumber: number
+        });
+
+        return;
+    }
+
+    this.setState({
+        phoneNumber: text,
+        phoneError: false
+    });
+  }
 
   render() {
+    let displayCreated
+    if( this.state.created ) {
+      displayCreated = <Text style={{color: 'green'}}> (User Created successfully) </Text>
+    }
     return (
       <TouchableWithoutFeedback onPress = {dismissKeyboard}>
       <View style={styles.loginContainer}>
@@ -203,7 +255,6 @@ export default class Login extends Component<IAppProps, IAppState> {
             keyboardAppearance="light"
             returnKeyType="done"
             ref = {(input) => {this.nextInput = input;}}
-            onSubmitEditing={() => {this.login();}}
             placeholder="Password"
             errorStyle={{ color: 'red' }}
             errorMessage={this.displayLoginError()}
@@ -215,10 +266,10 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Button
           title="Login"
           buttonStyle={{backgroundColor:"#2bc0cd"}}
-          onPress={() => {this.login()}}
+          onPress={() => {this.login()} }
           />
       </View>
-
+      {displayCreated}
       <CheckBox
         center title="Remember me"
         checked={this.state.isRemembered}
@@ -235,7 +286,7 @@ export default class Login extends Component<IAppProps, IAppState> {
             title="Forgot password?"
             titleStyle={styles.linkText}
             onPress={() => {
-              this.setState({forgotVisible: true});
+              this.setState({forgotVisible: true, created:false });
             }}
           />
         </View>
@@ -246,7 +297,7 @@ export default class Login extends Component<IAppProps, IAppState> {
             type={"clear"}
             title="Register"
             onPress={() => {
-              this.setState({signupVisible: true});
+              this.setState({signupVisible: true, created:false });
             }}
             titleStyle={styles.linkText}
           />
@@ -295,6 +346,8 @@ export default class Login extends Component<IAppProps, IAppState> {
         <Overlay
         isVisible={this.state.signupVisible}
         onBackdropPress={() => this.setState({
+                                      firstError: false,
+                                      lastError: false,
                                       signupVisible: false,
                                       passwordError: false,
                                       emailError: false,
@@ -304,10 +357,7 @@ export default class Login extends Component<IAppProps, IAppState> {
         containerStyle={styles.container}
         >
         <TouchableWithoutFeedback onPress = {dismissKeyboard}>
-
-
         <View style={styles.container}>
-
           <Input
             inputContainerStyle={styles.textinput}
             placeholder="First Name"
@@ -316,8 +366,10 @@ export default class Login extends Component<IAppProps, IAppState> {
             keyboardAppearance="light"
             returnKeyType="next"
             blurOnSubmit = {false}
+            errorStyle={{ color: 'red', alignSelf: "center" }}
+            errorMessage={this.displayFirstError()}
             onSubmitEditing = {() => {this.input1.focus()}}
-            onChangeText={(text) => this.setState({firstName: text})}
+            onChangeText={(text) => this.setState({firstName: text, firstError:false})}
           />
 
           <Input
@@ -329,8 +381,10 @@ export default class Login extends Component<IAppProps, IAppState> {
             returnKeyType="next"
             ref = {(input) => {this.input1 = input}}
             blurOnSubmit = {false}
+            errorStyle={{ color: 'red', alignSelf: "center" }}
+            errorMessage={this.displayLastError()}
             onSubmitEditing = {() => {this.input2.focus()}}
-            onChangeText={(text) => this.setState({lastName: text})}
+            onChangeText={(text) => this.setState({lastName: text, lastError: false})}
           />
 
           <Input
@@ -351,18 +405,22 @@ export default class Login extends Component<IAppProps, IAppState> {
 
           <Input
             inputContainerStyle={styles.textinput}
-            placeholder="Phone (optional)"
+            placeholder="(###) ### ####"
             autoCapitalize="none"
             autoCorrect={false}
             keyboardAppearance="light"
             keyboardType="phone-pad"
             returnKeyType="next"
+            value={this.state.phoneNumber}
             ref = {(input) => {this.input3 = input}}
             blurOnSubmit = {false}
             onSubmitEditing = {() => {this.input4.focus()}}
-            errorStyle={{ color: 'red' }}
+            errorStyle={{ color: 'red', alignSelf: "center" }}
             errorMessage={this.displayPhoneError()}
-            onChangeText={(text) => this.setState({phoneNumber: text, phoneError: false})}
+            textContentType='telephoneNumber'
+            dataDetectorTypes='phoneNumber'
+            maxLength={14}
+            onChangeText={(text) => this.onTextChange(text)}
           />
 
           <Input
@@ -387,18 +445,7 @@ export default class Login extends Component<IAppProps, IAppState> {
             returnKeyType="done"
             ref = {(input) => {this.input5 = input}}
             blurOnSubmit = {false}
-            onSubmitEditing = {() => {
-              if(EmailValidator.validate(this.state.email) &&
-                this.state.password === this.state.confirmPassword) {
-                this.createUser();
-              }
-              else if( !EmailValidator.validate(this.state.email) ) {
-                this.setState({emailError: true})
-              }
-              else if( this.state.password !== this.state.confirmPassword) {
-                this.setState({passwordError:true})
-              }
-            }}
+            onSubmitEditing = {() => Keyboard.dismiss()}
             errorStyle={{ color: 'red', alignSelf: "center" }}
             errorMessage={this.displayPasswordError()}
             secureTextEntry={true}
@@ -412,6 +459,18 @@ export default class Login extends Component<IAppProps, IAppState> {
               title="Sign Up"
 
               onPress={() => {
+                if(this.state.firstName === "") {
+                  this.setState({firstError: true})
+                }
+                if(this.state.lastName === "") {
+                  this.setState({lastError: true})
+                }
+                if(this.state.email === "") {
+                  this.setState({emailError: true})
+                }
+                if(this.state.phoneNumber === "" || this.state.phoneNumber.length < 14) {
+                  this.setState({phoneError: true})
+                }
                 if( !EmailValidator.validate(this.state.email) ) {
                   this.setState({emailError: true})
                 }
