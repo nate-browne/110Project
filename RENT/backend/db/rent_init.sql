@@ -65,7 +65,7 @@ CREATE TABLE `Note` (
 CREATE TABLE `ContactInfo` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`phoneNumber` varchar(10) NOT NULL,
+	`phoneNumber` varchar(25) NOT NULL,
 	`email` varchar(255),
 	`associatedUser` bigint(20) NOT NULL,
 	`relationship` varchar(255) NOT NULL,
