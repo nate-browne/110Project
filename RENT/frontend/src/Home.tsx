@@ -63,11 +63,25 @@ export default class Home extends Component<IAppProps, IAppState> {
     landlordLastName:"",
     landlordEmail:"",
     phoneNumber: "",
+    emailError: false,
+    phoneError: false,
     start: "",
     end: "",
     rent: 0,
   };
-
+  /* Displaying Error messages here */
+  displayEmailError(): string {
+    if(this.state.emailError) {
+      return "Please enter a valid email";
+    }
+    return "";
+  }
+  displayPhoneError(): string {
+    if (this.state.phoneError) {
+      return "Please enter a valid phone number";
+    }
+    return "";
+  }
   setVisible(visible: boolean) {
     this.setState({visible: visible});
   }
@@ -165,7 +179,8 @@ export default class Home extends Component<IAppProps, IAppState> {
             number = [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
 
         this.setState({
-            phoneNumber: number
+            phoneNumber: number,
+            phoneError: false
         });
 
         return;
@@ -173,6 +188,7 @@ export default class Home extends Component<IAppProps, IAppState> {
 
     this.setState({
         phoneNumber: text,
+        phoneError: false
     });
   }
 
@@ -284,16 +300,18 @@ export default class Home extends Component<IAppProps, IAppState> {
                     onChangeText={(text: string) => this.setState({landlordLastName: text})}
                   />
                 <Input
-                      //inputContainerStyle={styles.textinput}
-                      leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-                      placeholder="Landlord's email"
-                      keyboardAppearance="light"
-                      keyboardType="email-address"
-                      returnKeyType="next"
-                      ref = {(input) => {this.input4 = input}}
-                      blurOnSubmit = {false}
-                      onSubmitEditing = {() => {this.input5.focus()}}
-                      onChangeText={(text: string) => this.setState({landlordEmail: text})}
+                    //inputContainerStyle={styles.textinput}
+                    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+                    placeholder="Landlord's email"
+                    keyboardAppearance="light"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    ref = {(input) => {this.input4 = input}}
+                    blurOnSubmit = {false}
+                    onSubmitEditing = {() => {this.input5.focus()}}
+                    errorStyle={{ color: 'red', alignSelf: "center" }}
+                    errorMessage={this.displayEmailError()}
+                    onChangeText={(text: string) => this.setState({landlordEmail: text, emailError:false})}
                  />
                  <Input
                     //inputContainerStyle={styles.textinput}
@@ -308,6 +326,8 @@ export default class Home extends Component<IAppProps, IAppState> {
                     textContentType='telephoneNumber'
                     dataDetectorTypes='phoneNumber'
                     maxLength={14}
+                    errorStyle={{ color: 'red', alignSelf: "center" }}
+                    errorMessage={this.displayPhoneError()}
                     onChangeText={(text) => this.onTextChange(text)}
                   />
 
@@ -358,7 +378,14 @@ export default class Home extends Component<IAppProps, IAppState> {
                        || this.state.phoneNumber === "" || this.state.start === "" || this.state.end === "" || this.state.rent === 0) {
                          this.setState({formError:true})
                          Alert.alert("Please complete all the fields")
-                    } else {
+                    }
+                    else if( !EmailValidator.validate(this.state.landlordEmail) ) {
+                      this.setState({emailError: true})
+                    }
+                    else if( this.state.phoneNumber.length !== 14) {
+                      this.setState({phoneError: true})
+                    }
+                    else {
                       this.createRental(userID);
                       this.setVisible(false);
                     }
