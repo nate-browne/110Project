@@ -311,7 +311,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                   </TouchableOpacity>
     }
       return (
-          <View style = {{backgroundColor:"#666666", flex: 1}}>
+          <View style = {{backgroundColor:"#f6f7f8", flex: 1}}>
               <Overlay
                   windowBackgroundColor="rgba(255, 255, 255, .5)"
                   isVisible={this.state.nameVisible && this.state.canEdit}
@@ -319,7 +319,7 @@ export default class Profile extends Component<IAppProps, IAppState> {
                   height={'50%'}
               >
 
-                  <ScrollView>
+                  <ScrollView style={{backgroundColor:'f6f7f8'}}>
                       <Text style={{fontSize: 48}}>Edit Name</Text>
 
                       <Input
