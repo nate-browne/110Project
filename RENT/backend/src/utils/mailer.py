@@ -31,7 +31,7 @@ Returns:
 
     # Open CSV file, grab email and password
     filename = find('emailstuff.csv', True)
-    with open(filename, 'r') as infile:
+    with open('emailstuff.csv', 'r') as infile:
         read = csv.reader(infile, delimiter=',')
         next(read)
         for row in read:
