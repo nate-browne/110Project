@@ -1,24 +1,39 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+    divider:{
+        backgroundColor: '#AAAAAA',
+        height: 2,
+    },
+    emergency:{
+        marginHorizontal:15,
+        marginTop: 20,
+        fontSize:20,
+        fontWeight:"500",
+        color:"#222222",
+        textDecorationLine: 'underline',
+    },
+    contactInfo:{
+        marginHorizontal:25,
+        fontSize: 14,
+        marginTop: 5,
+        fontWeight:"200",
+        color:'#444444',
+    },
     container:{
       borderRadius: 5
     },
     header:{
-      backgroundColor: "#00BFFF",
+      backgroundColor: "#2bc0cd",
       height:200,
       alignItems: 'flex-end',
     },
     avatar: {
-      width: 130,
-      height: 130,
-      borderRadius: 63,
-      borderWidth: 4,
-      borderColor: "white",
-      marginBottom:10,
+      width: 100,
+      height: 100,
+      //borderRadius: 63,
+      marginTop: 30,
       alignSelf:'center',
-      position: 'absolute',
-      marginTop:130
     },
     body:{
       marginTop:40,
@@ -38,7 +53,7 @@ const styles = StyleSheet.create({
     },
     info:{
       fontSize:16,
-      color: "#00BFFF",
+      color: "#2bc0cd",
       marginTop:10
     },
     description:{
@@ -56,7 +71,7 @@ const styles = StyleSheet.create({
       marginBottom:20,
       width:250,
       borderRadius:30,
-      backgroundColor: "#00BFFF",
+      backgroundColor: "#ffffff",
     },
     textinput: {
       //fontSize: 18,

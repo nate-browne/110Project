@@ -19,6 +19,7 @@ class Users(UserMixin, db.Model):
                               nullable=True)
     pastRental = db.Column(db.Integer, db.ForeignKey('Rental.id'),
                            nullable=True)
+    deactivated = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self) -> str:
         return '<User>\nName: {} {}\nEmail: {}\nRental ID: {}'.format(
@@ -51,16 +52,6 @@ class Roommates(db.Model):
         return ''.join(val)
 
 
-class PropertyDocument(db.Model):
-    __tablename__ = 'PropertyDocument'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    document = db.Column(db.LargeBinary(16777215), nullable=False)
-    docName = db.Column(db.String(255), nullable=False)
-
-    def __repr__(self) -> str:
-        return '<Property Document>\nID: {}'.format(self.id)
-
-
 class Lease(db.Model):
     __tablename__ = 'Lease'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -70,34 +61,27 @@ class Lease(db.Model):
                                     default=None)
     landlordEmail = db.Column(db.String(255), nullable=False, default=None)
     rentCost = db.Column(db.DECIMAL(13, 2), nullable=False, default=0)
-    startDate = db.Column(db.Date, nullable=False)
-    endDate = db.Column(db.Date, nullable=False)
+    startDT = db.Column(db.DateTime, nullable=False)
+    endDT = db.Column(db.DateTime, nullable=False)
     rentDueDate = db.Column(db.String(50), nullable=False)
-    document = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
-                         nullable=False)
 
 
 class Rental(db.Model):
     __tablename__ = 'Rental'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     roommates = db.Column(db.Integer, db.ForeignKey('Roommates.id'),
-                          nullable=True, default=None)
-    contactInfoList = db.Column(db.Integer,
-                                db.ForeignKey('ContactInfoList.id'),
-                                nullable=True, default=None)
+                          nullable=False)
     lease = db.Column(db.Integer, db.ForeignKey('Lease.id'),
                       nullable=True, default=None)
-    insurance = db.Column(db.Integer, db.ForeignKey('PropertyDocument.id'),
-                          nullable=True, default=None)
     board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=True,
                       default=None)
-    address = db.Column(db.String(255), nullable=True, default=None)
+    address = db.Column(db.String(255), nullable=False)
 
     def __repr__(self) -> str:
-        print_str = "<Rental>\nrentalID: {}\ndocumentID: {}\nroommatesListID:\
-            {}\ncontactInfoListID: {}\nexpensesID: {}\nshoppingListID: {}"
-        return print_str.format(self.id, self.roommates, self.contact_info,
-                                self.expenses, self.shopping_list)
+        print_str = "<Rental>\nrentalID: {}\nroommatesListID:\
+            {}\nexpensesID: {}\nshoppingListID: {}"
+        return print_str.format(self.id, self.roommates, self.expenses,
+                                self.shopping_list)
 
 
 class Board(db.Model):
@@ -108,17 +92,17 @@ class Board(db.Model):
 class Note(db.Model):
     __tablename__ = 'Note'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    value = db.Column(db.String(500), nullable=False)
+    title = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
     board = db.Column(db.Integer, db.ForeignKey('Board.id'), nullable=False)
     isDeleted = db.Column(db.Boolean, nullable=False, default=False)
+    category = db.Column(db.String(25), nullable=False)
 
 
 class ContactInfo(db.Model):
     __tablename__ = 'ContactInfo'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    firstName = db.Column(db.String(255), nullable=False)
-    lastName = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     phoneNumber = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(255), nullable=True)
     associatedUser = db.Column(db.Integer, db.ForeignKey('Users.id'),
@@ -132,26 +116,12 @@ class ContactInfo(db.Model):
                 self.associated_user)
 
 
-class ContactInfoList(db.Model):
-    __tablename__ = 'ContactInfoList'
+class CalendarEvent(db.Model):
+    __tablename__ = 'CalendarEvent'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    contact1 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact2 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact3 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact4 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact5 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact6 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact7 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact8 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact9 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                         nullable=True)
-    contact10 = db.Column(db.Integer, db.ForeignKey('ContactInfo.id'),
-                          nullable=True)
+    eventName = db.Column(db.String(255), nullable=False)
+    eventStartDT = db.Column(db.DateTime, nullable=False)
+    eventEndDT = db.Column(db.DateTime, nullable=False)
+    eventDescription = db.Column(db.String(255), default=None)
+    rental = db.Column(db.Integer, db.ForeignKey('Rental.id'), nullable=False)
+    isDeleted = db.Column(db.Boolean, nullable=False, default=False)
