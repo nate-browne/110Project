@@ -155,10 +155,13 @@ export default class Roommates extends Component<IAppProps,IAppState> {
     render() {
         if (this.state.isLoading) {
             return (
-                <View>
-                    <ActivityIndicator size="large" color="#0000ff"/>
+                <View style = {{backgroundColor:"#f6f7f8", flex: 1}}>
+                  <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
+                      backgroundColor: "#f6f7f8", flex:1}}>
+                    <ActivityIndicator size="large" color="#2bc0cd" />
+                  </ScrollView>
                 </View>
-            );
+              );
 
         } else {
             return (

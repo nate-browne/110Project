@@ -261,11 +261,11 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
   render() {
 
     if (this.state.isLoading) {
-      return(
-        <View style = {{backgroundColor:"#666666", flex: 1}}>
+      return (
+        <View style = {{backgroundColor:"#f6f7f8", flex: 1}}>
           <ScrollView style={{marginTop: 80, marginBottom: 40, marginHorizontal: 40,
-              backgroundColor: "#FFFFFF", flex:1}}>
-            <ActivityIndicator size="large" color="#0000ff" />
+              backgroundColor: "#f6f7f8", flex:1}}>
+            <ActivityIndicator size="large" color="#2bc0cd" />
           </ScrollView>
         </View>
       );
@@ -337,7 +337,7 @@ export default class EventCalendar extends Component<IAppProps, IAppState> {
               <Text
                 style={{fontSize:24, textAlign:'center', marginTop: 40, marginBottom: 40}}
               >
-                {this.state.selectedDate.toString()}
+                {this.state.selectedDate}
               </Text>
 
               <FlatList
