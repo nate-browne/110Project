@@ -97,11 +97,11 @@ export default class Home extends Component<IAppProps, IAppState> {
   }
 
   getCurrentLeaseInfo = () => {
-    
+
   }
-  
+
   getPastLeaseInfo = () => {
-    
+
   }
 
   componentDidMount() {
@@ -155,7 +155,7 @@ export default class Home extends Component<IAppProps, IAppState> {
           isLoading: false
         })
       });
-      
+
     }).catch(err => {
         console.log('Error occurred',err);
     });
@@ -276,11 +276,11 @@ export default class Home extends Component<IAppProps, IAppState> {
           );
 
           displayCurr = (
-            <TouchableHighlight 
+            <TouchableHighlight
             underlayColor='#2bc0cd'
             activeOpacity={0.90}
             style={styles.cardColorBox}
-            onPress={() => { 
+            onPress={() => {
               this.props.navigation.navigate('RentalMain',{
                 userName: this.props.navigation.getParam("userName",""), //trying to get parameters from navigation
                 userID: userID,
@@ -305,11 +305,11 @@ export default class Home extends Component<IAppProps, IAppState> {
           );
 
           displayPast = (
-            <TouchableHighlight 
+            <TouchableHighlight
             underlayColor='#2bc0cd'
             activeOpacity={0.90}
             style={styles.cardColorBoxAlternate}
-            onPress={() => { 
+            onPress={() => {
               this.props.navigation.navigate('RentalMain',{
                 userName: this.props.navigation.getParam("userName",""), //trying to get parameters from navigation
                 userID: userID,
@@ -327,7 +327,7 @@ export default class Home extends Component<IAppProps, IAppState> {
       }
 
       return(
-        <ScrollView 
+        <ScrollView
           style={{ display: 'flex', flexDirection: 'column'}}
           contentContainerStyle={{justifyContent:'center', alignContent:'center', backgroundColor:'#f6f7f8'}}
         >
@@ -338,7 +338,7 @@ export default class Home extends Component<IAppProps, IAppState> {
           {displayPast}
           {button}
           <View style={styles.buttonBar}>
-            
+
             <Button
               containerStyle={styles.buttonBarElement}
               buttonStyle={{backgroundColor:'#2bc0cd'}}
@@ -388,7 +388,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                       ref = {(input) => {this.input1 = input}}
                       blurOnSubmit = {false}
                       onSubmitEditing = {() => {this.input2.focus()}}
-                      onChangeText={(text: string) => this.setState({address: text})}
+                      onChangeText={(text: string) => this.setState({address: text })}
                     />
 
                   <Text style={{fontSize: 24}}>Landlord Information</Text>
@@ -504,6 +504,7 @@ export default class Home extends Component<IAppProps, IAppState> {
                       }
                       else {
                         this.createRental(userID);
+                        this.setState({pastAddress: this.state.currentAddress, currentAddress:this.state.address})
                         this.setVisible(false);
                       }
                     }}
@@ -513,7 +514,7 @@ export default class Home extends Component<IAppProps, IAppState> {
           </Overlay>
 
         </ScrollView>
-      ) 
+      )
     }
   }
 }
