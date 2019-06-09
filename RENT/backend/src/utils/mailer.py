@@ -1,9 +1,9 @@
 import csv
 from sys import argv
 import smtplib as s
+from os.path import expanduser
 
 from .generate import gen_keys
-from .find import find
 
 smtp_server = 'smtp.gmail.com'  # Gmail
 
@@ -31,6 +31,7 @@ Returns:
 
     # Open CSV file, grab email and password
     filename = find('/home/ubuntu/110Project/RENT/backend/utils/emailstuff.csv', True)
+
     with open(filename, 'r') as infile:
         read = csv.reader(infile, delimiter=',')
         next(read)
