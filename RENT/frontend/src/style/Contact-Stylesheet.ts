@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
       alignItems: 'flex-end',
     },
     avatar: {
-      width: 80,
-      height: 80,
-      borderRadius: 63,
+      width: 100,
+      height: 100,
+      //borderRadius: 63,
       marginTop: 30,
       alignSelf:'center',
     },

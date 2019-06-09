@@ -30,7 +30,8 @@ Returns:
     to_send = ''.join(message)
 
     # Open CSV file, grab email and password
-    filename = expanduser('~') + 'emailstuff.csv'
+    filename = find('/home/ubuntu/110Project/RENT/backend/utils/emailstuff.csv', True)
+
     with open(filename, 'r') as infile:
         read = csv.reader(infile, delimiter=',')
         next(read)

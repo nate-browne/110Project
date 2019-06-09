@@ -17,6 +17,7 @@
     "react-native-calendario": "^0.2.10",
     "react-native-countdown-component": "^2.4.0",
     "react-native-dashboard": "^0.0.4",
+    "react-native-datepicker": "^1.7.2",
     "react-native-easy-grid": "^0.2.1",
     "react-native-elements": "^1.1.0",
     "react-native-expo-viewport-units": "^0.0.8",

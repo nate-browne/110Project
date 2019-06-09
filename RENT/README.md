@@ -40,15 +40,15 @@ keep it or yeet it).
 
 2. `python3`. This will also install `pip3` for you. Installation is available through `brew` I think.
 
-3. Flask, SQLAlchemy, Flask-Login, and MYSQLClient. You can get these with `pip3 install flask`, `pip3 install flask_sqlalchemy`, `pip3 install flask-login`, and `pip3 install mysqlclient`, respectively.
+3. Flask, SQLAlchemy, Flask-Login, MYSQLClient, and passlib. You can get these
+with `pip3 install flask`, `pip3 install flask_sqlalchemy`, `pip3 install
+flask-login`, `pip3 install mysqlclient`, and `pip3 install passlib`, respectively.
 
-4. MySQLClient and passlib (for now). You can get this with `pip3 install mysqlclient` and `pip3 install passlib`
-
-5. An editor that supports Typescript. I recommend either [IntelliJ IDEA](https://www.jetbrains.com/idea/?fromMenu),
+4. An editor that supports Typescript. I recommend either [IntelliJ IDEA](https://www.jetbrains.com/idea/?fromMenu),
    [Visual Studio Code](https://code.visualstudio.com/), or [Atom](https://atom.io/). Make sure that for VSCode you install the relevant Typescript plugins, like "ESLint", "TSLint", and "vscode-icons". If you're using VSCode, it may also help to have
    installed the "Python" plugin from Microsoft since it'll do linting and a bunch of other nice things.
 
-6. mariaDB. On macOS, you can get this with `brew install mariadb`. Ask Aabjeet about installation on Linux. Once you've done this,
+5. mariaDB. On macOS, you can get this with `brew install mariadb`. Ask Aabjeet about installation on Linux. Once you've done this,
    you can create your local copy of the database with the following steps:
    ```bash
    $ cd backend
@@ -83,7 +83,7 @@ then you'll have to change it. In `frontend`, be sure to create a file called `u
 ```javascript
 /** @type {Object.<string, string>} */
 var configInfo = {
-  'serverURL': "<your PRIVATE IP address>:5000"
+  'serverURL': "http://<your PRIVATE IP address>:5000"
 };
 
 module.exports = configInfo
